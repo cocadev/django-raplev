@@ -1,0 +1,89 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Add user{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger addition">
+    <form class="addition" action="" method="POST">
+        {% csrf_token %}
+        <section class="section">
+            <header class="section__header">
+                <h1 class="section__heading">Add new user</h1>
+            </header>
+            {% if success %}
+            <aside class="alert alert--success"><span>{{ success }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+            {% if error %}
+            <aside class="alert alert--warning"><span>{{ error }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+            <div class="section__inner">
+                <div class="section__field form-group">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="fullname" autocomplete="name" placeholder="Name" required>
+                    </div>
+                </div>
+                <div class="section__field form-group">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="username" pattern="[a-z,A-Z]{2,}" autocomplete="nickname" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="section__field form-group">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required>
+                    </div>
+                </div>
+                <div class="section__field form-group">
+                    <div class="form-group__field-group">
+                        <span class="form-group__triangle"></span>
+                        <select class="form-group__field" name="role" required>
+                            <option value="" selected disabled>Role</option>
+                            <option value='AD'>Admin</option>
+                            <option value='MO'>Moderator</option>
+                            <option value='IV'>ID Verifier</option>
+                            <option value='BM'>Blog Manager</option>
+                            <option value='SM'>SEO Manager</option>
+                            <option value='SA'>Support Agent</option>
+                            <option value='CM'>Community Moderator</option>
+                            <option value='AM'>Affiliate Manager</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="section__field form-group pw-generator js-pw-generator-toggle">
+                    <div class="form-group__field-group">
+                        <button class="pw-generator__visibility" type="button">
+                            <svg class="pw-generator__visibility-icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#eye"></use>
+                            </svg>
+                        </button>
+                        <button class="pw-generator__generate" type="button">
+                            <span>Generate</span><span> password</span>
+                        </button>
+                        <input class="form-group__field" name="password" type="password" autocomplete="new-password" placeholder="Password" required>
+                    </div>
+                </div>
+                <label class="checkbox">
+                    <input name="send_email" type="checkbox" hidden>
+                    <span class="checkbox__field"></span>
+                    <span class="checkbox__text">Send details to user email address</span>
+                </label>
+                {% if update %}
+                <label class="checkbox">
+                    <input name="update" type="checkbox" hidden>
+                    <span class="checkbox__field"></span>
+                    <span class="checkbox__text">Update email address to admin user</span>
+                </label>
+                {% endif %}
+            </div>
+        </section>
+        <div class="page__control">
+            <button class="page__control-item btn btn--red" type="submit">Add user</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

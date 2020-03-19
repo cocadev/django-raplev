@@ -1,0 +1,85 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Contact us{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner contact js-form-toggle" action="{{ theme_url }}/contact/" method="POST">
+    {% csrf_token %}
+    <header class="content-header">
+        <h1 class="content-header__heading">Contact us</h1>
+        {% if user.customer %}
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+		</div>
+        {% endif %}
+    </header>
+    <p class="contact__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. Quisque faucibus quis lacus in accumsan. Cras a feugiat urna. Quisque luctus mauris sed mi aliquet hendrerit. Integer luctus neque mattis, vulputate odio eu, consequat est. </p>
+    <div class="page__fields">
+        <div class="page__field form-group {% if error.fullname %}is-invalid{% endif %}">
+            <div class="form-group__field-group">
+                <input class="form-group__field" name="fullname" autocomplete="name" placeholder="Full name" required>
+                {% if error.fullname %}
+                <svg class="form-group__required is-invalid-item">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                </svg>
+                {% endif %}
+            </div>
+            {% if error.fullname %}
+            <p class="form-group__message is-invalid-item">{{ error.fullname }}</p>
+            {% endif %}
+        </div>
+        <div class="page__field form-group {% if error.email_address %}is-invalid{% endif %}">
+            <div class="form-group__field-group">
+                <input class="form-group__field" name="email_address" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address">
+                {% if error.email_address %}
+                <svg class="form-group__required is-invalid-item">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                </svg>
+                {% endif %}
+            </div>
+            {% if user.customer %}
+            <label class="contact__checkbox checkbox">
+                <input type="checkbox" name="use_my_email" hidden>
+                <span class="checkbox__field"></span>
+                <span class="checkbox__text">Use my user email address</span>
+            </label>
+            {% endif %}
+            {% if error.email_address %}
+            <p class="form-group__message is-invalid-item">{{ error.email_address }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="page__field form-group {% if error.subject %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="subject" placeholder="Subject" required>
+            {% if error.subject %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.subject %}
+        <p class="form-group__message is-invalid-item">{{ error.subject }}</p>
+        {% endif %}
+    </div>
+    <div class="page__field form-group form-group--textarea {% if error.content %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <textarea class="form-group__field" name="content" rows="14" placeholder="Your Message"></textarea>
+            {% if error.content %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.content %}
+        <p class="form-group__message is-invalid-item">{{ error.content }}</p>
+        {% endif %}
+    </div>
+    <div class="contact__buttons">
+        <button class="contact__send btn btn--round btn--theme-2" type="submit">Send Message</button>
+    </div>
+</form>
+{% endblock %}

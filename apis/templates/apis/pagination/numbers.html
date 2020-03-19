@@ -1,0 +1,51 @@
+{% load static %}
+
+<ul class="pagination__list">
+  {% if previous_url %}
+  <li>
+    <a class="pagination__btn" href="javascript: showPosts('{{ previous_url }}')" rel="first">
+      <svg class="pagination__icon">
+        <use xlink:href="{% static 'images/sprite.svg' %}#caret-left"></use>
+      </svg>
+    </a>
+  </li>
+  {% else %}
+  <li class="is-disabled">
+    <a class="pagination__btn" href="#" rel="first">
+      <svg class="pagination__icon">
+        <use xlink:href="{% static 'images/sprite.svg' %}#caret-left"></use>
+      </svg>
+    </a>
+  </li>
+  {% endif %}
+  
+  {% for page_link in page_links %}
+    {% if page_link.is_break %}
+    <li class="pagination__item is-disabled"><span>...</span></li>
+    {% else %}
+      {% if page_link.is_active %}
+      <li class="pagination__item is-active"><a class="pagination__link" href="javascript: showPosts('{{ page_link.url }}')">{{ page_link.number }}</a></li>
+      {% else %}
+      <li class="pagination__item"><a class="pagination__link" href="javascript: showPosts('{{ page_link.url }}')">{{ page_link.number }}</a></li>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if next_url %}
+  <li>
+    <a class="pagination__btn" href="javascript: showPosts('{{ next_url }}')" rel="next">
+      <svg class="pagination__icon">
+        <use xlink:href="{% static 'images/sprite.svg' %}#caret-right"></use>
+      </svg>
+    </a>
+  </li>
+  {% else %}
+  <li class="is-disabled">
+    <a class="pagination__btn" href="#" rel="next">
+      <svg class="pagination__icon">
+        <use xlink:href="{% static 'images/sprite.svg' %}#caret-right"></use>
+      </svg>
+    </a>
+  </li>
+  {% endif %}
+</ul>

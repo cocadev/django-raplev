@@ -1,0 +1,14 @@
+<input id="fileupload" type="file" name="file" multiple hidden data-url="{{ theme_url }}/upload/" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+<input type="hidden" name="featured_images" class="instead_of_file" >
+<div id="uploadlist"></div>
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'theme/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "theme/images/icons.svg" %}#times';
+</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Signup{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner individual">
+    <div class="individual__wrapper">
+        <h1 class="individual__heading">Register</h1>
+        <form class="js-password-check-toggle" action="{{ theme_url }}/register/" method="POST">
+            {% csrf_token %}
+            <input name="next" value="{{ next }}" type="hidden" />
+            <div class="individual__field dropdown__field form-group {% if error.email %}is-invalid{% endif %}">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="email" type="email" autocomplete="current-email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required>
+                    {% if error.email %}
+                    <svg class="form-group__required is-invalid-item">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+                {% if error.email %}
+                <p class="form-group__message is-invalid-item">{{ error.email }}</p>
+                {% endif %}
+            </div>
+            <div class="individual__field dropdown__field form-group {% if error.username %}is-invalid{% endif %}">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="username" type="text" autocomplete="current-username" placeholder="Username" required>
+                    {% if error.username %}
+                    <svg class="form-group__required is-invalid-item">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+                {% if error.username %}
+                <p class="form-group__message is-invalid-item">{{ error.email }}</p>
+                {% endif %}
+            </div>
+            <div class="individual__field dropdown__field form-group {% if error.password %}is-invalid{% endif %}">
+                <div class="form-group__field-group">
+                    <input class="form-group__field js-password-strength-input" name="password" type="password" autocomplete="new-password" placeholder="Password" required>
+                    {% if error.password %}
+                    <svg class="form-group__required is-invalid-item">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="individual__pw-check-bar dropdown__password-check-bar js-password-strength-output"><span class="dropdown__password-check-text">Strength: enter value...</span></div>
+                {% if error.password %}
+                <p class="form-group__message is-invalid-item">{{ error.password }}</p>
+                {% endif %}
+            </div>
+            <div class="individual__field dropdown__field form-group">
+                <div class="form-group__field-group">
+                    <input class="form-group__field js-password-match-input" name="password_confirm" type="password" autocomplete="new-password" placeholder="Password again" required>
+                </div>
+                <div class="individual__pw-check-bar dropdown__password-check-bar js-password-match-output"><span class="dropdown__password-check-text">Password matching: enter values...</span></div>
+            </div>
+            <div class="dropdown__buttons"><button class="dropdown__btn btn btn--theme-4" type="submit">I want to sell</button><button class="dropdown__btn btn btn--theme-2" type="submit">I want to buy</button></div><button class="dropdown__text-btn js-login-trigger" onclick="switchToLogin()" type="submit">I already have an account</button>
+        </form class="js-password-check-toggle">
+    </div>
+</div>
+{% endblock %}

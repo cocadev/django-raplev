@@ -1,0 +1,39 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Transaction Details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/transactions">Transactions</a><span> / </span><span>{{ item.id }}</span></h1>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item is-{{ item.get_status_display|lower }}"><dt class="data-panel__heading">Status</dt>
+                    <dd class="data-panel__value">{{ item.get_status_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Amount</dt>
+                    <dd class="data-panel__value">{{ item.amount }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Crypto currency</dt>
+                    <dd class="data-panel__value">{{ item.offer.what_crypto }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Trade Initiator</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.trade_initiator }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Vendor</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.vendor }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">txn ID</dt>
+                    <dd class="data-panel__value">{{ item.txn }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+</main>
+{% endblock %}

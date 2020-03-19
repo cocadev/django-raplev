@@ -1,0 +1,32 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger editor">
+    <form class="editor__container" action="" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.pk }}" />
+        <section class="section editor__app">
+            <header class="section__header">
+                <h1 class="section__heading">{{ title }}</h1>
+            </header>
+            <div class="section__inner">
+                <div class="editor__app-title form-group">
+                    <div class="form-group__field-group"><input class="form-group__field" name="title" placeholder="Title" value="{{ item.title }}"></div>
+                </div>
+                <article class="editor__app-container"><textarea class="js-editor-toggle" name="context">{{ item.context|safe }}</textarea></article>
+            </div>
+        </section>
+        <section class="section editor__control">
+            <div class="editor__control-buttons">
+                <input class="editor__control-btn btn btn--dark" type="submit" name="action" value="Publish" />
+                <input class="editor__control-btn btn btn--grey" type="submit" name="action" value="Draft" />
+                <input class="editor__control-link" style="border: none;" type="submit" name="action" value="Trash" />
+            </div>
+        </section>
+    </form>
+</main>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Media Library{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger library">
+    <section class="section">
+        <header class="library__header">
+            <form class="" action="" method="GET">
+                <div class="library__header-top">
+                    <div class="library__header-wrapper">
+                        <h1 class="library__heading">Media Files</h1><a class="library__add-btn btn btn--accent" href="{{ cadmin_url }}/upload">Add new</a>
+                    </div>
+                    <div class="section__search form-group search">
+                        <div class="form-group__field-group"><input class="form-group__field" name="search" value="{{ search }}" placeholder="Search in Trades"><button class="search__btn" type="submit">Search</button></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="select-filter"><span class="select-filter__item">Month</span>
+                        <div class="select-filter__item form-group">
+                            <div class="form-group__field-group"><span class="form-group__triangle"></span><select class="form-group__field" name="month">
+                                    <option value="" disabled>Select Month</option>
+                                    {% for mon in months %}
+                                    <option value="{{ mon }}" {% if mon|stringformat:"i" == month %}selected{% endif %}>{{ mon }}</option>
+                                    {% endfor %}
+                                </select></div>
+                        </div><span class="select-filter__item">Year</span>
+                        <div class="select-filter__item form-group">
+                            <div class="form-group__field-group"><span class="form-group__triangle"></span><select class="form-group__field" name="year" onchange="this.form.submit()">
+                                <option value="" disabled>Select Year</option>
+                                {% for yer in years %}
+                                <option value="{{ yer }}" {% if yer|stringformat:"i" == year %}selected{% endif %}>{{ yer }}</option>
+                                {% endfor %}
+                                </select></div>
+                        </div><button class="btn btn--dark" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </header>
+        <div class="section__inner">
+            <div class="library__content">
+                <ul class="library__items">
+                    {% for item in items %}
+                    <li class="file js-file-toggle library__file" file_id="{{ item.id }}" style="background-image: url('{{ item.file.url }}'); background-size: cover; border: 1px #ea565682 solid;">
+                        <div class="file__circle">
+                            <svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg>
+                        </div>
+                        <span class="file__caption" style="height: 50px; line-height: normal; word-break: break-all; padding: 5px;">{{ item.file.name }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <nav class="library__pagination pagination">
+                    <ul class="pagination__list">
+                        {% if items.has_previous %}
+                        <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                        {% else %}
+                        <li class="pagination__item disabled">Prev</li>
+                        {% endif %}
+                        {% for i in paginator.page_range %}
+                             {% if items.number == i %}
+                             <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                             {% else %}
+                             <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                             {% endif %}
+                        {% endfor %}
+                        {% if items.has_next %}
+                        <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                        {% else %}
+                        <li class="pagination__item disabled">Next</li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

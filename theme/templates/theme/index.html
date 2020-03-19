@@ -1,0 +1,322 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Homepage{% endblock %}
+{% block body %}home{% endblock %}
+
+{% block page-inner %}
+<div class="home__banner banner">
+    <div class="banner__container"></div>
+</div>
+<section>
+    <form class="home__search search" action="{{ theme_url }}/offer-listing/" method="GET">
+        <h1 class="search__heading">I want to</h1>
+        <div class="search__field form-group">
+            <div class="form-group__field-group">
+                <svg class="form-group__arrow">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+                <select class="form-group__field" name="trade_type">
+                    <option value="">- Trade Type -</option>
+                    <option value="sell">Buy</option>
+                    <option value="buy">Sell</option>
+                </select>
+            </div>
+        </div>
+        <div class="search__field search__field--small form-group">
+            <div class="form-group__field-group">
+                <input class="form-group__field" name="trade_price" type="number" placeholder="">
+            </div>
+        </div>
+        <div class="search__field form-group">
+            <div class="form-group__field-group">
+                <svg class="form-group__arrow">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+                <select class="form-group__field" name="what_crypto">
+                    <option value="">- Crypto -</option>
+                    {% for key, value in CRYPTO_CHOICES %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <span class="search__caption">for</span>
+        <div class="search__field search__field--small form-group">
+            <div class="form-group__field-group">
+                <svg class="form-group__arrow">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+                <select class="form-group__field" name="flat">
+                    <option value="">- Flat -</option>
+                    {% for key, value in FLAT_CHOICES %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select></div>
+        </div><span class="search__caption">with</span>
+        <div class="search__field search__field--small form-group">
+            <div class="form-group__field-group">
+                <svg class="form-group__arrow">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+                <select class="form-group__field" name="payment_method">
+                    <option value="">- Payment -</option>
+                    {% for key, value in PAYMENT_METHODS %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button class="search__expand" type="button" onclick="this.parentElement.classList.add('is-expanded')">More+</button>
+        <button class="search__btn btn btn--large btn--theme-1" type="submit">SEARCH NOW</button>
+    </form>
+</section>
+<div class="select-currency">
+    <form action="{{ theme_url }}/" method="GET">
+        <input name="crypto_filter" type="hidden" value="true" />
+        <div class="select-currency__items">
+            <div class="select-currency__item">
+                <h2 class="select-currency__heading">All</h2>
+                <div class="select-currency__buttons">
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_all_buy" {%if crypto_all_buy%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">BUY</span>
+                    </label>
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_all_sell" {%if crypto_all_sell%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">SELL</span>
+                    </label>
+                </div>
+            </div>
+            <div class="select-currency__item">
+                <h2 class="select-currency__heading">BTC</h2>
+                <div class="select-currency__buttons">
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_BTC_buy" {%if crypto_BTC_buy%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">BUY</span>
+                    </label>
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_BTC_sell" {%if crypto_BTC_sell%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">SELL</span>
+                    </label>
+                </div>
+            </div>
+            <div class="select-currency__item">
+                <h2 class="select-currency__heading">ETH</h2>
+                <div class="select-currency__buttons">
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_ETH_buy" {%if crypto_ETH_buy%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">BUY</span>
+                    </label>
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_ETH_sell" {%if crypto_ETH_sell%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">SELL</span>
+                    </label>
+                </div>
+            </div>
+            <div class="select-currency__item">
+                <h2 class="select-currency__heading">XRP</h2>
+                <div class="select-currency__buttons">
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_XRP_buy" {%if crypto_XRP_buy%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">BUY</span>
+                    </label>
+                    <label class="select-currency__btn-wrapper">
+                        <input type="checkbox" name="crypto_XRP_sell" {%if crypto_XRP_sell%}checked{%endif%} hidden>
+                        <span class="select-currency__btn">SELL</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="select-currency__filter">
+            <h3 class="select-currency__filter-heading">Filter by</h3>
+            <div class="select-currency__filter-select form-group">
+                <div class="form-group__field-group">
+                    <span class="select-currency__select-triangle"></span>
+                    <select class="form-group__field">
+                        <option value="#">Trending</option>
+                        <option value="#">Option 2</option>
+                        <option value="#">Option 3</option>
+                    </select></div>
+            </div>
+            <button class="select-currency__filter-btn" type="submit">APPLY</button>
+        </div>
+    </form>
+</div>
+<section class="sales">
+    <div class="page__inner">
+        <div class="sales__item">
+            <header class="sales__header">
+                <h2 class="sales__heading">Trending Bitcoin Offers</h2>
+                <a class="btn btn--theme-1 btn--large btn--round" href="{{ theme_url }}/offer-listing?what_crypto=BTC">I WANT MORE</a>
+            </header>
+            <table class="table-new table-new--theme-2">
+                <thead class="table-new__thead">
+                    <tr class="table-new__row">
+                        <th class="table-new__th">Method</th>
+                        <th class="table-new__th">Listed by</th>
+                        <th class="table-new__th">Payment method</th>
+                        <th class="table-new__th">Short description</th>
+                        <th class="table-new__th">Price ({{SET_CSYMBOL}} / BTC)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in BTC_items %}
+                    <tr class="table-new__row">
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                            <div class="table-new__rate">
+                                <p class="table-new__rate-caption">{{ item.get_trade_type_display }}</p>
+                                <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">({{ item.created_by.review_count }})</a>
+                                    <div class="stars-fixed small">
+                                        {% for rate in '01234'|make_list %}
+                                        <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                        </svg>
+                                        <svg class="stars-fixed__icon {%if item.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                        </svg>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">{{ item.created_by.get_public_url|safe }}</a></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>{{ item.get_flat_display }}</span></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">{{ item.trade_overview }}</span></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">{{ item.get_trade_price|cconv:SET_CURRENCY }}</span><a class="table-new__price-action-btn" href="{{ theme_url }}/single-offer-detail?item_id={{ item.id }}">SEE OFFER</a></span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="padding: 10px 15px;">There are no offers to show</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="sales__item">
+            <header class="sales__header">
+                <h2 class="sales__heading">Trending Ethereum Offers</h2><a class="btn btn--theme-1 btn--large btn--round" href="{{ theme_url }}/offer-listing?what_crypto=ETH">I WANT MORE</a>
+            </header>
+            <table class="table-new table-new--theme-2">
+                <thead class="table-new__thead">
+                    <tr class="table-new__row">
+                        <th class="table-new__th">Method</th>
+                        <th class="table-new__th">Listed by</th>
+                        <th class="table-new__th">Payment method</th>
+                        <th class="table-new__th">Short description</th>
+                        <th class="table-new__th">Price ({{SET_CSYMBOL}} / ETH)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ETH_items %}
+                    <tr class="table-new__row">
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                            <div class="table-new__rate">
+                                <p class="table-new__rate-caption">{{ item.get_trade_type_display }}</p>
+                                <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">({{ item.created_by.review_count }})</a>
+                                    <div class="stars-fixed small">
+                                        {% for rate in '01234'|make_list %}
+                                        <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                        </svg>
+                                        <svg class="stars-fixed__icon {%if item.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                        </svg>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">{{ item.created_by.get_public_url|safe }}</a></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>{{ item.get_flat_display }}</span></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">{{ item.trade_overview }}</span></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Price/ETH</span><span class="table-new__price-action"><span class="table-new__price-action-sum">{{ item.get_trade_price|cconv:SET_CURRENCY }}</span><a class="table-new__price-action-btn" href="{{ theme_url }}/single-offer-detail?item_id={{ item.id }}">SEE OFFER</a></span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="padding: 10px 15px;">There are no offers to show</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="sales__item">
+            <header class="sales__header">
+                <h2 class="sales__heading">Latest Ripple Offers</h2><a class="btn btn--theme-1 btn--large btn--round" href="{{ theme_url }}/offer-listing?what_crypto=XRP">I WANT MORE</a>
+            </header>
+            <table class="table-new table-new--theme-2">
+                <thead class="table-new__thead">
+                    <tr class="table-new__row">
+                        <th class="table-new__th">Method</th>
+                        <th class="table-new__th">Listed by</th>
+                        <th class="table-new__th">Payment method</th>
+                        <th class="table-new__th">Short description</th>
+                        <th class="table-new__th">Price ({{SET_CSYMBOL}} / XRP)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in XRP_items %}
+                    <tr class="table-new__row">
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                            <div class="table-new__rate">
+                                <p class="table-new__rate-caption">{{ item.get_trade_type_display }}</p>
+                                <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">({{ item.created_by.review_count }})</a>
+                                    <div class="stars-fixed small">
+                                        {% for rate in '01234'|make_list %}
+                                        <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                        </svg>
+                                        <svg class="stars-fixed__icon {%if item.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                        </svg>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">{{ item.created_by.get_public_url|safe }}</a></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>{{ item.get_flat_display }}</span></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">{{ item.trade_overview }}</span></td>
+                        <td class="table-new__cell"><span class="table-new__mobile-heading">Price/XRP</span><span class="table-new__price-action"><span class="table-new__price-action-sum">{{ item.get_trade_price|cconv:SET_CURRENCY }}</span><a class="table-new__price-action-btn" href="{{ theme_url }}/single-offer-detail?item_id={{ item.id }}">SEE OFFER</a></span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="padding: 10px 15px;">There are no offers to show</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<section class="feature feature--buying">
+    <div class="feature__container">
+        <div class="feature__inner">
+            <h2 class="feature__heading">From simple purchase to complex trades we will cover you.</h2>
+            <p class="feature__text"> <b>Nulla facilisi. Fusce eget lobortis arcu. Vestibulum nec lectus quis tellus sodales sodales sit amet ut augue. </b>Aliquam ac dui porttitor, vestibulum diam quis, gravida urna. Aenean ipsum nulla, consequat a feugiat ut, dapibus eu tortor. Nullam fringilla nunc imperdiet, suscipit ex in, semper eros. Aliquam laoreet rhoncus tortor, ac mattis lacus porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquet lectus at dignissim fermentum. </p><a class="btn btn--theme-2 btn--large btn--round" href="{{ theme_url }}/new-offer">START BUYING</a>
+        </div>
+    </div>
+</section>
+<section class="feature feature--selling">
+    <div class="feature__container">
+        <div class="feature__inner">
+            <h2 class="feature__heading">Find the best buyers<br> and make succesfull trades with us.</h2>
+            <p class="feature__text"> <b>Nulla facilisi. Fusce eget lobortis arcu. Vestibulum nec lectus quis tellus sodales sodales sit amet ut augue.</b>Aliquam ac dui porttitor, vestibulum diam quis, gravida urna. Aenean ipsum nulla, consequat a feugiat ut, dapibus eu tortor. Nullam fringilla nunc imperdiet, suscipit ex in, semper eros. Aliquam laoreet rhoncus tortor, ac mattis lacus porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquet lectus at dignissim fermentum. </p><a class="btn btn--theme-2 btn--large btn--round" href="{{ theme_url }}/new-offer">START SELLING</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block bottom-script %}
+{% if user.is_authenticated and user.is_customer and not user.email_verified %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => emailActivation.open());
+</script> 
+{% endif %}
+{% if error.register %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => register.open());
+</script>
+{% endif %}
+{% if error.login %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => login.open());
+</script>
+{% endif %}
+</script>
+{% endblock %}

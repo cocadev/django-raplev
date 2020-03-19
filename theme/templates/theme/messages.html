@@ -1,0 +1,116 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Homepage{% endblock %}
+{% block body %}home{% endblock %}
+
+{% block page-inner %}
+<div class="messenger">
+    <div class="messenger__container">
+        <header class="content-header">
+            <h1 class="content-header__heading">My messages</h1>
+            <div class="status">
+                <div class="status__data"><span class="status__text">1.554 BTC in Wallet</span><a class="status__text" href="#">View Full Wallet</a></div>
+                <div class="status__userpic js-status-trigger is-online"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                <div class="status__dropdown js-status-target">
+                    <ul class="status__list">
+                        <li class="status__item" onclick="userStatus.setOnline()">Online</li>
+                        <li class="status__item" onclick="userStatus.setAway()">Away</li>
+                        <li class="status__item" onclick="userStatus.setOffline()">Offline</li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <div class="messenger__inner">
+            <div class="userlist" data-toggle="userlist">
+                <div class="userlist__container">
+                    <ul class="userlist__list">
+                        {% for rel in user.relation_partners %}
+                        <li class="userlist__item is-unread" onclick="location.href = '/messages/?for={{ rel.partner.id }}'">
+                            <div class="userlist__userpic"><img class="userlist__user-img" src="{% if rel.partner.avatar %}{{ rel.partner.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                            <div>
+                                <h3 class="userlist__heading">{{ rel.partner.username }}</h3>
+                                <p class="userlist__caption">{{ rel.unreaded_first_message }}</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="messages">
+                <header class="messages__header">
+                    <h2 class="messages__heading">Conversation</h2>
+                    {% if relation and relation.blocked_at %}
+                    <div class="blocked"><svg class="blocked__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#ban"></use>
+                        </svg><span>Blocked</span></div>
+                    {% endif %}
+                    <div class="messages__block" onclick="this.children[0].classList.toggle('is-visible')">Block<div class="messages__block-dropdown"><button class="messages__block-dropdown-btn" type="button">Block this person</button><button class="messages__block-dropdown-btn" type="button">Unblock this person</button></div>
+                    </div>
+                </header>
+                <div class="messages__inner messages__items" id="message_container">
+                   
+                    
+                </div>
+                <div class="js-fix-textarea-container">
+                    <form class="messages__control-inner js-fix-textarea-toggle" onsubmit="sendMessage(event);" 
+                        action="{{ theme_url }}/add-message/" method="POST" id="send_message_form">
+                        {% csrf_token %}
+                        <input type="hidden" name="partner_id" value="{{ partner.id }}">
+                        <input type="hidden" name="relation_id" value="{{ relation.id }}">
+                        <input type="hidden" name="message_id" value="">
+                        <input type="hidden" name="message_type" value="message">
+                        <textarea class="messages__textarea js-auto-expand-toggle" id="message_content" name="content" rows="1" placeholder="Type your message here"></textarea>
+                        <div class="messages__buttons"><label class="messages__attach"><input type="file" hidden><svg class="messages__attach-icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#paperclip"></use>
+                                </svg></label><button class="messages__send btn btn--round btn--theme-2" type="submit">Send</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script>
+    function sendMessage(evt) {
+        evt.preventDefault();
+        $.ajax({
+            url: $('#send_message_form').attr('action'),
+            type: $('#send_message_form').attr('method'),
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded',
+            data: $('#send_message_form').serialize(),
+            success: function( data, textStatus, jQxhr ){
+                if(data.success) {
+                    $("#message_content").val('')
+                    displayMessages();
+                }
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+    }
+    function displayMessages(page=1) {
+        $.ajax({
+            url: '/messages/',
+            type: 'post',
+            contentType: 'application/x-www-form-urlencoded',
+            data: $('#send_message_form').serialize(),
+            success: function( data, textStatus, jQxhr ){
+                $("#message_container").html(data)
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        });
+    }
+    $(document).ready(function () {
+        displayMessages();
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Documentations{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger guide">
+    <section class="section js-tablist-toggle">
+        <header class="section__header">
+            <h1 class="section__heading">Documentations</h1>
+            <nav class="guide__nav tabs js-tablist-triggers"><a class="tabs__item is-active" href="#">How to use Dashboard?</a><a class="tabs__item" href="#">How to create page? </a><a class="tabs__item" href="#">How to write a blog entry?</a></nav>
+        </header>
+        <div class="section__inner js-tablist-tabs">
+            <div class="guide__tab is-active">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga repellat doloribus mollitia vero, minima aut earum tenetur corrupti? Officia incidunt nobis, minima impedit distinctio blanditiis corrupti unde atque. Minima, dolorum.Rem incidunt inventore numquam, maiores distinctio ab. Nostrum, iste. Labore, illum voluptas! Possimus cumque magni praesentium provident unde, quae aliquam in facere molestias consectetur temporibus! Quam laudantium nisi eligendi optio.Perspiciatis dignissimos vitae rem doloremque impedit quasi, vero aspernatur repudiandae repellat quo laudantium nostrum ullam sapiente quae. Ipsum, repellendus voluptates labore ducimus consequuntur, quia expedita perferendis vitae possimus dolorum facere!Maxime sapiente non dicta! Impedit quidem expedita laborum deleniti nobis ipsum quasi quis. Numquam, quidem dicta? Inventore, a nostrum tempore ab perferendis debitis suscipit deserunt eum cumque ducimus voluptatem delectus!Cumque tempora optio deleniti doloremque quas nulla mollitia sapiente magnam veniam magni veritatis dolorem laudantium expedita eius quam, fugit minus porro aperiam ullam? Voluptatibus perspiciatis explicabo fugit magni, debitis quibusdam?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga repellat doloribus mollitia vero, minima aut earum tenetur corrupti? Officia incidunt nobis, minima impedit distinctio blanditiis corrupti unde atque. Minima, dolorum.Rem incidunt inventore numquam, maiores distinctio ab. Nostrum, iste. Labore, illum voluptas! Possimus cumque magni praesentium provident unde, quae aliquam in facere molestias consectetur temporibus! Quam laudantium nisi eligendi optio.Perspiciatis dignissimos vitae rem doloremque impedit quasi, vero aspernatur repudiandae repellat quo laudantium nostrum ullam sapiente quae. Ipsum, repellendus voluptates labore ducimus consequuntur, quia expedita perferendis vitae possimus dolorum facere!Maxime sapiente non dicta! Impedit quidem expedita laborum deleniti nobis ipsum quasi quis. Numquam, quidem dicta? Inventore, a nostrum tempore ab perferendis debitis suscipit deserunt eum cumque ducimus voluptatem delectus!Cumque tempora optio deleniti doloremque quas nulla mollitia sapiente magnam veniam magni veritatis dolorem laudantium expedita eius quam, fugit minus porro aperiam ullam? Voluptatibus perspiciatis explicabo fugit magni, debitis quibusdam?</p>
+            </div>
+            <div class="guide__tab">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga repellat doloribus mollitia vero, minima aut earum tenetur corrupti? Officia incidunt nobis, minima impedit distinctio blanditiis corrupti unde atque. Minima, dolorum.Rem incidunt inventore numquam, maiores distinctio ab. Nostrum, iste. Labore, illum voluptas! Possimus cumque magni praesentium provident unde, quae aliquam in facere molestias consectetur temporibus! Quam laudantium nisi eligendi optio.Perspiciatis dignissimos vitae rem doloremque impedit quasi, vero aspernatur repudiandae repellat quo laudantium nostrum ullam sapiente quae. Ipsum, repellendus voluptates labore ducimus consequuntur, quia expedita perferendis vitae possimus dolorum facere!Maxime sapiente non dicta! Impedit quidem expedita laborum deleniti nobis ipsum quasi quis. Numquam, quidem dicta? Inventore, a nostrum tempore ab perferendis debitis suscipit deserunt eum cumque ducimus voluptatem delectus!Cumque tempora optio deleniti doloremque quas nulla mollitia sapiente magnam veniam magni veritatis dolorem laudantium expedita eius quam, fugit minus porro aperiam ullam? Voluptatibus perspiciatis explicabo fugit magni, debitis quibusdam?</p>
+            </div>
+            <div class="guide__tab">
+                <p>Lorem ipsum dolor sit amet</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+            </div>
+        </div>
+    </section>
+    <div class="page__control"><a class="page__control-item page__control-link" href="{{ cadmin_url }}/post-issue">Found a technical issue?</a><a class="page__control-item btn btn--accent" href="{{ cadmin_url }}/post-issue">Post</a></div>
+</main>
+{% endblock %}

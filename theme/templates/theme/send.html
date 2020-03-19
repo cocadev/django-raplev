@@ -1,0 +1,85 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Send{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner send js-form-toggle" action="{{ theme_url }}/send/" method="POST">
+    {% csrf_token %}
+    <div class="alert-wrapper" style="margin-top: -50px;margin-bottom: 50px;">
+        {% if success %}
+        <aside class="alert alert--success"><span>{{ success|safe }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+        </svg></button></aside>
+        {% endif %}
+        {% if warning %}
+        <aside class="alert alert--warning" style="background: #9a535f;"><span>{{ warning|safe }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+        </svg></button></aside>
+        {% endif %}
+    </div>
+    <header class="content-header content-header--has-list">
+        <ul class="content-header__list">
+            <li class="content-header__item is-active"><a class="content-header__link" href="#">Send</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/receive">Receive</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/trade-history">Transaction History</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/saved-wallet">Saved Wallets</a></li>
+        </ul>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+		</div>
+    </header>
+    <p class="send__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. Quisque faucibus quis lacus in accumsan. Cras a feugiat urna. Quisque luctus mauris sed mi aliquet hendrerit. Integer luctus neque mattis, vulputate odio eu, consequat est. Nam orci justo, blandit at risus auctor, faucibus porttitor ante. Quisque ut neque nec odio pulvinar vehicula a et libero. Donec velit mi, sollicitudin ut libero ut, aliquam accumsan nunc. Cras posuere ex egestas, fermentum nibh ac, varius massa. Nunc mattis metus quis velit euismod varius. Aenean in ante vitae arcu volutpat rutrum.</p>
+    <div class="page__fields">
+        <div class="page__field form-group">
+            <div class="form-group__field-group"><span class="form-group__triangle"></span>
+                <select class="form-group__field" name="currency" required>
+                    <option value="" disabled>What you wish to send?</option>
+                    {% for key, value in CURRENCY_CHOICES %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select></div>
+        </div>
+        <div class="page__field form-group">
+            <div class="form-group__field-group">
+                <input class="form-group__field" name="receiver_email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Receiver Email Address" required>
+                <svg class="form-group__required">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="page__field form-group">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="description" placeholder="Description of this trade" required>
+            <svg class="form-group__required">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+        </div>
+    </div>
+    <div class="page__fields">
+        <div class="page__field form-group">
+            <div class="form-group__field-group"><span class="form-group__currency">CRYPTO</span>
+                <input class="form-group__field" name="crypto_amount" type="number" placeholder="Amount in Bitcoin" required>
+                <svg class="form-group__required">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                </svg>
+            </div>
+        </div>
+        <div class="page__field form-group">
+            <div class="form-group__field-group"><span class="form-group__currency">FLAT</span>
+                <input class="form-group__field" name="flat_amount" type="number" placeholder="Amount in Flat" required>
+                <svg class="form-group__required">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <footer class="send__footer">
+        <p class="send__bottom-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. </p>
+        <button class="send__submit btn btn--round btn--theme-4" type="submit">Send</button>
+    </footer>
+</form>
+{% endblock %}

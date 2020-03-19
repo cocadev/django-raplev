@@ -1,0 +1,49 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Watch list{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner watch-list">
+    <h1 class="watch-list__heading">YOUR LIST</h1>
+    {% for item in items %}
+    <div class="watch-list__item offer-info" id="{{ item.id }}">
+        <div class="offer-info__main">
+            <span class="offer-info__text">Selling {{ item.offer.what_crypto }} for {{ item.offer.flat }} - {{ item.offer.trade_price }}</span>
+            <a class="offer-info__view" href="{{ theme_url }}/single-offer-detail?item_id={{ item.offer.id }}">View offer</a>
+            <a class="offer-info__remove" href="#" onclick="postAction({'item_id': '{{item.id}}'}, 'Are you sure to remove this list?', '{{ theme_url }}/watch-list/', function(message) {$('#{{ item.id }}').remove()});">Remove</a>
+        </div>
+        {% if item.is_updated %}
+        <div class="offer-info__alert">
+            <svg class="offer-info__alert-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#question-circle"></use>
+            </svg>
+            <span class="offer-info__alert-text">This offer has been updated after your last view</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <nav class="watch-list__pagination pagination">
+        <ul class="pagination__list">
+            {% if items.has_previous %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Prev</li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                 {% if items.number == i %}
+                 <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% else %}
+                 <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% endif %}
+            {% endfor %}
+            {% if items.has_next %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Next</li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

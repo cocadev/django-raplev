@@ -1,0 +1,38 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Community Options{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger editor">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <section class="section editor__app">
+            <header class="section__header">
+                <h1 class="section__heading">Community Options</h1>
+            </header>
+            <div class="section__inner">
+                <h2 class="section__inner-heading">Rules</h2>
+                <article class="editor__app-container">
+                    <textarea class="js-editor-toggle" name="community.rule">{{ items.community.rule|safe }}</textarea>
+                </article>
+            </div>
+        </section>
+        <div class="page__control">
+            {% if success %}
+            <div class="page__control-item status"> 
+                <span class="status__text">Saved</span>
+                <span class="status__icon-wrapper">
+                    <svg class="status__icon" width="30">
+                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                    </svg>
+                </span>
+            </div>
+            {% endif %}
+            <button class="page__control-item btn btn--red" type="submit">Apply Changes</button>
+            <button class="page__control-item btn btn--red" type="reset">Cancel</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

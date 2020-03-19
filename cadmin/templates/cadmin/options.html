@@ -1,0 +1,186 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Options{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger options">
+    <section class="section js-tablist-toggle">
+        <header class="section__header">
+            <h2 class="section__heading">Options</h2>
+            <nav class="options__nav page-nav js-tablist-triggers">
+                <a class="page-nav__item {% if nav != 'router' %}is-active{% endif %}" href="#">General</a>
+                <a class="page-nav__item" href="#">Header/Footer</a>
+                <a class="page-nav__item" href="#">Site Options</a>
+                <a class="page-nav__item" href="#">Social Media Links</a>
+                <a class="page-nav__item" href="#">APIs</a>
+                <a class="page-nav__item" href="#">Email</a>
+                <a class="page-nav__item" href="#">Logo</a>
+                <a class="page-nav__item" href="#">Backup</a>
+                <a class="page-nav__item" href="#">Content</a>
+                <a class="page-nav__item {% if nav == 'router' %}is-active{% endif %}" href="#">Router</a>
+            </nav>
+        </header>
+        <div class="options__inner section__inner">
+            <form id="form1" action="{{ cadmin_url }}/options/" method="POST">{% csrf_token %}</form>
+            <div class="js-tablist-tabs">
+                <!-- General-->
+                <div class="options__tab {% if nav != 'router' %}is-active{% endif %}">
+                    <div class="section__field form-group">
+                        <div class="form-group__field-group">
+                            <input form="form1" class="form-group__field" name="general.mailing_email_address" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Mailing email address" value="{{ items.general.mailing_email_address }}" required>
+                        </div>
+                    </div>
+                    <div class="section__field form-group">
+                        <div class="form-group__field-group">
+                            <input form="form1" class="form-group__field" name="general.site_title" placeholder="Site title" value="{{ items.general.site_title }}" required>
+                        </div>
+                    </div>
+                    <label class="checkbox">
+                        <input form="form1" type="checkbox" name="general.discourage_for_se" {% if items.general.discourage_for_se == 'on' %}checked{% endif %} hidden>
+                        <span class="checkbox__field"></span>
+                        <span class="checkbox__text"> Discourage for Search Engines</span>
+                    </label>
+                </div>
+                <!-- Header/Footer-->
+                <div class="options__tab">
+                    <label class="section__field form-group">
+                        <span class="form-group__caption">Header custom CSS code</span>
+                        <span class="form-group__field-group">
+                            <textarea form="form1" class="form-group__field js-expanding-textarea" name="header_footer.header_custom_css" rows="3" placeholder="Text field">{{ items.header_footer.header_custom_css }}</textarea>
+                        </span>
+                    </label>
+                    <label class="section__field form-group">
+                        <span class="form-group__caption">Header custom JS code</span>
+                        <span class="form-group__field-group">
+                            <textarea form="form1" class="form-group__field js-expanding-textarea" name="header_footer.header_custom_js" rows="3" placeholder="Text field">{{ items.header_footer.header_custom_js }}</textarea>
+                        </span>
+                    </label>
+                    <label class="section__field form-group">
+                        <span class="form-group__caption">Footer custom CSS code</span>
+                        <span class="form-group__field-group">
+                            <textarea form="form1" class="form-group__field js-expanding-textarea" name="header_footer.footer_custom_css" rows="3" placeholder="Text field">{{ items.header_footer.footer_custom_css }}</textarea>
+                        </span>
+                    </label>
+                    <label class="section__field form-group">
+                        <span class="form-group__caption">Footer custom JS code</span>
+                        <span class="form-group__field-group">
+                            <textarea form="form1" class="form-group__field js-expanding-textarea" name="header_footer.footer_custom_js" rows="3" placeholder="Text field">{{ items.header_footer.footer_custom_js }}</textarea>
+                        </span>
+                    </label>
+                </div>
+                <!-- Site options-->
+                <div class="options__tab">
+                    <label class="section__field form-group">
+                        <span class="options__label form-group__caption">
+                            <span>Remove Payment Methods</span>
+                            <span class="options__label-details-text">Separated by comma - 
+                                <a class="options__label-details-link" href="#">How to find?</a>
+                            </span>
+                        </span>
+                        <span class="form-group__field-group">
+                            <textarea form="form1" class="form-group__field js-expanding-textarea" name="site_options.remove_payment_methods" rows="3" placeholder="Text field">{{ items.site_options.remove_payment_methods }}</textarea form="form1">
+                        </span>
+                    </label>
+                    <label class="section__field form-group">
+                        <span class="options__label form-group__caption">
+                            <span>Remove currency options from balance</span>
+                            <span class="options__label-details-text">Separated by comma - 
+                                <a class="options__label-details-link" href="#">How to find?</a>
+                            </span>
+                        </span>
+                        <span class="form-group__field-group">
+                            <textarea form="form1" class="form-group__field js-expanding-textarea" name="site_options.remove_currency_options_from_balance" rows="3" placeholder="Text field">{{ items.site_options.remove_currency_options_from_balance }}</textarea>
+                        </span>
+                    </label>
+                    <label class="checkbox">
+                        <input form="form1" type="checkbox" name="site_options.hide_funding_page_from_customer_dashboard" {% if items.site_options.hide_funding_page_from_customer_dashboard == 'on' %}checked{% endif %} hidden>
+                        <span class="checkbox__field"></span>
+                        <span class="checkbox__text"> Hide funding page from customer Dashboard</span>
+                    </label>
+                </div>
+                <div class="options__tab">Social Media Links tab content</div>
+                <div class="options__tab">APIs tab content</div>
+                <div class="options__tab">Email tab content</div>
+                <div class="options__tab">Logo tab content</div>
+                <div class="options__tab">Backup tab content</div>
+                <div class="options__tab">Content tab content</div>
+                <!-- Router-->
+                <div class="options__tab {% if nav == 'router' %}is-active{% endif %}">
+                    <div class="options__add-field add-field">
+                        <div class="add-field__desc">Blog</div>
+                        <div class="add-field__form-group">
+                            <span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <form class="add-field__wrapper" action="{{ cadmin_url }}/options-router-blog/" method="POST">
+                                    {% csrf_token %}
+                                    <div class="add-field__field-group">
+                                        <input class="add-field__input" name="router.blog" value="{{ items.router.blog }}" placeholder="Link">
+                                    </div>
+                                    <button class="add-field__btn btn btn--accent" type="submit">Save</button>
+                                </form>
+                                {% if error.blog %}
+                                <div class="add-field__message">
+                                    <svg class="add-field__message-icon" width="30">
+                                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg>
+                                    <span class="add-field__message-text">Sorry, this router already is assigned to something else {{ error.forgot_password }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="options__add-field add-field">
+                        <div class="add-field__desc">Forgot password (Admin)</div>
+                        <div class="add-field__form-group">
+                            <span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <form class="add-field__wrapper"action="{{ cadmin_url }}/options-router-forgot-password/" method="POST">
+                                    {% csrf_token %}
+                                    <div class="add-field__field-group">
+                                        <input class="add-field__input" name="router.forgot_password" value="{{ items.router.forgot_password }}" placeholder="Link">
+                                    </div>
+                                    <button class="add-field__btn btn btn--accent" type="submit">Save</button>
+                                </form>
+                                {% if error.forgot_password %}
+                                <div class="add-field__message">
+                                    <svg class="add-field__message-icon" width="30">
+                                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg>
+                                    <span class="add-field__message-text">Sorry, this router already is assigned to something else {{ error.forgot_password }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="page__control">
+        {% if success %} 
+        <div class="page__control-item status">
+            <span class="status__text">{{ success }}</span>
+            <span class="status__icon-wrapper">
+                <svg class="status__icon" width="30">
+                    <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                </svg>
+            </span>
+        </div>
+        {% endif %}
+        {% if error.normal %} 
+        <div class="page__control-item status">
+            <span class="status__text">{{ error.normal }}</span>
+            <span class="status__icon-wrapper">
+                <svg class="status__icon" width="30">
+                    <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                </svg>
+            </span>
+        </div>
+        {% endif %}
+        <button form="form1" class="page__control-item btn btn--accent btn--large" type="submit">Apply changes</button>
+        <button form="form1" class="page__control-item btn btn--dark btn--large" type="reset">Cancel</button>
+    </div>
+</main>
+{% endblock %}

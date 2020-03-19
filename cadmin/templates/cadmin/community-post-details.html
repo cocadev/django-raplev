@@ -1,0 +1,47 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Community post details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="details__section section">
+        <header class="section__header section__header--has-button">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/community-posts">Community Posts</a><span> / </span><span>{{ item.id }}</span></h1><a class="btn btn--red" href="{{ cadmin_url }}/post-preview?item_id={{ item.id }}">View public link</a>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Created by</dt>
+                    <dd class="data-panel__value"> <a href="#">{{ item.posted_by }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Created on</dt>
+                    <dd class="data-panel__value">{{ item.created_at }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Status</dt>
+                    <dd class="data-panel__value">{{ item.get_status_display }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading">{{ item.title }}</h1>
+        </header>
+        <div class="section__inner">
+            <p>{{ item.context|safe }}</p>
+            <dl class="details__post-info post-info">
+                <div class="post-info__item"><dt>Upvoted: </dt>
+                    <dd class="post-info__value">{{ item.upvoted }}</dd>
+                </div>
+                <div class="post-info__item"><dt>Comments: </dt>
+                    <dd class="post-info__value">{{ item.comments }}</dd>
+                </div>
+                <div class="post-info__item"><dt>Reports: </dt>
+                    <dd class="post-info__value is-warning">{{ item.reports }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+</main>
+{% endblock %}

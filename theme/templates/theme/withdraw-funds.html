@@ -1,0 +1,36 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Withdraw funds{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner withdraw js-form-toggle" action="{{ theme_url }}/withdraw-funds/" method="POST">
+    {% csrf_token %}
+    <h1 class="withdraw__heading">WITHDRAW</h1>
+    <div class="page__field form-group">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="amount" type="number" placeholder="Amount to withdraw" required>
+            <svg class="form-group__required">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+        </div>
+    </div>
+    <div class="page__field form-group">
+        <div class="form-group__field-group"><span class="form-group__triangle"></span>
+            <select class="form-group__field" name="currency" required>
+                <option value="" disabled>Select account where you wish to withdraw</option>
+                {% for key, value in CURRENCY_CHOICES %}
+                    <option value="{{ key }}" {% if key == currency %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="page__field form-group form-group--textarea">
+        <div class="form-group__field-group">
+            <textarea class="form-group__field" name="details" rows="13" placeholder="Description of this transaction for self-reference (optional)"></textarea>
+        </div>
+    </div>
+    <button class="withdraw__btn btn--round btn btn--theme-4" type="submit">Withdraw</button>
+</form>
+{% endblock %}

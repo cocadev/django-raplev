@@ -1,0 +1,48 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner individual">
+    <div class="individual__wrapper">
+        <h1 class="individual__heading">Login</h1>
+        <form action="{{ theme_url }}/login/" method="POST">
+            {% csrf_token %}
+            <input name="next" value="{{ next }}" type="hidden" />
+            <div class="individual__field dropdown__field form-group {% if error.email %}is-invalid{% endif %}">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="email" type="text" placeholder="Email address or Username" required>
+                    {% if error.email %}
+                    <svg class="form-group__required is-invalid-item">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+                {% if error.email %}
+                <p class="form-group__message is-invalid-item">{{ error.email }}</p>
+                {% endif %}
+            </div>
+            <div class="individual__field dropdown__field form-group {% if error.password %}is-invalid{% endif %}">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="password" type="password" autocomplete="current-password" placeholder="Password" required>
+                    {% if error.password %}
+                    <svg class="form-group__required is-invalid-item">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+                {% if error.password %}
+                <p class="form-group__message is-invalid-item">{{ error.password }}</p>
+                {% endif %}
+            </div>
+            <button class="dropdown__submit btn btn--large btn--theme-2" type="submit">LOGIN</button>
+        </form>
+        <footer class="dropdown__buttons">
+            <button class="individual__text-btn dropdown__text-btn" onclick="location.href='{{ theme_url }}/register?next={{ next }}'" type="button">Create Account</button>
+            <button class="individual__text-btn dropdown__text-btn js-forgot-pwd-trigger" onclick="location.href='{{ theme_url }}/forgot-password-email?next={{ next }}'" type="button">I forgot my password </button>
+        </footer>
+    </div>
+</div>
+{% endblock %}

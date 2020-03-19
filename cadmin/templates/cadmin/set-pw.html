@@ -1,0 +1,33 @@
+{% extends 'cadmin/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Recover{% endblock %}
+
+{% block body %}dialog{% endblock %}
+
+{% block content %}
+<main class="dialog__container"><a class="dialog__logo" href="{{ cadmin_url }}"><img class="dialog__logo-img" src="{% static 'cadmin/images/raplev-logo-alt.png' %}" alt="Raplev logo"></a>
+    <div class="dialog__inner">
+        {% if error %}
+        <span class="dialog__notification has-important-theme">{{ error }}</span>
+        {% endif %}
+        {% if success %}
+        <span class="dialog__notification has-success-theme">Your password has been reset. You can now with new password here.</span>
+        {% endif %}
+        <form class="dialog__wrapper js-password-check-toggle" action="" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="token" value="{{ token }}" />
+            <div class="dialog__field form-group">
+                <div class="form-group__field-group"><input class="form-group__field js-password-strength-input" name="password" type="password" autocomplete="new-password" placeholder="New password" required></div>
+                <div class="dialog__bar js-password-strength-output"><span class="dialog__bar-text">Strength: enter value...</span></div>
+            </div>
+            <div class="dialog__field form-group">
+                <div class="form-group__field-group"><input class="form-group__field js-password-match-input" name="password_confirm" type="password" autocomplete="new-password" placeholder="Repeat new password" required></div>
+                <div class="dialog__bar js-password-match-output"><span class="dialog__bar-text">Password matching: enter values...</span></div>
+            </div>
+            <div class="dialog__control"><button class="dialog__submit-btn btn btn--accent" type="submit">Submit</button></div>
+        </form>
+    </div>
+</main>
+{% endblock %}

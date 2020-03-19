@@ -1,0 +1,57 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Admin{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge"><!-- Favicon data-->
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'theme/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'theme/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'theme/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'theme/site.webmanifest' %}">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+        <link href="{% static 'css/fonts.googleapis.css' %}" rel="stylesheet">
+        <link href="{% static 'theme/css/quill.snow.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'theme/css/theme.min.css' %}">
+
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script defer src="{% static 'theme/js/theme.min.js' %}"></script>
+        <script src="{% static 'theme/js/quill.js' %}"></script>
+        {% block head-script %}{% endblock %}
+    </head>
+
+    <body class="page {% block body %}{% endblock %}">
+        <section class="" style="background: #26cde1;">
+            <aside style="padding: 5px 42px;font-size: 15px;">This is a beta release. Please excuse any errors, or, if you are generous, <a href="/submit-ticket/" style="color: red;">report</a> them.</aside>
+            <!-- {% if 'success' in global_alert or 'success' in alert %}
+            <aside class="alert alert--success"><span>{{ global_alert.success|default:alert.success|safe }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+            {% if 'neutral' in global_alert or 'neutral' in alert %}
+            <aside class="alert alert--neutral"><span>{{ global_alert.neutral|default:alert.neutral|safe }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+            {% if 'warning' in global_alert or 'warning' in alert %}
+            <aside class="alert alert--warning" style="background: #9a535f;"><span>{{ global_alert.warning|default:alert.warning|safe }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %} -->
+        </section>
+        <article class="cookie-alert">
+            <div class="cookie-alert__container"><span>We use cookies to personalize content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services</span><button class="cookie-alert__btn" type="button" onclick="this.parentElement.parentElement.remove()">ACCEPT</button></div>
+        </article>
+        
+
+        {% block content %}{% endblock %}
+
+        {% block bottom-base-script %}{% endblock %}
+        {% block bottom-script %}{% endblock %}
+    </body>
+
+</html>

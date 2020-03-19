@@ -1,0 +1,55 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ item.title|slice:":50" }}{% endblock %}
+
+{% block page-inner %}
+<section class="banner banner--bare banner--has-heading">
+    <div class="page__inner banner__container">
+        <h1 class="banner__heading">{{ item.title }}</h1>
+        <p class="banner__subheading">{{ item.created_at }} - Added by {{ item.posted_by }}</p>
+    </div>
+</section>
+<article class="page__inner blog">
+    <div class="blog__wrapper">
+        <div class="blog__inner">
+            <div class="blog__content">
+                {{ item.context|safe }}
+            </div>
+            <div class="blog__tags">
+                {% for tag in item.tags_list %}
+                <a class="blog__tag" href="{{ theme_url }}/tag?item_name={{ tag }}">{{ tag }}</a>
+                {% endfor %}
+            </div>
+            <div class="blog__share">
+                <p class="blog__share-caption">Share this<span class="blog__share-caption--only-small-screens">blog post on</span></p>
+                <ul class="blog__share-list">
+                    <li class="blog__share-item"><a class="blog__share-link" href="#[[[?]]]"><svg class="blog__share-icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#facebook-f"></use>
+                            </svg></a></li>
+                    <li class="blog__share-item"><a class="blog__share-link" href="#[[[?]]]"><svg class="blog__share-icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#instagram"></use>
+                            </svg></a></li>
+                    <li class="blog__share-item"><a class="blog__share-link" href="#[[[?]]]"><svg class="blog__share-icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#google"></use>
+                            </svg></a></li>
+                    <li class="blog__share-item"><a class="blog__share-link" href="#[[[?]]]"><svg class="blog__share-icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#youtube"></use>
+                            </svg></a></li>
+                </ul>
+            </div>
+        </div>
+        <aside class="blog__articles">
+            <h2 class="blog__related">Related</h2>
+            {% for rpost in item.related_post_list %}
+            <article class="blog__article article">
+                <h3 class="article__heading">{{ rpost.title }}</h3>
+                <p class="article__text">{{ rpost.beauty_context }} <a class="article__more" href="{{ theme_url }}/blog-detail?item_id={{ rpost.id }}">Read&nbsp;more</a></p>
+            </article>
+            {% endfor %}
+            <a class="blog__more btn btn--theme-2" href="{{ theme_url }}/blog-listing">I want to read more!</a>
+        </aside>
+    </div>
+</article>
+{% endblock %}

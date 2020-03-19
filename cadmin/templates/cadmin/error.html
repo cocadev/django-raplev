@@ -1,0 +1,20 @@
+{% extends 'cadmin/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Error{% endblock %}
+
+{% block body %}dialog{% endblock %}
+
+{% block content %}
+<main class="dialog__container"><a class="dialog__logo" href="{{ cadmin_url }}"><img class="dialog__logo-img" src="{% static 'cadmin/images/raplev-logo-alt.png' %}" alt="Raplev logo"></a>
+    <div class="dialog__inner">
+        {% if error %}
+        <span class="dialog__notification has-important-theme">{{ error }}</span>
+        {% endif %}
+        {% if success %}
+        <span class="dialog__notification has-success-theme">{{ success }}</span>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Flagged content{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="details__section section">
+        <header class="section__header section__header--has-button">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/flagged-posts">Flagged content</a><span> / </span><span>{{ item.id }}</span></h1><a class="btn btn--red" href="{{ cadmin_url }}/post-preview?item_id={{ item.post.id }}">View public link</a>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Flag reason</dt>
+                    <dd class="data-panel__value">{{ item.flag_reason }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Flagged by</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.flagged_by }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Flagged on</dt>
+                    <dd class="data-panel__value">{{ item.created_at }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Community post ID</dt>
+                    <dd class="data-panel__value"><a href="{{ cadmin_url }}/post-preview?item_id={{ item.post.id }}">{{ item.post.id }}</a></dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading">Message</h1>
+        </header>
+        <div class="section__inner">
+            {{ item.message|safe }}
+        </div>
+    </section>
+</main>
+{% endblock %}

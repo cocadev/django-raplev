@@ -1,0 +1,173 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Single offer details{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner single-offer">
+    {% if not item.is_expired %}
+    <aside class="single-offer__alert alert alert--attention">
+        <span class="alert__text">Seller is closing shop soon. If you upload a proof of transaction now, it may set reviewed next working day.</span>
+        <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+            <svg class="alert__close-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+            </svg>
+        </button>
+    </aside>
+    {% endif %}
+    {% if item.is_paused %}
+    <aside class="single-offer__alert alert alert--note">
+        <span class="alert__text">No trade available right now. The seller may be away.</span>
+        <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+            <svg class="alert__close-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+            </svg>
+        </button>
+    </aside>
+    {% endif %}
+    <div class="single-offer__control">
+        {% if item.created_by == user.customer %}
+        <a class="single-offer__control-btn" href="{{ theme_url }}/offer-activity/?item_id={{ item.id }}">Go To Offer Activity</a>
+        {% else %}
+        <a class="single-offer__control-btn" href="{{ theme_url }}/initiate-trade?item_id={{ item.id }}">INITIATE A TRADE</a>
+        {% endif %}
+        <div class="single-offer__control-wrapper">
+            <div class="single-offer__control-items">
+                {% if item.sms_verification_required %}
+                <span class="single-offer__control-item">SMS Verified</span>
+                {% endif %}
+                {% if item.identified_user_required %}
+                <span class="single-offer__control-item">Identified</span>
+                {% endif %}
+                <span class="single-offer__control-item">{{ item.address }}</span>
+                <a class="single-offer__control-link" href="#">View on map</a>
+            </div>
+            {% if item.created_by != user.customer %}
+            <div class="single-offer__control-items">
+                {% if item.counter and item.counter.vendor == user.customer %}
+                <a class="single-offer__control-action" href="#">You already sent offer.</a>
+                {% else %}
+                <a class="single-offer__control-action" href="{{ theme_url }}/send-counter-offer?item_id={{ item.id }}">SEND AN OFFER</a>
+                {% endif %}
+                <form action="{{ theme_url }}/single-offer-detail/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="{{ item.id }}" />
+                    <button class="single-offer__control-action" type="submit">ADD TO LIST</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <header class="single-offer__header">
+        <div class="single-offer__header-part">
+            <div class="single-offer__price">PRICE</div>
+            <div class="single-offer__price-value">${{ item.get_trade_price }}</div>
+            <div class="stars-fixed medium">
+                {% for rate in '01234'|make_list %}
+                <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                </svg>
+                <svg class="stars-fixed__icon {%if item.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                </svg>
+                {% endfor %}
+            </div>
+            <p class="single-offer__payment-status">Payment accepted: {{ item.payment_method }}</p>
+            <div class="single-offer__payment-attention"><span class="single-offer__payment-risk">{{ item.payment_risk }}</span><a class="single-offer__payment-explain" href="#">Tell me why</a></div>
+        </div>
+        <div class="single-offer__header-part">
+            <ul class="single-offer__data-list">
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Accepted currencies</span><span>{{ item.flat }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Minimum transaction limit</span><span>{{ item.minimun_transaction_limit }} {{ item.what_crypto }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Maximum transaction limit</span><span>{{ item.maximun_transaction_limit }} {{ item.what_crypto }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Minimum successful trades</span><span>{{ item.minimum_successful_trades }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Opening hours</span><span>{{ item.operating_hours_start }} - {{ item.operating_hours_end }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Restricted hours</span><span>{{ item.restrict_hours_start }} - {{ item.restrict_hours_end }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">User Languages</span><span>{{ item.supported_location_list }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Successful Trades</span><span>{{ item.created_by.successful_trade_count }}</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Blocked by</span><span>{{ item.created_by.blocked_by_count }} users</span></li>
+                <li class="single-offer__data-item"><span class="single-offer__data-caption">Average review time</span><span>{{ item.created_by.average_trade_complete_time }} hours</span></li>
+            </ul>
+        </div>
+    </header>
+    <h2 class="single-offer__heading">Trade overview</h2>
+    <p class="single-offer__desc">{{ item.trade_overview }}</p>
+    <div class="single-offer__author-wrapper">
+        <div class="single-offer__author"><span class="single-offer__author-level">{{ item.created_by.seller_level }}</span><span>Offered by <b>{{ item.created_by }}</b></span></div>
+    </div>
+    <div class="single-offer__reviews-header">
+        <h2 class="single-offer__reviews-heading">Reviews</h2>
+        <div class="stars-fixed medium">
+            {% for rate in '01234'|make_list %}
+            <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+            </svg>
+            <svg class="stars-fixed__icon {%if item.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+            </svg>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="single-offer__reviews-list">
+        {% for review in item.created_by.review_list %}
+        <article class="single-offer__review review">
+            <footer class="review__footer">
+                <div class="stars-fixed small">
+                    {% for rate in '01234'|make_list %}
+                    <svg class="stars-fixed__icon stars-fixed__icon--half {%if review.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                    </svg>
+                    <svg class="stars-fixed__icon {%if review.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg>
+                    {% endfor %}
+                </div>
+                <span class="review__time">Posted by {{ review.created_by }} on {{ review.created_at }}</span>
+            </footer>
+            <p class="review__text">{{ review.content|slice:':100' }} <a class="review__link" href="{{ theme_url }}/review-details?item_id={{ review.id }}">See more</a></p>
+        </article>
+        {% endfor %}
+    </div>
+    <table class="single-offer__table table-new table-new--theme-2">
+        <thead class="table-new__thead">
+            <tr class="table-new__row">
+                <th class="table-new__th">Method</th>
+                <th class="table-new__th">Listed by</th>
+                <th class="table-new__th">Payment method</th>
+                <th class="table-new__th">Short description</th>
+                <th class="table-new__th">Price/BTC</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for offer in item.other_open_offer_list %}
+            <tr class="table-new__row">
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                    <div class="table-new__rate">
+                        <p class="table-new__rate-caption">Selling</p>
+                        <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">({{ offer.created_by.review_count }})</a>
+                            <div class="stars-fixed small">
+                                {% for rate in '01234'|make_list %}
+                                <svg class="stars-fixed__icon stars-fixed__icon--half {%if offer.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                </svg>
+                                <svg class="stars-fixed__icon {%if offer.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">{{ offer.created_by }}</a></td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>{{ offer.get_flat_display }}</span></td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">{{ offer.trade_overview }}</span></td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">{{ offer.trade_price }}</span><a class="table-new__price-action-btn" href="{{ theme_url }}/single-offer-detail?item_id={{ offer.id }}">SEE OFFER</a></span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="padding: 10px 15px;">There are no offers to show</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

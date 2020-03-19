@@ -1,0 +1,82 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Affiliates{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger">
+    <section class="section section--has-filter">
+        <form class="section__header section__header date-filter" action="" method="GET">
+            <div class="date-filter__inputs">
+                <div class="date-filter__field form-group">
+                    <div class="form-group__field-group"><svg class="form-group__calendar" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#calendar-alt"></use>
+                        </svg><input class="form-group__field js-datepicker-toggle" name="start_date" placeholder="7 Nov 2019" value="{{ start_date }}" readonly required></div>
+                </div>
+                <div class="date-filter__divider">to</div>
+                <div class="date-filter__field form-group">
+                    <div class="form-group__field-group"><svg class="form-group__calendar" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#calendar-alt"></use>
+                        </svg><input class="form-group__field js-datepicker-toggle" name="end_date" placeholder="12 Nov 2019" value="{{ end_date }}" readonly required></div>
+                </div><button class="date-filter__apply btn btn--red" type="submit">Apply filter</button>
+            </div>
+            <div class="section__search form-group search">
+                <div class="form-group__field-group"><input class="form-group__field" name="search" value="{{ search }}" placeholder="Search in Affiliates"><button class="search__btn" type="submit">Search</button></div>
+            </div>
+        </form>
+        <div class="section__inner">
+            <h1 class="section__inner-heading">Showing {{ items|length }} of {{ paginator.count }} results</h1>
+            <table class="section__table table">
+                <thead>
+                    <tr>
+                        <th>Affiliate ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email address</th>
+                        <th>Total earned</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr id="{{ item.id }}">
+                        <td><span class="table__mobile-heading">Affiliate ID</span><a href="#">{{ item.id }}</a></td>
+                        <td><span class="table__mobile-heading">First name</span><span>{{ item.user.first_name }}</span></td>
+                        <td><span class="table__mobile-heading">Last name</span><span>{{ item.user.last_name }}</span></td>
+                        <td><span class="table__mobile-heading">Email address</span><span>{{ item.user.email }}</span></td>
+                        <td><span class="table__mobile-heading">Total earned</span><span>${{ item.total_earned }}</span></td>
+                        <td><span class="table__mobile-heading">Status</span><span class="user_status">{{ item.user.is_affiliate }}</span></td>
+                        <td><span class="table__mobile-heading">Actions</span>
+                            <a href="{{ cadmin_url }}/add-new-affiliate?item_id={{ item.id }}">Details</a> | <a class="table-actions__item" href="#" onclick="postAction({'item_id': '{{item.id}}'}, 'Are you sure to suspend this affiliate?', '{{ cadmin_url }}/affiliates/', function(message) {$('#{{ item.id }}').find('.user_status').text(message)});">Suspend</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,14 @@
+{
+    "name": "Dashboard",
+    "short_name": "Dashboard",
+    "icons": [
+        {
+            "src": "/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#e77474",
+    "background_color": "#e77474",
+    "display": "standalone"
+}

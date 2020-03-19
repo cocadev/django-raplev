@@ -1,0 +1,87 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Receive{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner receive">
+    <header class="content-header content-header--has-list">
+        <ul class="content-header__list">
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/send">Send</a></li>
+            <li class="content-header__item is-active"><a class="content-header__link" href="#">Receive</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/trade-history">Transaction History</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/saved-wallet">Saved Wallets</a></li>
+        </ul>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+		</div>
+    </header>
+    <div class="tablist js-tablist-toggle">
+        <div class="tablist__buttons js-tablist-triggers"><button class="tablist__button is-active" type="button">BTC</button><button class="tablist__button" type="button">ETH</button><button class="tablist__button" type="button">XRP</button></div>
+        <div class="tablist__tabs js-tablist-tabs">
+            <div class="tablist__tab is-active">
+                <div class="receive__copy copy">
+                    <div class="copy__inner"><input class="copy__output js-copy-target" type="text" value="{{ user.customer.btc_wallet }}" readonly><span class="copy__message js-copy-message">COPIED</span><button class="copy__btn js-copy-trigger" type="button"><svg class="copy__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#copy"></use>
+                            </svg></button></div>
+                    <p class="copy__caption">Give out the bitcoin address above to receive bitcoins. This address will expire in 2 months. A new one will be automatically generated. Check back here to ensure you do not give out an expired address.</p>
+                </div>
+                {% for btc in user.customer.received_btc %}
+                <div class="receive__collapse collapse">
+                    <header class="collapse__header js-collapse-trigger" data-target="#answer-{{ btc.id }}">
+                        <h3 class="collapse__heading">{{ btc.description }}</h3><svg class="collapse__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                        </svg>
+                    </header>
+                    <div class="collapse__content" id="answer-{{ btc.id }}">
+                        <p class="collapse__text">{{ btc.detail_description }} <a href="#">You can find out more in our FAQ.</a></p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="tablist__tab">
+                <div class="receive__copy copy">
+                    <div class="copy__inner"><input class="copy__output js-copy-target" type="text" value="{{ user.customer.eth_wallet }}" readonly><span class="copy__message js-copy-message">COPIED</span><button class="copy__btn js-copy-trigger" type="button"><svg class="copy__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#copy"></use>
+                            </svg></button></div>
+                    <p class="copy__caption">Give out the Ethereum address above to receive Ethereum. This address will expire in 2 months. A new one will be automatically generated. Check back here to ensure you do not give out an expired address.</p>
+                </div>
+                {% for eth in user.customer.received_eth %}
+                <div class="receive__collapse collapse">
+                    <header class="collapse__header js-collapse-trigger" data-target="#answer-{{ eth.id }}">
+                        <h3 class="collapse__heading">{{ eth.description }}</h3><svg class="collapse__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                        </svg>
+                    </header>
+                    <div class="collapse__content" id="answer-{{ eth.id }}">
+                        <p class="collapse__text">{{ eth.detail_description }} <a href="#">You can find out more in our FAQ.</a></p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="tablist__tab">
+                <div class="receive__copy copy">
+                    <div class="copy__inner"><input class="copy__output js-copy-target" type="text" value="{{ user.customer.xrp_wallet }}" readonly><span class="copy__message js-copy-message">COPIED</span><button class="copy__btn js-copy-trigger" type="button"><svg class="copy__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#copy"></use>
+                            </svg></button></div>
+                    <p class="copy__caption">Give out the Ripple address above to receive Ripple. This address will expire in 2 months. A new one will be automatically generated. Check back here to ensure you do not give out an expired address.</p>
+                </div>
+                {% for xrp in user.customer.received_xrp %}
+                <div class="receive__collapse collapse">
+                    <header class="collapse__header js-collapse-trigger" data-target="#answer-{{ xrp.id }}">
+                        <h3 class="collapse__heading">{{ xrp.description }}</h3><svg class="collapse__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                        </svg>
+                    </header>
+                    <div class="collapse__content" id="answer-{{ xrp.id }}">
+                        <p class="collapse__text">{{ xrp.detail_description }} <a href="#">You can find out more in our FAQ.</a></p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

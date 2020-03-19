@@ -1,0 +1,86 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}ID Verification{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner verification">
+    <div class="verification__control">
+        <div class="verification__upload">
+            <h1 class="verification__title">ID Verification</h1>
+            <p class="verification__subtitle">Please upload a Government Issued document</p>
+            <form
+                id="fileupload"
+                action="{{ theme_url }}/upload/"
+                method="POST"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="mode" value="id_card">
+                <select name="card_id" class="form-group__field" style="margin-bottom: 10px;">
+                    <option> Select ID card </option>
+                    {% for card in user.id_cards_list %}
+                        <option value="{{ card.id }}">{{ card.card_name }}</option>
+                    {% endfor %}
+                </select>
+                <div class="verification__upload-inner">
+                    <label class="verification__btn btn btn--round btn--theme-2" for="upload-image">Upload Document
+                        <input id="upload-image"
+                            type="file"
+                            name="file"
+                            hidden
+                            multiple>
+                    </label>
+                    <p class="verification__upload-desc">
+                        <b class="verification__support">Supported file formats:</b>
+                        <span class="verification__format">*JPG, *PNG, *PDF</span>
+                    </p>
+                </div>
+            </form>
+        </div>
+        <div class="verification__accept">
+            <h2 class="verification__accept-heading">Accepted (but not limited to) documents</h2>
+            <ul class="verification__accept-list">
+                <li class="verification__accept-item"><svg class="verification__accept-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#id-card"></use>
+                    </svg>
+                    <p class="verification__accept-caption">ID Card</p>
+                </li>
+                <li class="verification__accept-item"><svg class="verification__accept-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#passport"></use>
+                    </svg>
+                    <p class="verification__accept-caption">Passport</p>
+                </li>
+                <li class="verification__accept-item"><svg class="verification__accept-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#address-card"></use>
+                    </svg>
+                    <p class="verification__accept-caption">Voter ID</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="verification__status-data">
+        <h2 class="verification__status-heading">Uploaded documents status</h2>
+        <div id="uploadlist">
+            {% for item in items %}
+            <li class="file js-file-toggle library__file" file_id="{{ item.id }}" style="background-image: url('{{ item.file.url }}'); background-size: cover; border: 1px #ea565682 solid;">
+                <span class="file__caption" style="height: 50px; line-height: normal; word-break: break-all; padding: 5px;">{{ item.file.name }}</span>
+            </li>
+            {% empty %}
+            <div class="verification__status-message">Sorry, we don’t have any document in our system or it was rejected.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'cadmin/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "cadmin/images/icons.svg" %}#times';
+</script>
+{% endblock %}

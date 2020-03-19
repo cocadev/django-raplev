@@ -1,0 +1,151 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}User public profile{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner public-profile">
+    <section class="public-profile__section public-profile__user">
+        <div class="public-profile__user-info">
+            <div class="public-profile__user-pic"><svg class="public-profile__user-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#user-circle"></use>
+                </svg><!-- img.public-profile__user-img(src="images/user.jpg", alt="")-->
+            </div>
+            <div>
+                <h1 class="public-profile__user-name">{{ customer }}</h1>
+                <p class="public-profile__user-data">Average trade completion time: {{ customer.average_trade_complete_time }} hours</p>
+                <p class="public-profile__user-data">Trade intiate to completion rate: {{ customer.trade_initiate_complete_rate }}%</p>
+            </div>
+        </div>
+        <div class="public-profile__user-rate public-profile__user-rate--1"><span class="public-profile__user-rated-amount">{{ customer.customer_rate_amount }}</span>
+            <!--+stars("user-rate", "medium")(star_40 = "checked")-->
+            <div class="stars-fixed medium">
+                {% for rate in '01234'|make_list %}
+                <svg class="stars-fixed__icon stars-fixed__icon--half {%if customer.customer_rate < forloop.counter %}is-selected{%endif%}">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                </svg>
+                <svg class="stars-fixed__icon {%if customer.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                </svg>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="public-profile__section">
+        <h2 class="public-profile__heading">Overview</h2>
+        <p class="public-profile__text">
+            <span>{{ customer.overview|slice:':100'|safe }}</span>
+            <span hidden>{{ customer.overview|slice:'100:'|safe }}</span>
+            <button class="read-more js-hidden-text" type="button" onclick="hiddenText.toggle(this)">Read more</button></p>
+    </section>
+    <section class="public-profile__section">
+        <h2 class="public-profile__heading">Feedbacks</h2>
+        <div class="public-profile__feedbacks">
+            <div class="public-profile__feedback-col">
+                {% for item in customer.review_list %}
+                <article class="public-profile__feedback-item feedback">
+                    <header class="feedback__header">
+                        <div class="feedback__header-part">
+                            <div class="stars-fixed small">
+                                {% for rate in '01234'|make_list %}
+                                <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.customer.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                </svg>
+                                <svg class="stars-fixed__icon {%if item.customer.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                            <span class="feedback__seller">As seller</span>
+                        </div>
+                        <div class="feedback__header-part"><span class="feedback__average">Average </span>
+                            <div class="stars-fixed small dark">
+                                {% for rate in '01234'|make_list %}
+                                <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.customer.successful_trade_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                </svg>
+                                <svg class="stars-fixed__icon {%if item.customer.successful_trade_rate <= forloop.counter %}is-selected{%endif%}">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </header>
+                    <p class="feedback__text"> 
+                        <span>{{ item.content|slice:':100' }}</span>
+                        <span hidden>{{ item.content|slice:'100:' }}</span>
+                        <button class="read-more js-hidden-text" type="button" onclick="hiddenText.toggle(this)">Read more</button>
+                    </p>
+                    <footer class="feedback__footer">{{ item.created_at }} | Transaction: {{ item.transaction.amount }} {{ item.transaction.offer.what_crypto }}</footer>
+                </article>
+                {% endfor %}
+            </div>
+            <a class="public-profile__feedback-load" href="{{ theme_url }}/reviews?customer_id={{ customer.id }}">SEE MORE</a>
+        </div>
+    </section>
+    <section class="public-profile__section">
+        <h2 class="public-profile__heading">Open offers</h2>
+        <table class="public-profile__table table-new table-new--theme-2">
+            <thead class="table-new__thead">
+                <tr class="table-new__row">
+                    <th class="table-new__th">Method</th>
+                    <th class="table-new__th">Listed by</th>
+                    <th class="table-new__th">Payment method</th>
+                    <th class="table-new__th">Short description</th>
+                    <th class="table-new__th">Price/BTC</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr class="table-new__row">
+                    <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                        <div class="table-new__rate">
+                            <p class="table-new__rate-caption">Selling</p>
+                            <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">({{ item.created_by.trade_count }})</a>
+                                <div class="stars-fixed small">
+                                    {% for rate in '01234'|make_list %}
+                                    <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.created_by.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                    </svg>
+                                    <svg class="stars-fixed__icon {%if item.created_by.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                    </svg>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">{{ item.created_by }}</a></td>
+                    <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>{{ item.get_flat_display }}</span></td>
+                    <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">{{ item.trade_overview }}</span></td>
+                    <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">{{ item.get_trade_price }}</span><a class="table-new__price-action-btn" href="{{ theme_url }}/single-offer-detail?item_id={{ item.id }}">SEE OFFER</a></span></td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+        <nav class="public-profile__pagination pagination">
+            <ul class="pagination__list">
+                {% if items.has_previous %}
+                <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                {% else %}
+                <li class="pagination__item disabled">Prev</li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                     {% if items.number == i %}
+                     <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                     {% else %}
+                     <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                     {% endif %}
+                {% endfor %}
+                {% if items.has_next %}
+                <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                {% else %}
+                <li class="pagination__item disabled">Next</li>
+                {% endif %}
+            </ul>
+        </nav>
+    </section>
+</div>
+{% endblock %}

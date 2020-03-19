@@ -1,0 +1,135 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Trade completed{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner trade-details">
+    {% if not item.is_completed %}
+    <aside class="proof-gift__alert alert alert--attention">
+        <span class="alert__text">Your transaction is not Completed.</span>
+        <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+            <svg class="alert__close-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+            </svg>
+        </button>
+    </aside>
+    {% else %}
+    <header class="trade-details__header">
+        <h1 class="trade-details__heading">Trade No. {{ item.id }}</h1>
+        <div class="trade-details__header-inner">
+            <p class="trade-details__status badge badge--success">Trade completed</p>
+        </div>
+    </header>
+    <form action="{{ theme_url }}/trade-complete/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="trade_id" value="{{ item.id }}" />
+        <div class="trade-details__rate">
+            <p class="trade-details__rate-text">Rate this trade</p>
+            <div class="stars-select">
+                <input class="stars-select__input stars-select__input--none" disabled="disabled" checked="checked" name="rate" value="0" type="radio" />
+                <label class="stars-select__label" for="rate-1">
+                    <svg class="stars-select__icon {%if item.offerer_review.review_rate == 1 %}is-selected{%endif%}"><use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use></svg>
+                </label>
+                <input class="stars-select__input" id="rate-1" {%if item.offerer_review.review_rate == 1 %}checked{%endif%} name="rate" value="1" type="radio" />
+                    <label class="stars-select__label" for="rate-2"><svg class="stars-select__icon {%if item.offerer_review.review_rate == 1 %}is-selected{%endif%}">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="rate-2" {%if item.offerer_review.review_rate == 2 %}checked{%endif%} name="rate" value="2" type="radio" /><label class="stars-select__label" for="rate-3">
+                        <svg class="stars-select__icon {%if item.offerer_review.review_rate == 3 %}is-selected{%endif%}">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="rate-3" {%if item.offerer_review.review_rate == 3 %}checked{%endif%} name="rate" value="3" type="radio" /><label class="stars-select__label" for="rate-4">
+                        <svg class="stars-select__icon {%if item.offerer_review.review_rate == 4 %}is-selected{%endif%}">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="rate-4" {%if item.offerer_review.review_rate == 4 %}checked{%endif%} name="rate" value="4" type="radio" /><label class="stars-select__label" for="rate-5">
+                        <svg class="stars-select__icon {%if item.offerer_review.review_rate == 5 %}is-selected{%endif%}">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="rate-5" {%if item.offerer_review.review_rate == 5 %}checked{%endif%} name="rate" value="5" type="radio" />
+            </div>
+        </div>
+        <div style="margin-bottom: 20px; text-align: right;">
+            {% if not item.offerer_review.review_rate %}
+            <button class=" btn btn--theme-4" type="submit">Submit</button>
+            {% endif %}
+        </div>
+    </form>
+    {% if not item.offerer_review.feedback %}
+    <div class="trade-details__rate">
+        <a class="trade-details__rate-text" href="{{ theme_url }}/leave-review?item_id={{ item.offerer_review.id }}">Leave Feedback</a>
+    </div>
+    {% else %}
+    <div class="trade-details__rate">
+        {{ item.offerer_review.feedback|safe }}
+    </div>
+    {% endif %}
+    <div class="trade-details__container">
+        <div class="trade-details__user-wrapper">
+            <div class="dashboard__user">
+                <div class="dashboard__user-picture"><img class="dashmboard__user-img" src="{% if item.seller.user.avatar %}{{ item.seller.user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                <h2 class="dashboard__name">{{ item.seller }}</h2>
+                <p class="dashboard__user-data"><span class="dashboard__data-text">{{ item.seller.balance }} in Wallet</span><span class="dashboard__data-text">Seller in this trade</span></p>
+                <ul class="dashboard__data-list">
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trade Partners</span><span class="dashboard__value">{{ item.seller.trade_partners }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades</span><span class="dashboard__value">{{ item.seller.trade_count }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades Volume</span><span class="dashboard__value">{{ item.seller.trade_volumn }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trusted by</span><span class="dashboard__value">{{ item.seller.trusted_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Blocked by</span><span class="dashboard__value">{{ item.seller.blocked_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Joined</span><span class="dashboard__value">{{ item.seller.user.date_joined.date }}</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="trade-details__data">
+            <table class="trade-details__table">
+                <tr>
+                    <td>Seller</td>
+                    <td>{{ item.seller.user.get_fullname }}</td>
+                </tr>
+                <tr>
+                    <td>Buyer</td>
+                    <td>{{ item.buyer.user.get_fullname }}</td>
+                </tr>
+                <tr>
+                    <td>Date of Trade</td>
+                    <td>{{ item.trade_date.date }}</td>
+                </tr>
+                <tr>
+                    <td>Trade Amount</td>
+                    <td>{{ item.amount }}</td>
+                </tr>
+                <tr>
+                    <td>Trade Currency</td>
+                    <td>{{ item.offer.what_crypto }}</td>
+                </tr>
+                <tr>
+                    <td>Flat</td>
+                    <td>{{ item.offer.flat }}</td>
+                </tr>
+                <tr>
+                    <td>Market Value</td>
+                    <td>{{ item.trade_price }}</td>
+                </tr>
+                <tr>
+                    <td>Payment Method</td>
+                    <td>{{ item.payment_method }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="trade-details__user-wrapper">
+            <div class="dashboard__user">
+                <div class="dashboard__user-picture"><img class="dashmboard__user-img" src="{% if item.buyer.user.avatar %}{{ item.buyer.user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                <h2 class="dashboard__name">{{ item.buyer }}</h2>
+                <p class="dashboard__user-data"><span class="dashboard__data-text">{{ item.buyer.balance }} in Wallet</span><span class="dashboard__data-text">buyer in this trade</span></p>
+                <ul class="dashboard__data-list">
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trade Partners</span><span class="dashboard__value">{{ item.buyer.trade_partners }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades</span><span class="dashboard__value">{{ item.buyer.trade_count }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades Volume</span><span class="dashboard__value">{{ item.buyer.trade_volumn }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trusted by</span><span class="dashboard__value">{{ item.buyer.trusted_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Blocked by</span><span class="dashboard__value">{{ item.buyer.blocked_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Joined</span><span class="dashboard__value">{{ item.buyer.user.date_joined.date }}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

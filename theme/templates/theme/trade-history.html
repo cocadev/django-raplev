@@ -1,0 +1,46 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Transaction History{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner history">
+    <header class="content-header content-header--has-list">
+        <ul class="content-header__list">
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/send">Send</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/receive">Receive</a></li>
+            <li class="content-header__item is-active"><a class="content-header__link" href="#">Transaction History</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/saved-wallet">Saved Wallets</a></li>
+        </ul>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+		</div>
+    </header>
+    <ul class="history__page-nav page-nav">
+        <li class="page-nav__item {% if mode == 'sold' %}is-selected{% endif %}"><a class="page-nav__link" href="{{ theme_url }}/trade-history?mode=sold">Sold</a></li>
+        <li class="page-nav__item {% if mode == 'bought' %}is-selected{% endif %}"><a class="page-nav__link" href="{{ theme_url }}/trade-history?mode=bought">Bought</a></li>
+        <li class="page-nav__item {% if mode == 'successful' %}is-selected{% endif %}"><a class="page-nav__link" href="{{ theme_url }}/trade-history?mode=successful">Sucessful</a></li>
+        <li class="page-nav__item {% if mode == 'cancelled' %}is-selected{% endif %}"><a class="page-nav__link" href="{{ theme_url }}/trade-history?mode=cancelled">Cancelled</a></li>
+    </ul>
+    <div class="table">
+        <header class="table__header">
+            <div class="table__col table__col-1">Date</div>
+            <div class="table__col table__col-2">Coins</div>
+            <div class="table__col table__col-3">Payment</div>
+            <div class="table__col table__col-4">Description</div>
+            <div class="table__col table__col-5">Status</div>
+        </header>
+        {% for item in items %}
+        <div class="table__row table__row--{{ item.status }}">
+            <div class="table__col table__col-1">{{ item.trade_date }}</div>
+            <div class="table__col table__col-2">{{ item.amount }} {{ item.offer.what_crypto }}</div>
+            <div class="table__col table__col-3">{{ item.flat_amount }} {{ item.trade_flat }}</div>
+            <div class="table__col table__col-4">{{ item.message }}[[[?]]]</div>
+            <div class="table__col table__col-5">{{ item.get_status_display }} Trade</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

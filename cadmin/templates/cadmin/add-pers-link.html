@@ -1,0 +1,151 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Add personalized link{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger addition">
+    <section class="section">
+        <header class="add-header">
+            <div class="add-header__top">
+                <h1 class="add-header__heading">Add a personalized link</h1>
+                {% if success %}
+                <aside class="add-header__alert alert alert--neutral">
+                    <span>{{ success }}</span>
+                    <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+                        <svg class="alert__close-icon" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                        </svg>
+                    </button>
+                </aside>
+                {% endif %}
+                {% if error.delete_item %}
+                <aside class="add-header__alert alert alert--warning">
+                    <span>{{ error.delete_item }}</span>
+                    <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+                        <svg class="alert__close-icon" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                        </svg>
+                    </button>
+                </aside>
+                {% endif %}
+            </div>
+            <form action="{{ cadmin_url }}/add-pers-link/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <div class="add-header__bottom">
+                    <div class="add-header__add-field add-field--large">
+                        <div class="add-field__desc">SELECT LANDING PAGE</div>
+                        <div class="add-field__form-group"><span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <div class="add-field__wrapper">
+                                    <div class="add-field__field-group">
+                                        <span class="form-group__triangle"></span><select class="add-field__input" name="landing_page_id" required>
+                                            <option value="" >Select Landing Page</option>
+                                            {% for landing in landings %}
+                                            <option value="{{ landing.id }}">{{ landing.personalized_link }}</option>
+                                            {% endfor %}
+                                            {% if item.id %}
+                                            <option value="{{ item.landing_page.id }}" selected>{{ item.landing_page.personalized_link }}</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-header__add-field add-field add-field--small">
+                        <div class="add-field__desc">PERSONALIZED LINK</div>
+                        <div class="add-field__form-group"><span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <div class="add-field__wrapper">
+                                    <div class="add-field__field-group">
+                                        <input class="add-field__input" name="personalized_link" placeholder="Link" value="{{ item.personalized_link }}" required></div>
+                                </div>
+                                {% if error.personalized_link %}
+                                <div class="add-field__message">
+                                    <svg class="add-field__message-icon" width="30">
+                                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg>
+                                    <span class="add-field__message-text">{{ error.personalized_link }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-header__add-field add-field--large">
+                        <div class="add-field__desc">ASSIGNED TO USER</div>
+                        <div class="add-field__form-group"><span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <div class="add-field__wrapper">
+                                    <div class="add-field__field-group">
+                                        <span class="form-group__triangle"></span>
+                                        <select class="add-field__input" name="assigned_to_user_id" required>
+                                            <option value="" >Select User</option>
+                                            {% for user in users %}
+                                            <option value="{{ user.username }}" {% if user.username == item.assigned_to_user %}selected{% endif %}>{{ user.username }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <button class="add-field__btn btn btn--accent" type="submit">{% if item.id %}Edit{% else %}Add{% endif %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </header>
+        <div class="section__inner">
+            <table class="section__table table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Personalized link</th>
+                        <th>Landing</th>
+                        <th>Leads</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td><span class="table__mobile-heading">User</span><span>{{ item.assigned_to_user }}</span></td>
+                        <td><span class="table__mobile-heading">Personalized link</span><a href="/{{ item.personalized_link }}">{{ item.personalized_link }}</a></td>
+                        <td><span class="table__mobile-heading">Landing</span><span>{{ item.landing_page.personalized_link }}</span></td>
+                        <td><span class="table__mobile-heading">Leads</span><span>{{ item.leads }}</span></td>
+                        <td><span class="table__mobile-heading">Actions</span>
+                            <div class="table-actions">
+                                <a class="table-actions__item table-actions__edit" href="{{ cadmin_url }}/add-pers-link/?item_id={{ item.id }}">Edit</a>
+                                <a class="table-actions__item" href="{{ cadmin_url }}/add-pers-link?delete_id={{ item.id }}">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

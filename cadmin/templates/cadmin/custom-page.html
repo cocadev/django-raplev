@@ -1,0 +1,30 @@
+{% extends 'cadmin/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ options.seo.title_tag|keyvalue:item.id|default:item.title }}{% endblock %}
+
+{% block head-script %}
+<meta name="description" content="{{ options.seo.meta_description|keyvalue:item.id|safe }}">
+<style>
+    {{ options.header_footer.header_custom_css|safe }}
+</style>
+<script>
+    {{ options.header_footer.header_custom_js|safe }}
+</script>
+{% endblock %}
+
+{% block content %}
+<main class="dialog__container">
+    {{ item.context|safe }}
+</main>
+{% endblock %}
+
+{% block bottom-script %}
+<style>
+    {{ options.header_footer.footer_custom_css|safe }}
+</style>
+<script>
+    {{ options.header_footer.footer_custom_js|safe }}
+</script>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Trade details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details trade-details">
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/trades">Trade ID</a><span> / </span><span>{{ item.id }}</span></h1>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Created at</dt>
+                    <dd class="data-panel__value">{{ item.created_at }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Offer ID</dt>
+                    <dd class="data-panel__value"> <a href="{{ cadmin_url }}/offer-details?item_id={{ item.offer.id }}">{{ item.offer.id }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Trade initiator</dt>
+                    <dd class="data-panel__value"> <a href="#">{{ item.trade_initiator }}</a></dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Vendor</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.vendor }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Payment method</dt>
+                    <dd class="data-panel__value">{{ item.get_payment_method_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Amount</dt>
+                    <dd class="data-panel__value">{{ item.amount }} {{ item.offer.what_crypto }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Status</dt>
+                    <dd class="data-panel__value">{{ item.get_status_display }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <section class="section section--small">
+        <header class="section__header">
+            <h2 class="section__heading">Proof</h2>
+        </header>
+        <div class="section__inner">
+            <div class="trade-details__document">
+                <!-- <div class="trade-details__file file"><svg class="trade-details__file-icon" width="30">
+                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}' %}#play-circle"></use>
+                    </svg>
+                </div> -->
+                {% for doc in item.proof_documents_list %}
+                    <img class="proof-transaction__document-img" height="250" src="{{ doc.file.url }}" alt="">
+                {% endfor %}
+                <div class="trade-details__data">
+                    <h3 class="trade-details__heading">Uploaded documents</h3><a class="trade-details__file-name" href="#"> </a>
+                    <div class="trade-details__code">
+                        <h4 class="trade-details__code-heading">Code</h4>
+                        <div class="trade-details__code-field form-group is-not-opened">
+                            <div class="form-group__field-group"><input class="form-group__field" {% if item.proof_opened %}type="password"{% else %}type="text"{% endif %} value="{{ item.proof_gift_code|default_if_none:'' }}" disabled></div>
+                        </div><span class="trade-details__code-caption">{% if item.proof_opened %}Opened by Vendor{% else %}Not opened by Vendor{% endif %}</span>
+                    </div>
+                    <!-- <div class="trade-details__code">
+                        <h4 class="trade-details__code-heading">Code</h4>
+                        <div class="trade-details__code-field form-group">
+                            <div class="form-group__field-group"><input class="form-group__field" name="unfilled" value="{{ item.proof_opened }}" disabled></div>
+                        </div><span class="trade-details__code-caption">Opened by Vendor</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

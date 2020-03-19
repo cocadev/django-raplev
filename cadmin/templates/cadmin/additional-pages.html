@@ -1,0 +1,79 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Additional pages{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger">
+    <section class="section">
+        <header class="section__header">
+            <h1 class="section__heading">Additional pages</h1>
+            <form class="section__search form-group search" action="" method="GET">
+                <div class="form-group__field-group">
+                    <input type="hidden" name="search_status" value="{{ search_status }}" />
+                    <input class="form-group__field" name="search" value="{{ search }}" placeholder="Search in Additional Pages"><button class="search__btn" type="submit">Search</button>
+                </div>
+            </form>
+        </header>
+        <div class="section__inner">
+            <nav class="section__tabs tabs">
+                <a class="tabs__item {% if search_status == 'Publish' %}is-active{% endif %}" href="{{ cadmin_url }}/additional-pages?search_status=Publish&search={{ search }}">Published</a>
+                <a class="tabs__item {% if search_status == 'Draft' %}is-active{% endif %}" href="{{ cadmin_url }}/additional-pages?search_status=Draft&search={{ search }}">Draft</a>
+                <a class="tabs__item {% if search_status == 'Trash' %}is-active{% endif %}" href="{{ cadmin_url }}/additional-pages?search_status=Trash&search={{ search }}">Trash</a>
+            </nav>
+            <table class="section__table table table--large">
+                <thead>
+                    <tr>
+                        <th>Page ID</th>
+                        <th>Actions</th>
+                        <th>Title</th>
+                        <th>Posted by</th>
+                        <th>Updated on</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr id='{{ item.id }}'>
+                        <td><span class="table__mobile-heading">Page ID</span><a href="#">{{ item.id }}</a></td>
+                        <td><span class="table__mobile-heading">Actions</span>
+                            <div class="table-actions">
+                                <a class="table-actions__item table-actions__edit" href="{{ cadmin_url }}/add-new-page?item_id={{ item.id }}">Edit</a>
+                                <a class="table-actions__item" href="#" onclick="postAction({'item_id': '{{item.id}}'}, 'Are you sure to move this page to trash?', '{{ cadmin_url }}/additional-pages/move-to-trash-page/', function(message) {$('#{{ item.id }}').find('.page_status').text(message)});">Move to trash</a>
+                                <a class="table-actions__item table-actions__view" href="javascript: window.open('{{ cadmin_url }}/additional-page-preview?item_id={{ item.id }}');">View</a></div>
+                        </td>
+                        <td><span class="table__mobile-heading">Title</span><span>{{ item.title }}</span></td>
+                        <td><span class="table__mobile-heading">Posted by</span><a href="#">{{ item.posted_by }}</a></td>
+                        <td><span class="table__mobile-heading">Updated on</span><span>{{ item.updated_on }}</span></td>
+                        <td><span class="table__mobile-heading">Status</span><span class="page_status">{{ item.status }}ed</span></td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

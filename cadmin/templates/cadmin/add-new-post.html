@@ -1,0 +1,187 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger editor">
+    <form class="editor__container" action="" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.pk }}" />
+        <section class="section editor__app">
+            <header class="section__header">
+                <h1 class="section__heading">{{ title }}</h1>
+            </header>
+            <div class="section__inner">
+                <div class="editor__app-title form-group">
+                    <div class="form-group__field-group"><input class="form-group__field" name="title" placeholder="Title" value="{{ item.title }}"></div>
+                </div>
+                <article class="editor__app-container"><textarea class="js-editor-toggle" name="context">{{ item.context|safe }}</textarea></article>
+                <label class="editor__app-checkbox checkbox">
+                    <input name="disallow_comments" type="checkbox" value="{{ item.disallow_comments }}" hidden>
+                    <span class="checkbox__field"></span>
+                    <span class="checkbox__text">Disallow Comments</span>
+                </label>
+            </div>
+        </section>
+        <section class="section editor__control">
+            <div class="editor__control-buttons">
+                <input class="editor__control-btn btn btn--dark" type="submit" name="action" value="Publish" />
+                <input class="editor__control-btn btn btn--grey" type="submit" name="action" value="Draft" />
+                <input class="editor__control-link" style="border: none;" type="submit" name="action" value="Trash" />
+            </div>
+            <div class="editor__control-uploading">
+                <div class="editor__control-uploading-inner">
+                    <label class="editor__control-uploading-btn">
+                        <svg class="editor__control-uploading-icon" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#plus"></use>
+                        </svg>
+                        <input id="fileupload" type="file" name="file" multiple
+                            style="display: none;"
+                            data-url="{{ cadmin_url }}/upload/"
+                            data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+                        <!-- <span>Add featured image</span> -->
+                    </label>
+                    <input type="hidden" name="featured_images" class="instead_of_file" value="{{ item.featured_images }}">
+                </div>
+            </div>
+            <div id="uploadlist">
+                {% for media in item.featured_images_list %}
+                <div class="drag-n-drop__uploading-file upload-bar" file_id="{{ media.id }}">
+                    <div class="upload-bar__file-name" style="width: 80%; word-break: break-all;">{{ media }}</div>
+                    <div class="upload-bar__bar">
+                        <a class="upload-bar__close-btn" href="javascript:void(0)" onclick="removeFileList('{{ media.id }}')">
+                            <svg class="upload-bar__close-icon" width="30">
+                                <use xlink:href="{% static '/cadmin/images/icons.svg' %}#times"></use>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div> 
+            <div class="editor__control-input">
+                <input class="editor__control-input-tag" name="tags" placeholder="Enter tags" value="{{ item.tags|default_if_none:'' }}">
+                <svg class="editor__control-input-icon" width="30">
+                    <use xlink:href="{% static 'cadmin/images/icons.svg' %}#plus"></use>
+                </svg>
+            </div>
+            <!-- <div class="editor__control-tag">Tag example 1</div>
+            <div class="editor__control-tag">Tag example 2</div> -->
+        </section>
+    </form>
+</main>
+<!-- <aside class="modal upload-popup js-upload-popup-target"><button class="modal__close-outer" type="button" onclick="uploadPopup.close()"></button>
+    <div class="modal__container upload-popup__container"><button class="upload-popup__close-inner" type="button" onclick="uploadPopup.close()"><svg class="upload-popup__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button>
+        <div class="js-tablist-toggle">
+            <div class="upload-popup__buttons js-tablist-triggers"><button class="upload-popup__button" type="button">Upload file(s)</button><button class="upload-popup__button is-active" type="button">Select file(s)</button></div>
+            <div class="upload-popup__tabs js-tablist-tabs">
+                <ul class="upload-popup__tab">
+                    <div class="upload-popup__drag-n-drop drag-n-drop">
+                        <div class="drag-n-drop__container">
+                            <h2 class="drag-n-drop__heading">Drag and drop files anywhere to upload</h2>
+                            <p class="drag-n-drop__subheading">or</p><label class="btn btn--accent btn--large">Select files<input type="file" hidden></label>
+                        </div>
+                        <div class="drag-n-drop__uploading-file upload-bar"><span class="upload-bar__file-name">375_carddetails.jpg</span>
+                            <div class="upload-bar__bar">
+                                <div class="upload-bar__background"></div>
+                                <div class="upload-bar__progress"></div><button class="upload-bar__close-btn" type="button" onclick="this.parentElement.parentElement.remove()"><svg class="upload-bar__close-icon" width="30">
+                                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                                    </svg></button>
+                            </div>
+                        </div>
+                        <div class="drag-n-drop__uploading-file upload-bar"><span class="upload-bar__file-name">a77.pdf</span>
+                            <div class="upload-bar__bar">
+                                <div class="upload-bar__background"></div>
+                                <div class="upload-bar__progress"></div><button class="upload-bar__close-btn" type="button" onclick="this.parentElement.parentElement.remove()"><svg class="upload-bar__close-icon" width="30">
+                                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="upload-popup__tab upload-popup__tab--has-scroll is-active">
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div><span class="file__caption">MOV</span>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div><span class="file__caption">PDF</span>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                    <li class="file js-file-toggle upload-popup__file">
+                        <div class="file__circle"><svg class="file__icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                            </svg></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</aside> -->
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'cadmin/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "cadmin/images/icons.svg" %}#times';
+</script>
+{% endblock %}

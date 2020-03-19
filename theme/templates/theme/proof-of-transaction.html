@@ -1,0 +1,105 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Proof of transaction{% endblock %}
+
+{% block page-inner %}
+<section class="banner banner--bare banner--has-heading">
+    <div class="page__inner banner__container">
+        <h1 class="banner__heading">Before you buy ...</h1>
+        <p class="banner__subheading">Please upload your proof of transaction to make sure everything is accurate</p>
+    </div>
+</section>
+<div class="page__inner proof-gift">
+    {% if success %}
+    <aside class="proof-gift__alert alert alert--success">
+        <span class="alert__text">Your proof of transaction has been uploaded. You will be redirected in 5 seconds. If not, <a class="alert__link" href="/">CLICK HERE</a></span>
+        <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+            <svg class="alert__close-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+            </svg>
+        </button>
+    </aside>
+    {% endif %}
+    <form action="{{ theme_url }}/proof-of-transaction/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="trade_id" value="{{ item.id }}" />
+        {% if item.is_gift_card %}
+        <div class="proof-gift__upload">
+            <div class="proof-gift__upload-left-col">
+                <h2 class="proof-gift__heading">Upload your Gift card and purchase receipt</h2>
+                <p class="proof-gift__subheading">Seller will need a screenshot or scan from your slip to complete this transaction</p>
+            </div>
+            <!-- <div class="proof-gift__upload-right-col">
+                <label class="proof-gift__upload-btn btn--round btn btn--theme-2">Browse
+                    <input id="fileupload" type="file" name="file" multiple hidden data-url="{{ theme_url }}/upload/" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+                </label>
+                <input type="hidden" name="proof_not_opened" class="instead_of_file" >
+                <p class="proof-gift__upload-text">Accepted Format: JPG, PNG, GIF, PDF</p>
+            </div> -->
+        </div>
+        <!-- <div id="uploadlist"></div> -->
+        <p>Your gift card can reviewed by while seller attempts to reedem code. We will not expose the code and these photos to seller.</p>
+        <div class="proof-gift__field-wrapper">
+            <div class="proof-gift__field form-group">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="proof_gift_code" autocomplete="off" placeholder="Your Gift card code" required>
+                    <svg class="form-group__required"><use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use></svg></div>
+            </div>
+            <button class="proof-gift__send btn btn--theme-4" type="submit">SEND</button>
+        </div>
+        <p class="proof-gift__note">
+            <span>You are protected by our screen recorder which will record seller as they attempt to open and reedem this code.<br></span><b>WARNING - If a seller asks you to send Gift card code directly in message, please report it with evidence by <a href="#">opening a ticket</a>.</b>
+        </p>
+        
+        {% else %}
+        <div class="proof-gift__upload">
+            <div class="proof-gift__upload-left-col">
+                <h2 class="proof-gift__heading">Upload proof of transaction</h2>
+                <p class="proof-gift__subheading">Seller will need a screenshot or scan from your slip to complete this transaction</p>
+            </div>
+            <div class="proof-gift__upload-right-col">
+                <label class="proof-gift__upload-btn btn--round btn btn--theme-2">Upload
+                    <input id="fileupload" type="file" name="file" multiple hidden data-url="{{ theme_url }}/upload/" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+                </label>
+                <input type="hidden" name="proof_documents" class="instead_of_file" >
+                <p class="proof-gift__upload-text">Accepted Format: JPG, PNG, GIF, PDF</p>
+            </div>
+        </div>
+        <div id="uploadlist"></div>
+        <div class="proof-gift__field-wrapper">
+            <div class="proof-gift__field form-group">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="reference_number" autocomplete="off" placeholder="Reference number" required>
+                    <svg class="form-group__required"><use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use></svg>
+                </div>
+            </div>
+            <button class="btn btn--theme-4" type="submit">Submit</button>
+        </div>
+        {% endif %}
+    </form>
+
+    <h2 class="proof-gift__heading">Message from Seller</h2>
+    <p class="proof-gift__subheading">Aliquam erat volutpat. Integer mattis dui ut dolor suscipit, non sollicitudin leo suscipit. Aenean luctus, elit maximus sagittis imperdiet, elit libero pulvinar arcu, id ullamcorper tellus diam a odio. Vivamus sed ex quam. Cras placerat eu odio sit amet volutpat. Aliquam venenatis finibus est, at dictum leo. In hendrerit sollicitudin dignissim. Phasellus commodo vel massa eget pellentesque. </p>
+</div>
+{% endblock %}
+
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'theme/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "theme/images/icons.svg" %}#times';
+</script>
+{% if success %}
+<script>
+setTimeout(function () {
+    location.href='/'
+}, 5000)
+</script>
+{% endif %}
+{% endblock %}

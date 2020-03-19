@@ -1,0 +1,67 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Security status{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger security-status">
+    <section class="security-status__top-section section">
+        <header class="security-status__header section__header">
+            <h1 class="section__heading">SERVER STATUS</h1><span class="security-status__state">{{ server_status|yesno:'OK,STOP' }}</span>
+        </header>
+    </section>
+    <div class="security-status__wrapper">
+        <section class="security-status__bottom-section section section--small">
+            <header class="section__header">
+                <h1 class="section__heading">Most unusual failed login attempts in the last 7 days</h1>
+            </header>
+            <div class="section__inner">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>Username</th>
+                            <th>Number of attempts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td><span class="table__mobile-heading">IP Address</span><span>{{ item.ip_address }}</span></td>
+                            <td><span class="table__mobile-heading">Username</span><span>{{ item.user__username }}</span></td>
+                            <td><span class="table__mobile-heading">Number of attempts</span><span>{{ item.number_of_attempts }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="security-status__bottom-section section section--small">
+            <header class="section__header">
+                <h1 class="section__heading">Most unusual failed login attempts in the last 7 days</h1>
+            </header>
+            <div class="section__inner">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>Username</th>
+                            <th>Number of attempts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td><span class="table__mobile-heading">IP Address</span><span>{{ item.ip_address }}</span></td>
+                            <td><span class="table__mobile-heading">Username</span><span>{{ item.user__username }}</span></td>
+                            <td><span class="table__mobile-heading">Number of attempts</span><span>{{ item.number_of_attempts }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}

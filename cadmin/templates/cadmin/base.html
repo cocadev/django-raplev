@@ -1,0 +1,52 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Admin{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge"><!-- Favicon data-->
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'cadmin/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'cadmin/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'cadmin/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'cadmin/site.webmanifest' %}">
+        <meta name="msapplication-TileColor" content="#001c35">
+        <meta name="theme-color" content="#e77474">
+        <link href="{% static 'css/fonts.googleapis.css' %}" rel="stylesheet">
+        <link href="{% static 'css/select2.min.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'cadmin/css/admin.css' %}">
+
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/select2.min.js' %}"></script>
+        <script defer src="{% static 'cadmin/js/admin.js' %}" defer></script>
+        <style>.dialog_modal{position: fixed;z-index: 999;top: 0;left: 0;background: rgba(255, 255, 255, 0.79);width: 100%;height: 100%;text-align: center;padding-top: 10%;display: none;} .file{background: #e6e6e64d;}</style>
+        {% block head-script %}{% endblock %}
+    </head>
+
+    <body class="page {% block body %}{% endblock %}">
+        <section class="alert-wrapper" style="position: fixed; top: 50px; right: 50px; z-index: 300;">
+            {% if 'success' in global_alert or 'success' in alert %}
+            <aside class="alert alert--success"><span>{{ global_alert.success|default:alert.success }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+            {% if 'neutral' in global_alert or 'neutral' in alert %}
+            <aside class="alert alert--neutral"><span>{{ global_alert.neutral|default:alert.neutral }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+            {% if 'warning' in global_alert or 'warning' in alert %}
+            <aside class="alert alert--warning"><span>{{ global_alert.warning|default:alert.warning }}</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button></aside>
+            {% endif %}
+        </section>
+        {% block content %}
+        {% endblock %}
+        {% block bottom-script %}
+        {% endblock %}
+    </body>
+
+</html>

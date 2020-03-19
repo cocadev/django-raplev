@@ -1,0 +1,27 @@
+{% extends 'cadmin/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Recover{% endblock %}
+
+{% block body %}dialog dialog--recover{% endblock %}
+
+{% block content %}
+<main class="dialog__container"><a class="dialog__logo" href="{{ cadmin_url }}"><img class="dialog__logo-img" src="{% static 'cadmin/images/raplev-logo-alt.png' %}" alt="Raplev logo"></a>
+    <div class="dialog__inner">
+        <!-- {% if error %}
+        <span class="dialog__notification has-important-theme">{{ error }}</span>
+        {% endif %} -->
+        <form class="dialog__wrapper" action="" method="POST">
+            {% csrf_token %}
+            <div class="dialog__field form-group">
+                <div class="form-group__field-group"><input class="form-group__field" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Enter your email address" required></div>
+            </div>
+            <div class="dialog__control"><button class="dialog__submit-btn btn btn--accent" type="submit">Send</button></div>
+            {% if success or error %}
+            <p class="dialog__note">If an email is associated with any user, we have sent you the reset instructions to your email address.</p>
+            {% endif %}
+        </form>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Gift Card Steps{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner gift-steps">
+    <h1 class="gift-steps__heading">Before you open Gift card code to redeem</h1>
+    <dl class="gift-steps__item">
+        <dt class="gift-steps__item-heading">STEP 1</dt>
+        <dd>Download <a class="gift-steps__link" href="#">Screen Recorder App</a> (Supported OS: Windows 7 and above). Already installed? Then go to STEP 2</dd>
+    </dl>
+    <dl class="gift-steps__item">
+        <dt class="gift-steps__item-heading">STEP 2</dt>
+        <dd>Login to Recorder App and enter unique trade ID</dd>
+    </dl>
+    <dl class="gift-steps__item">
+        <dt class="gift-steps__item-heading">STEP 3</dt>
+        <dd>Click on Play icon to start recording. You should pre-login to gift card reedem website if you are concerned about security.</dd>
+    </dl>
+    <dl class="gift-steps__item">
+        <dt class="gift-steps__item-heading">STEP 4</dt>
+        <dd>Once these steps are done, go to <a class="gift-steps__link" href="{{ theme_url }}/vpof-gift-card-open-code?item_id={{ item_id }}">this page</a> to open code.</dd>
+    </dl>
+</div>
+{% endblock %}

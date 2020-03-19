@@ -1,0 +1,239 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Dashboard | Overview{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner dashboard">
+    <header class="content-header">
+        <h1 class="content-header__heading">Dashboard</h1>
+        <a class="dashboard__verify-id btn btn--round btn--theme-2" href="{{ theme_url }}/id-verification">Verify your ID</a>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+		</div>
+    </header>
+    <ul class="dashboard__page-nav page-nav">
+        <li class="page-nav__item is-selected"><a class="page-nav__link">Profile Overview</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/received-offers">Received Offers</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/buy-sell-coins">Buy / Sell Coins</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/funding">Funding</a></li>
+    </ul>
+    <div class="dashboard__inner">
+        <div class="dashboard__user">
+            <div class="dashboard__user-picture"><img class="dashboard__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+            <h2 class="dashboard__name"{{ user.get_fullname }}</h2>
+            <p class="dashboard__user-data"><span class="dashboard__data-text">{{ user.customer.balance }} in wallet</span><span class="dashboard__data-text">You can send up to {{ user.customer.avail_sendup }}</span><span class="dashboard__data-text">Seller Level: {{ user.customer.seller_level }}<svg class="dashboard__data-text-info">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#question-circle"></use>
+                    </svg></span></p>
+            <ul class="dashboard__data-list">
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trade Partners</span><span class="dashboard__value">{{ user.customer.trade_partners }}</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trades</span><span class="dashboard__value">{{ user.customer.trade_count }}</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trades Volume</span><span class="dashboard__value">{{ user.customer.trade_volumn }}</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trusted by</span><span class="dashboard__value">{{ user.customer.trusted_by_count }} People</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Blocked by</span><span class="dashboard__value">{{ user.customer.blocked_by_count }} People</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Joined</span><span class="dashboard__value">{{ user.date_joined.date }}</span></li>
+            </ul><a class="dashboard__view-profile" href="{{ them_url }}/user-public-profile?item_id={{ user.customer.id }}">VIEW PUBLIC PROFILE</a>
+        </div>
+        <form class="dashboard__form js-form-toggle" action="{{ theme_url }}/profile-overview/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="page__fields">
+                <div class="page__field form-group {% if error.first_name %}is-invalid{% endif %}">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="first_name" placeholder="First name" value="{{ user.first_name|default_if_none:'' }}">
+                        {% if error.first_name %}
+                        <svg class="form-group__required is-invalid-item">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    {% if error.first_name %}
+                    <p class="form-group__message is-invalid-item">{{ error.first_name }}</p>
+                    {% endif %}
+                </div>
+                <div class="page__field form-group {% if error.last_name %}is-invalid{% endif %}">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="last_name" placeholder="Last name" value="{{ user.last_name|default_if_none:'' }}">
+                        {% if error.last_name %}
+                        <svg class="form-group__required is-invalid-item">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    {% if error.last_name %}
+                    <p class="form-group__message is-invalid-item">{{ error.last_name }}</p>
+                    {% endif %}
+                </div>
+                <div class="page__field form-group {% if error.email %}is-invalid{% endif %}">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="email" type="email" value="{{ user.email|default_if_none:'' }}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required>
+                        {% if user.phone_verified %}
+                        <svg class="dashboard__tick">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#check-circle"></use>
+                        </svg>
+                        {% endif %}
+                        {% if error.email %}
+                        <svg class="form-group__required is-invalid-item">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    {% if error.email %}
+                    <p class="form-group__message is-invalid-item">{{ error.email }}</p>
+                    {% endif %}
+                </div>
+                <div class="page__field form-group {% if error.billing_address %}is-invalid{% endif %}">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="billing_address" placeholder="Biling Address" value="{{ user.billing_address|default_if_none:'' }}">
+                        {% if error.billing_address %}
+                        <svg class="form-group__required is-invalid-item">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    {% if error.billing_address %}
+                    <p class="form-group__message is-invalid-item">{{ error.billing_address }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="page__field form-group {% if error.password_old %}is-invalid{% endif %}">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="password_old" type="password" placeholder="Current Password">
+                    {% if error.password_old %}
+                    <svg class="form-group__required is-invalid-item">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+                {% if error.password_old %}
+                <p class="form-group__message is-invalid-item">{{ error.password_old }}</p>
+                {% endif %}
+            </div>
+            <div class="page__fields">
+                <div class="page__field form-group {% if error.password %}is-invalid{% endif %}">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="password" type="password" autocomplete="new-password" placeholder="New Password">
+                        {% if error.password %}
+                        <svg class="form-group__required is-invalid-item">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    {% if error.password %}
+                    <p class="form-group__message is-invalid-item">{{ error.password }}</p>
+                    {% endif %}
+                </div>
+                <div class="page__field form-group {% if error.password_confirm %}is-invalid{% endif %}">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="password_confirm" type="password" autocomplete="new-password" placeholder="Repeat New Password">
+                        {% if error.password_confirm %}
+                        <svg class="form-group__required is-invalid-item">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    {% if error.password_confirm %}
+                    <p class="form-group__message is-invalid-item">{{ error.password_confirm }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <fieldset class="dashboard__section">
+                <legend class="dashboard__heading">Phone Number</legend>
+                <div class="dashboard__phone-verification">
+                    <div class="form-group {% if error.phonenumber %}is-invalid{% endif %}">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="phonenumber" id="verify_phonenumber" value="{{ user.phonenumber|default_if_none:'' }}" type="tel" autocomplete="tel" placeholder="+12 34567 8910">
+                            {% if user.phone_verified %}
+                            <svg class="dashboard__tick">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#check-circle"></use>
+                            </svg>
+                            {% endif %}
+                            {% if error.phonenumber %}
+                            <svg class="form-group__required is-invalid-item">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.phonenumber %}
+                        <p class="form-group__message is-invalid-item">{{ error.phonenumber }}</p>
+                        {% endif %}
+                    </div>
+                    <svg class="form-group__required">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    <button class="dashboard__verify btn" type="button" id="verify_phonenumber_btn">Verify</button>
+                </div>
+            </fieldset>
+            <fieldset class="dashboard__section">
+                <legend class="dashboard__heading">Profile Overview</legend><!-- Quill editor-->
+                <div class="js-toolbar-primary"><select class="ql-size">
+                        <option value="small">Small</option>
+                        <option selected>Normal</option>
+                        <option value="large">Large</option>
+                    </select><select class="ql-color">
+                        <option selected>Default</option>
+                        <option value="#e77474">Red</option>
+                        <option value="#6ad99f">Green</option>
+                        <option value="#8ab9f9">Blue</option>
+                    </select><span class="ql-counter">Character remaining: <span class="js-editor-counter-toggle">100</span></span><button class="ql-bold"></button><button class="ql-italic"></button></div>
+                <div class="js-editor-primary">{{ user.overview|default_if_none:''|safe }}</div><!-- Quill editor-->
+                <textarea hidden id="js_editor_primary" name="overview">{{ user.overview|default_if_none:'' }}</textarea>
+            </fieldset>
+            <div class="dashboard__controls">
+                <!-- <label class="dashboard__checkbox checkbox">
+                    <input type="checkbox" name="use_2factor_authentication" {% if user.use_2factor_authentication %}checked{% endif %} hidden><span class="checkbox__field"></span>
+                    <span class="checkbox__text">Enable 2 factor authentication</span>
+                </label> -->
+                <div class="dashboard__buttons">
+                    <label class="dashboard__btn btn btn--round btn--theme-4" for="fileupload">Upload photo</label>
+                    <input id="fileupload" type="file" name="file" hidden data-url="{{ theme_url }}/upload/" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+                    <input type="hidden" name="avatar" value="{{ user.avatar.id }}" class="instead_of_file" >
+                    <button class="dashboard__btn btn btn--round btn--theme-2" type="submit">Update details</button>
+                </div>
+            </div>
+            <div id="uploadlist"></div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'theme/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "theme/images/icons.svg" %}#times';
+</script>
+<script>
+$(function () {
+    $('#verify_phonenumber_btn').click(function () {
+        var phonenumber = $('#verify_phonenumber').val();
+        if (phonenumber) {
+            $.ajax({
+                url: '{{ theme_url }}/resend-verify-phone/',
+                type: 'POST',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'phonenumber':phonenumber},
+                success: function(data) {
+                    if (data.success) {
+                        $('#confirm_phonenumber').val(phonenumber);
+                        $('#confirm_phone').attr('action', '{{ theme_url }}/verify-phone/')
+                        confirmation.open()
+                    } else if (data.error) {
+                        alertMessage("Invalid Phonenumber.", "warning")
+                    }
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    alertMessage("Invalid Phonenumber.", "warning")
+                    console.log( errorThrown );
+                }
+            })
+        } else {
+            alertMessage("You need to insert phonenumber first.", "warning")
+        }
+    })
+})
+</script>
+{% endblock %}

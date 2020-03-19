@@ -1,0 +1,27 @@
+{% extends 'cadmin/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}dialog{% endblock %}
+
+{% block content %}
+<main class="dialog__container"><a class="dialog__logo" href="{{ cadmin_url }}"><img class="dialog__logo-img" src="{% static 'cadmin/images/raplev-logo-alt.png' %}" alt="Raplev logo"></a>
+    <div class="dialog__inner">
+        {% if error %}
+        <span class="dialog__notification has-important-theme">{{ error }}</span>
+        {% endif %}
+        <form class="dialog__wrapper" action="" method="POST">
+            {% csrf_token %}
+            <div class="dialog__field form-group">
+                <div class="form-group__field-group"><input class="form-group__field" name="email" placeholder="Email or Username" required></div>
+            </div>
+            <div class="dialog__field form-group">
+                <div class="form-group__field-group"><input class="form-group__field" name="password" type="password" autocomplete="new-password" placeholder="Password" required></div>
+            </div>
+            <div class="dialog__control"><button class="dialog__submit-btn btn btn--accent" type="submit">Login</button><a class="dialog__reset-link" href="{{ cadmin_url }}/recover">Reset password</a></div>
+        </form>
+    </div>
+</main>
+{% endblock %}

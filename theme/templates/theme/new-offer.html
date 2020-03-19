@@ -1,0 +1,279 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}New offer{% endblock %}
+{% block head-script %}
+<link href="{% static 'css/select2.min.css' %}" rel="stylesheet">
+<script src="{% static 'js/select2.min.js' %}" defer></script>
+{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner new-offer js-form-toggle" id="offer_form" action="{{ theme_url }}/new-offer/" method="POST">
+    {% csrf_token %} 
+    {% if error %}
+	<aside class="new-offer__validation validation">
+		<header class="validation__header">
+			<p class="validation__caption">Please correct the following errors: </p>
+			<button class="validation__close-btn" type="button" onclick="this.parentElement.parentElement.remove()">
+				<svg class="validation__close-icon">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+				</svg>
+			</button>
+		</header>
+		<ul>
+			<li class="validation__item">‘Price’ is required</li>
+			<li class="validation__item">Please select an option for crypto</li>
+			<li class="validation__item">Invalid postcode</li>
+		</ul>
+	</aside>
+	<aside class="new-offer__alert alert alert--attention"><span class="alert__text">Your offer is being held for insufficient funds in your wallet. You can make deposit using information from <a class="alert__link" href="">here</a></span>
+		<button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+			<svg class="alert__close-icon">
+				<use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+			</svg>
+		</button>
+    </aside> 
+    {% endif %}
+    {% if success %}
+    <aside class="new-offer__alert alert alert--success"><span class="alert__text">{{ success|safe }}</span>
+		<button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+			<svg class="alert__close-icon">
+				<use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+			</svg>
+		</button>
+    </aside> 
+    {% endif %}
+	<header class="content-header">
+		<h1 class="content-header__heading">New Offer</h1>
+		<div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+		</div>
+	</header>
+	<p class="new-offer__note">Don’t understand how to fill this form? <b><a class="new-offer__note-link" href="#">Watch this video[[[?]]]<span class="new-offer__note-circle"></span></a></b></p>
+	<div class="new-offer__mode">
+		<label class="new-offer__mode-option">
+			<input type="radio" name="trade_type" value="buy" checked hidden><span class="new-offer__mode-caption">BUY</span></label>
+		<label class="new-offer__mode-option">
+			<input type="radio" name="trade_type" value="sell" hidden><span class="new-offer__mode-caption">SELL</span></label>
+	</div>
+	<div class="new-offer__fields">
+		<!-- <span class="new-offer__field-caption"></span> -->
+		<div class="new-offer__buying-field form-group">
+			<div class="form-group__field-group"><span class="form-group__triangle"></span>
+				<select class="form-group__field" name="what_crypto" required>
+					{% for key, value in CRYPTO_CHOICES %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+				</select>
+			</div>
+        </div><span class="new-offer__field-caption">For</span>
+        <div class="new-offer__for-field form-group">
+			<div class="form-group__field-group"><span class="form-group__triangle"></span>
+				<select class="form-group__field" name="flat" required>
+					{% for key, value in FLAT_CHOICES %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+				</select>
+			</div>
+		</div>
+		<div class="new-offer__postal-code form-group">
+			<div class="form-group__field-group">
+				<input class="form-group__field" name="postal_code" value="{{ user.customer.last_postal_code }}" autocomplete="postal-code" placeholder="Postcode">
+				<svg class="form-group__required">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+				</svg>
+			</div>
+			<label class="new-offer__checkbox checkbox">
+                <input type="checkbox" name="show_postcode" hidden>
+                <span class="checkbox__field"></span>
+                <span class="checkbox__text">I prefer not do display postcode</span>
+            </label>
+		</div>
+		<div class="new-offer__country form-group">
+			<div class="form-group__field-group"><span class="form-group__triangle"></span>
+                <select class="form-group__field" name="country" required>
+                    {% for key, value in COUNTRY_CODE %}
+                        <option value="{{ key }}" {%if key == SET_COUNTRY%}selected{%endif%}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+		</div>
+		<div class="new-offer__city page__field form-group">
+			<div class="form-group__field-group">
+				<input class="form-group__field" name="city" value="{{ user.customer.last_city }}" placeholder="Enter city" required>
+				<svg class="form-group__required">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="page__field">
+		<div class="new-offer__market-price-inner form-group">
+			<div class="form-group__field-group js-trade-price-field">
+				<input class="form-group__field" name="trade_price" type="number" placeholder="Asking Price? Current Market Price 3885 USD" required>
+				<svg class="form-group__required">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+				</svg>
+			</div>
+		</div>
+		<div class="new-offer__additions form-group">
+			<div class="new-offer__checkboxes">
+				<label class="new-offer__price-checkbox checkbox">
+					<input type="checkbox" name="useMarketPrice" onclick="handleMarketPrice()" hidden><span class="checkbox__field"></span><span class="checkbox__text">Use market price</span></label>
+				<label class="new-offer__price-checkbox checkbox">
+					<input type="checkbox" name="trailMarketPrice" onclick="handleMarketPrice()" hidden><span class="checkbox__field"></span><span class="checkbox__text">Trail market price*</span></label>
+			</div>
+			<div class="new-offer__edit"> <span class="new-offer__edit-caption">Additional options: </span><span class="new-offer__">Add profit markup</span>
+				<input class="new-offer__number-input" name="profit_start" type="number"><span class="new-offer__">% if price goes </span>
+				<input class="new-offer__number-input" name="profit_end" type="number"><span class="new-offer__">% in</span>
+				<select class="new-offer__select" name="profit_time">
+					<option value="5" selected>5 minutes</option>
+					<option value="30">30 minutes</option>
+					<option value="60">1 hour</option>
+                </select>
+                <span class="new-offer__">, pause my offer!</span>
+            </div>
+            <span class="new-offer__checkbox-note">*Market Data refreshes every 10 minutes</span> 
+        </div>
+	</div>
+	<div class="page__fields">
+		<div class="page__field form-group">
+			<div class="form-group__field-group">
+				<input class="form-group__field" name="minimum_transaction_limit" type="number" autocomplete="off" placeholder="Minimum transaction limit" required>
+				<svg class="form-group__required">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+				</svg>
+            </div>
+            <span class="new-offer__field-desc">Donec interdum mauris commodo, tempus velit vel, aliquet felis. Cras sed mi leo. Praesent dolor neque, tempus a tincidunt non, sollicitudin vel quam. </span> 
+        </div>
+		<div class="page__field form-group">
+			<div class="form-group__field-group">
+				<input class="form-group__field" name="maximum_transaction_limit" type="number" autocomplete="off" placeholder="Maximum transaction limit" required>
+				<svg class="form-group__required">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+				</svg>
+            </div>
+            <span class="new-offer__field-desc">Donec interdum mauris commodo, tempus velit vel, aliquet felis. Cras sed mi leo. Praesent dolor neque, tempus a tincidunt non, sollicitudin vel quam. </span> 
+        </div>
+	</div>
+	<div class="page__fields">
+		<span class="page__field new-offer__restriction"><span>Restrict Hours from</span>
+		<input class="new-offer__hours-input timepicker" name="operating_hours_start" type="text"><span>to</span>
+		<input class="new-offer__hours-input timepicker" name="operating_hours_end" type="text">
+		<svg class="new-offer__clock-icon">
+			<use xlink:href="{% static 'theme/images/icons.svg' %}#clock"></use>
+		</svg>
+		</span><span class="page__field new-offer__restriction"><span>Restrict Hours from</span>
+		<input class="new-offer__hours-input timepicker" name="restrict_hours_start" type="text"><span>to</span>
+		<input class="new-offer__hours-input timepicker" name="restrict_hours_end" type="text">
+		<svg class="new-offer__clock-icon">
+			<use xlink:href="{% static 'theme/images/icons.svg' %}#clock"></use>
+		</svg>
+		</span>
+	</div>
+	<div class="new-offer__review-time page__field">
+		<p class="new-offer__review-time-text">How many hour time window do you need to review a proof of transaction? </p>
+		<div class="page__field form-group">
+			<div class="form-group__field-group">
+				<input class="form-group__field" name="proof_times" type="number" autocomplete="off" placeholder="Number field" required>
+				<svg class="form-group__required">
+					<use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+				</svg><span class="new-offer__review-time-caption">hours</span></div>
+		</div>
+	</div>
+    <div class="new-offer__supported_location form-group">
+        <div class="form-group__field-group">
+            <select class="form-group__field js-multiple-select" name="supported_location[]" multiple data-placeholder="Location(s) Supported - separated by comma">
+                {% for key, value in COUNTRY_CODE %}
+                    <option value="{{ key }}" {% if key in item.supported_location %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+	<div class="new-offer__textareas">
+		<div class="page__field form-group form-group--textarea">
+			<div class="form-group__field-group">
+				<textarea class="form-group__field" name="trade_overview" rows="8" data-character-counter=".js-character-counter" placeholder="Short description"></textarea>
+				<p class="new-offer__description-counter">Character remaining: <span class="js-character-counter">200</span></p>
+			</div>
+		</div>
+		<div class="page__field">
+			<!-- Quill editor-->
+			<div class="js-toolbar-primary">
+				<select class="ql-size">
+					<option value="small">Small</option>
+					<option selected>Normal</option>
+					<option value="large">Large</option>
+				</select>
+				<select class="ql-color">
+					<option selected>Default</option>
+					<option value="#e77474">Red</option>
+					<option value="#6ad99f">Green</option>
+					<option value="#8ab9f9">Blue</option>
+				</select><span class="ql-counter">Character remaining: <span class="js-editor-counter-toggle">25</span></span>
+				<button class="ql-bold"></button>
+				<button class="ql-italic"></button>
+			</div>
+			<div class="js-editor-primary"></div>
+			<textarea hidden id="js_editor_primary" name="message_for_proof"></textarea>
+			<!-- Quill editor-->
+		</div>
+		<div class="page__field">
+			<!-- Quill editor-->
+			<div class="js-toolbar-secondary">
+				<select class="ql-size">
+					<option value="small">Small</option>
+					<option selected>Normal</option>
+					<option value="large">Large</option>
+				</select>
+				<select class="ql-color">
+					<option selected>Default</option>
+					<option value="#e77474">Red</option>
+					<option value="#6ad99f">Green</option>
+					<option value="#8ab9f9">Blue</option>
+				</select><span class="ql-counter">Character remaining: <span class="js-editor-counter-toggle">25</span></span>
+				<button class="ql-bold"></button>
+				<button class="ql-italic"></button>
+			</div>
+            <div class="js-editor-secondary"></div>
+            <textarea hidden id="js_editor_secondary"></textarea>
+
+			<!-- Quill editor-->
+		</div>
+	</div>
+	<h2 class="new-offer__heading">Additional Options</h2>
+	<p class="new-offer__terms">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. Quisque faucibus quis lacus in accumsan. Cras a feugiat urna.</p>
+    <div class="new-offer__options form-group">
+        <label class="new-offer__option checkbox">
+            <input type="checkbox" name="identified_user_required" hidden><span class="new-offer__option-box checkbox__field"></span><span class="checkbox__text">ID Verified</span></label>
+        <label class="new-offer__option checkbox">
+            <input type="checkbox" name="sms_verification_required" hidden><span class="new-offer__option-box checkbox__field"></span><span class="checkbox__text">SMS Verified</span></label>
+        <div class="">
+            <span class="new-offer__option new-offer__option-text">Minimum Successful Trades</span>
+            <input class="new-offer__input" name="minimum_successful_trades" type="number" value="0">
+        </div>
+        <div class="">
+            <span class="new-offer__option new-offer__option-text">Trade initiate to completion rate </span>
+            <input class="new-offer__input" name="minimum_complete_trade_rate" value="0" type="number">
+        </div>
+    </div>
+	<button class="new-offer__post btn btn--round btn--theme-2" type="submit">Post New Offer</button>
+</form>
+{% endblock %}
+
+{% block bottom-script %}
+<script>
+    $(function() {
+        const t="";
+        e=$(t).data("placeholder");
+        $(".js-multiple-select").select2({
+            placeholder:e,
+            allowClear:!0,
+            tags:!0,
+            tokenSeparators:[","]
+        })
+    })
+</script>
+{% endblock %}

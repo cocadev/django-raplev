@@ -1,0 +1,120 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Trade Processed{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner trade-details">
+    {% if not item.is_proofed %}
+    <aside class="trade-details__alert alert alert--attention">
+        <p class="alert__text">The amount {{ item.escrow_amount }} are in escrow, please ensure proof of transaction is uploaded quickly to ensure escrow amount are not returned to seller.</p><button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+            <svg class="alert__close-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+            </svg>
+        </button>
+    </aside>
+    {% endif %}
+    <header class="trade-details__header">
+        <h1 class="trade-details__heading">Trade No. {{ item.id }}</h1>
+        {% if not item.is_gift_card and not item.is_proofed %}
+        <div class="trade-details__header-inner">
+            <p class="trade-details__status badge badge--secondary">Awaiting proof of transaction</p>
+            <a class="trade-details__btn btn btn--theme-2 btn--round" href="{{ theme_url }}/proof-of-transaction?item_id={{ item.id }}">Upload Proof</a>
+        </div>
+        {% endif %}
+        {% if not item.is_gift_card and item.is_proofed %}
+        <div class="trade-details__header-inner">
+            <p class="trade-details__status badge">Proof already uploaded</p>
+            <a class="trade-details__btn btn btn--theme-2 btn--round" href="{{ theme_url }}/vendor-proof-of-transaction?item_id={{ item.id }}">View proof</a>
+        </div>
+        {% endif %}
+        {% if item.is_gift_card and not item.is_proofed %}
+        <div class="trade-details__header-inner">
+            <p class="trade-details__status badge badge--secondary">Awaiting gift card code</p>
+            <a class="trade-details__btn btn btn--theme-2 btn--round" href="{{ theme_url }}/proof-of-transaction?item_id={{ item.id }}">Add Gift Card Code</a>
+        </div>
+        {% endif %}
+        {% if item.is_gift_card and item.is_proofed %}
+        <div class="trade-details__header-inner">
+            <p class="trade-details__status badge">Code already added</p>
+            <a class="trade-details__btn btn btn--theme-2 btn--round" href="{{ theme_url }}/vendor-proof-of-transaction?item_id={{ item.id }}">View code</a>
+        </div>
+        {% endif %}
+    </header>
+    <div class="trade-details__container">
+        <div class="trade-details__user-wrapper">
+            <div class="dashboard__user">
+                <div class="dashboard__user-picture"><img class="dashmboard__user-img" src="{% if item.seller.user.avatar %}{{ item.seller.user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                <h2 class="dashboard__name">{{ item.seller }}</h2>
+                <p class="dashboard__user-data"><span class="dashboard__data-text">{{ item.seller.balance }} in Wallet</span><span class="dashboard__data-text">Seller in this trade</span></p>
+                <ul class="dashboard__data-list">
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trade Partners</span><span class="dashboard__value">{{ item.seller.trade_partners }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades</span><span class="dashboard__value">{{ item.seller.trade_count }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades Volume</span><span class="dashboard__value">{{ item.seller.trade_volumn }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trusted by</span><span class="dashboard__value">{{ item.seller.trusted_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Blocked by</span><span class="dashboard__value">{{ item.seller.blocked_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Joined</span><span class="dashboard__value">{{ item.seller.user.date_joined.date }}</span></li>
+                </ul>
+            </div>
+            {% if item.seller == user.customer %}
+            <a class="trade-details__view-escrow" href="{{ theme_url }}/independent-escrow?trade_id={{ item.id }}">View Escrow</a>
+            {% endif %}
+        </div>
+        <div class="trade-details__data">
+            <table class="trade-details__table">
+                <tr>
+                    <td>Seller</td>
+                    <td>{{ item.seller.user.get_fullname }}</td>
+                </tr>
+                <tr>
+                    <td>Buyer</td>
+                    <td>{{ item.buyer.user.get_fullname }}</td>
+                </tr>
+                <tr>
+                    <td>Date of Trade</td>
+                    <td>{{ item.trade_date.date }}</td>
+                </tr>
+                <tr>
+                    <td>Trade Amount</td>
+                    <td>{{ item.amount }}</td>
+                </tr>
+                <tr>
+                    <td>Trade Currency</td>
+                    <td>{{ item.offer.what_crypto }}</td>
+                </tr>
+                <tr>
+                    <td>Flat</td>
+                    <td>{{ item.offer.flat }}</td>
+                </tr>
+                <tr>
+                    <td>Market Value</td>
+                    <td>{{ item.trade_price }}</td>
+                </tr>
+                <tr>
+                    <td>Payment Method</td>
+                    <td>{{ item.payment_method }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="trade-details__user-wrapper">
+            <div class="dashboard__user">
+                <div class="dashboard__user-picture"><img class="dashmboard__user-img" src="{% if item.buyer.user.avatar %}{{ item.buyer.user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                <h2 class="dashboard__name">{{ item.buyer }}</h2>
+                <p class="dashboard__user-data"><span class="dashboard__data-text">{{ item.buyer.balance }} in Wallet</span><span class="dashboard__data-text">buyer in this trade</span></p>
+                <ul class="dashboard__data-list">
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trade Partners</span><span class="dashboard__value">{{ item.buyer.trade_partners }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades</span><span class="dashboard__value">{{ item.buyer.trade_count }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trades Volume</span><span class="dashboard__value">{{ item.buyer.trade_volumn }}</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Trusted by</span><span class="dashboard__value">{{ item.buyer.trusted_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Blocked by</span><span class="dashboard__value">{{ item.buyer.blocked_by_count }} People</span></li>
+                    <li class="dashboard__data-item"><span class="dashboard__caption">Joined</span><span class="dashboard__value">{{ item.buyer.user.date_joined.date }}</span></li>
+                </ul>
+            </div>
+            {% if item.buyer == user.customer %}
+            <a class="trade-details__view-escrow" href="{{ theme_url }}/independent-escrow?trade_id={{ item.id }}">View Escrow</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

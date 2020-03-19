@@ -1,0 +1,52 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Blog listing{% endblock %}
+
+{% block page-inner %}
+<section class="banner banner--bare banner--has-heading">
+    <div class="page__inner banner__container">
+        <h1 class="banner__heading">The ultimate guidebook for your success</h1>
+        <p class="banner__subheading">Read our blog</p>
+    </div>
+</section>
+<div class="page__inner blog-listing">
+    <div class="blog-listing__wrapper">
+        {% for item in items %}
+        {% if forloop.counter|multiple3 %}
+        <div class="blog-listing__column"></div>
+        {% endif %}
+        <article class="blog-listing__item">
+            <div class="blog-listing__img-wrapper"><img class="blog-listing__img" src="{{ item.first_featured_image }}" alt=""></div>
+            <h2 class="blog-listing__heading"> <a class="blog-listing__link" href="{{ theme_url }}/blog-detail?item_id={{ item.id }}">{{ item.title }}</a></h2><time class="blog-listing__pub-data" datetime="2019-05-01 00:00">{{ item.get_update_time }} - Added by {{ item.posted_by.fullname }}</time>
+            <p class="blog-listing__excerpt">{{ item.beauty_context|safe }}</p><a class="blog-listing__read-more" href="{{ theme_url }}/blog-detail?item_id={{ item.id }}">READ MORE</a>
+        </article>
+        {% if forloop.counter|multiple3 %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <nav class="blog-listing__pagination pagination">
+        <ul class="pagination__list">
+            {% if items.has_previous %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Prev</li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                 {% if items.number == i %}
+                 <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% else %}
+                 <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% endif %}
+            {% endfor %}
+            {% if items.has_next %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Next</li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

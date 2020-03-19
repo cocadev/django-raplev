@@ -1,0 +1,59 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}ID Verify App Details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/id-verify-app">ID Verify App</a><span> / </span><span>{{ item.id }}</span></h1>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Username</dt>
+                    <dd class="data-panel__value"> <a href="#">{{ item.user }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Full name</dt>
+                    <dd class="data-panel__value">{{ item.user.get_fullname }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Document type</dt>
+                    <dd class="data-panel__value">{{ item.card_name }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Document file</dt>
+                    <dd class="data-panel__value"><a class="data-panel__file-link" href="{{ item.images_list|join:', ' }}">{{ item.images_list|join:', ' }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Status</dt>
+                    <dd class="data-panel__value">{{ item.get_status_display }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <div class="page__control">
+        <div class="verify-app__reject"><a class="verify-app__reject" href="#" onclick="IDVerifyAppPopup.open()">REJECT THIS ID - Be careful to not reject an application by accident</a></div>
+        <form action="{{ cadmin_url }}/id-verify-app-accept/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
+            <button type="submit" class="btn btn--red">Accept this ID</button>
+        </form>
+    </div>
+</main>
+<aside class="modal popup popup--small js-id-verify-app-popup-target"><button class="modal__close-outer" type="button" onclick="IDVerifyAppPopup.close()"></button>
+    <form class="popup__container modal__container" action="{{ cadmin_url }}/id-verify-app-reject/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
+        <button class="popup__close-inner" type="button" onclick="IDVerifyAppPopup.close()">
+            <svg class="popup__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg>
+        </button>
+        <h1 class="popup__heading">Do you want to reject this ID?</h1>
+        <div class="popup__buttons">
+            <div class="popup__buttons-top"><button class="popup__true-btn" type="submit">YES</button><button class="popup__false-btn" onclick="IDVerifyAppPopup.close()" type="button">NO</button></div>
+        </div>
+    </form>
+</aside>
+{% endblock %}

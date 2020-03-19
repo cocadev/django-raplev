@@ -1,0 +1,65 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Escrow Details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/escrows">Escrows</a><span> / </span><span>{{ item.id }}</span></h1>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Held for</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.held_for }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Held from</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.held_from }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Amount</dt>
+                    <dd class="data-panel__value">{{ item.amount }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Currency</dt>
+                    <dd class="data-panel__value">{{ item.offer.what_crypto }}</dd>
+                </div>
+                <div class="data-panel__item is-{{ item.status|yesno:'active,inactive' }}"><dt class="data-panel__heading">Status</dt>
+                    <dd class="data-panel__value">{{ item.get_status_display }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <div class="page__control"><a class="page__control-item btn btn--dark btn--large" href="#" onclick="escrowReleasePopup.open()">Release</a><a class="page__control-item btn btn--red btn--large" href="#" onclick="escrowCancelPopup.open()">Cancel</a></div>
+</main>
+<aside class="modal popup popup--small js-escrow-cancel-popup-target"><button class="modal__close-outer" type="button" onclick="escrowCancelPopup.close()"></button>
+    <form class="popup__container modal__container" action="{{ cadmin_url }}/escrow-cancel/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
+        <button class="popup__close-inner" type="button" onclick="escrowCancelPopup.close()">
+            <svg class="popup__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button>
+        <h1 class="popup__heading">Are you sure you want to cancel this escrow?</h1>
+        <div class="popup__buttons">
+            <div class="popup__buttons-top"><button class="popup__true-btn" type="submit">YES</button><button class="popup__false-btn" type="button" onclick="escrowCancelPopup.close()">NO</button></div>
+        </div>
+    </form>
+</aside>
+<aside class="modal popup popup--small js-escrow-release-popup-target"><button class="modal__close-outer" type="button" onclick="escrowReleasePopup.close()"></button>
+    <form class="popup__container modal__container" action="{{ cadmin_url }}/escrow-release/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}" />
+        <button class="popup__close-inner" type="button" onclick="escrowReleasePopup.close()">
+            <svg class="popup__close-icon" width="30">
+                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+            </svg></button>
+        <h1 class="popup__heading">Are you sure you want to escrow this amount?</h1>
+        <div class="popup__buttons">
+            <div class="popup__buttons-top"><button class="popup__true-btn" type="submit">YES</button><button class="popup__false-btn" type="button" onclick="escrowReleasePopup.close()">NO</button></div>
+        </div>
+    </form>
+</aside>
+{% endblock %}

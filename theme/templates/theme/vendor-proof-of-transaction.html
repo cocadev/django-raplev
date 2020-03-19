@@ -1,0 +1,59 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Vendor review proof of transaction{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner proof-transaction">
+    <header class="proof-transaction__header">
+        <h1 class="proof-transaction__heading">Review proof of transaction</h1>
+        {% if item.is_completed %}
+        <a class="proof-transaction__approve btn btn--theme-2 btn--round" href="{{ theme_url }}/trade-complete?item_id={{ item.id }}">Complete</a>
+        {% endif %}
+        {% if not item.is_completed %}
+        <div>
+            <a class="btn btn--theme-1 btn--round" href="{{ theme_url }}/trade-processed?item_id={{ item.id }}">Go to trade</a>
+            <button class="proof-transaction__approve btn btn--theme-2 btn--round" form="form1" type="submit">Approve trade</button>
+        </div>
+        {% endif %}
+    </header>
+    <h2 class="proof-transaction__subheading">Trade {{ item.id }}</h2>
+    <form action="{{ theme_url }}/vendor-proof-of-transaction/" method="POST" id="form1">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.id }}" />
+        <div class="proof-transaction__wrapper">
+            <div class="proof-transaction__data">
+                <dl class="proof-transaction__data-list">
+                    <dt class="proof-transaction__data-heading">AMOUNT</dt>
+                    <dd class="proof-transaction__data-amount">{{ item.amount }} {{ item.offer.what_crypto }}</dd>
+                </dl>
+                <dl class="proof-transaction__data-list">
+                    <dt class="proof-transaction__data-heading">ESCROW STATUS</dt>
+                    <dd class="proof-transaction__data-status">{% if item.escrow_status %}Held{% else %}Being Held{% endif %}</dd>
+                </dl>
+            </div>
+            <div class="proof-transaction__document">
+                <h3 class="proof-transaction__document-heading">Uploaded document</h3>
+                <div class="proof-transaction__document-inner">
+                    {% for doc in item.proof_documents_list %}
+                    <a class="proof-transaction__document-img-wrapper" href="javascript: window.open('{{ doc.file.url }}')">
+                        <img class="proof-transaction__document-img" height="200" src="{{ doc.file.url }}" alt="">
+                        <svg class="proof-transaction__document-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#search"></use>
+                        </svg>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="proof-transaction__code"><span class="proof-transaction__code-text">A code has been sent</span><button class="proof-transaction__code-show btn btn--theme-4" type="button" onclick="this.nextElementSibling.classList.add('is-visible'); this.remove()">Show</button>
+        <div class="proof-transaction__code-output page__field form-group">
+            <div class="form-group__field-group">
+            <input class="form-group__field" name="reference_number" value="{{ item.reference_number }}" disabled></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

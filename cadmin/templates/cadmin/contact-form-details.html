@@ -1,0 +1,33 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Contact form details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/contact-form">Contact forms</a><span> / </span><span>{{ item.id }} </span></h1>
+        </header>
+        <div class="section__inner data-panel data-panel--wide">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Email address:</dt>
+                    <dd class="data-panel__value">{{ item.email_address }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Subject:</dt>
+                    <dd class="data-panel__value">{{ item.subject }}</dd>
+                </div>
+            </dl>
+            <div class="section__inner details__text">
+                <p>{{ item.content|safe }}</p>
+                <p>Sent from: {{ item.ip_address }}</p>
+                <!-- <p><a href="#">View full message</a></p> -->
+            </div>
+        </div>
+    </section>
+    <div class="page__control"><a class="page__control-item btn btn--red" href="javascript:window.open('mailto:{{ item.email_address }}');">Open on Email to reply</a></div>
+</main>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ item.topic }}{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner ticket-details">
+    <p class="ticket-details__status">Status: {{ item.get_is_dispute_display }}</p>
+    <header class="ticket-details__header">
+        <h1 class="ticket-details__heading">ID{{ item.id }} - {{ item.topic }}</h1>
+        {% if item.is_dispute %}
+        <button class="ticket-details__btn btn btn--theme-2 btn--round" type="button">THIS IS SOLVED</button>
+        {% endif %}
+    </header>
+    <div class="ticket-details__history">
+        <h2 class="ticket-details__history-heading">Content</h2>
+        <!-- Dispute history -->
+        <p class="ticket-details__history-desc">{{ item.content|safe }}</p>
+    </div>
+    <div class="ticket-details__search">
+        <form action="{{ theme_url }}/add-message/" method="POST" style="width: 100%;">
+            {% csrf_token %}
+            <input type="hidden" name="ticket_id" value="{{ item.id }}">
+            <input type="hidden" name="message_type" value="ticket">
+            <input type="hidden" name="writer_id" value="{{ user.customer.id }}">
+            <input class="ticket-details__search-input" name="content" type="text" style="width: calc(100% - 160px);height: 30px;margin-top: 4px;">
+            <button class="ticket-details__search-btn btn btn--round btn--theme-2" style="float: right;" type="submit">Send</button>
+        </form>
+    </div>
+    <div class="ticket-details__messages">
+        {% for message in item.messages_list %}
+        <article class="ticket-details__message message message--incoming">
+            <div class="message__body">
+                <div class="message__userpic"><img class="message__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                <div class="message__content">
+                    <p class="message__text">{{ message.content|safe }}</p><button class="message__reply" type="button">Reply to this message</button>
+                </div>
+            </div>
+            <footer class="message__footer">
+                <div class="message__data"><span>Sent on {{ message.created_at }}</span></div>
+            </footer>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

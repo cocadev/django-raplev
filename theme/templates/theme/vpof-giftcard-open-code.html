@@ -1,0 +1,64 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Gift Card Open Code{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner open-gift">
+    <div class="alert-wrapper"></div>
+
+    <h1 class="open-gift__heading">Open Gift card</h1>
+    <p class="open-gift__subheading">Your Gift card is unopened. Do you want to open it? We will know if you have opened it. Please keep screen recorder on before you proceed.</p>
+    <div class="open-gift__field page__field" onclick="this.nextElementSibling.classList.add('is-active'); this.style = 'display: none'; send_opend_action('{{ item.id }}')">
+        <div class="open-gift__field-inner">
+            <svg class="open-gift__field-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#dollar-sign"></use>
+            </svg>
+            <div class="open-gift__field-wrapper">
+                <span class="open-gift__field-caption">OPEN</span>
+                <svg class="open-gift__field-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#dollar-sign"></use>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="open-gift__copy page__field copy">
+        <div class="copy__inner">
+            <input class="copy__output js-copy-target" type="text" value="XXXX" id="proof_gift_code" readonly>
+            <span class="copy__message js-copy-message">Copied</span>
+            <span class="copy__caption">Copy</span>
+            <button class="copy__btn js-copy-trigger" type="button"><svg class="copy__icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#copy"></use>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script>
+function send_opend_action(item_id) {
+    $.ajax({
+        url: '{{ theme_url }}/vpof-gift-card-open-code/',
+        dataType: 'json',
+        type: 'post',
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}', item_id: item_id},
+        success: function( data, textStatus, jQxhr ){
+            if (data.success) {
+                alertMessage(data.success)
+                $('#proof_gift_code').val(data.proof_gift_code)
+            }
+            if (data.error) {
+                alertMessage(data.error, 'warning')
+            }
+        },
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+    });
+}
+</script>
+{% endblock %}

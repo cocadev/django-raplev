@@ -1,0 +1,89 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Theme Pages{% endblock %}
+
+{% block head-script %}
+<style>
+    .pages-list {
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-bottom: 30px;
+    }
+    .pages-item {
+        padding: 3px 10px;
+    }
+</style>
+{% endblock %}
+
+{% block page-inner %}
+<section>
+    <ul class="pages-list">
+        <li class="pages-item"><a href="/">Index</a></li>
+        <li class="pages-item"><a href="/index/">Index</a></li>
+        <li class="pages-item"><a href="/blog-listing/">Blog Listing</a></li>
+        <li class="pages-item"><a href="/blog-detail/?item_id=1">Blog Detail</a></li>
+        <li class="pages-item"><a href="/contact/">Contact</a></li>
+        <li class="pages-item"><a href="/support-center/">Support Center</a></li>
+        <li class="pages-item"><a href="/submit-ticket/">Submit Ticket</a></li>
+        <li class="pages-item"><a href="/ticket-details/?item_id=1">Ticket Details</a></li>
+
+        <li class="pages-item"><a href="/login/?next=/new-offer/">Login</a></li>
+        <li class="pages-item"><a href="/register/?next=/new-offer/">Register</a></li>
+        <li class="pages-item"><a href="/forgot-password-email/?next=/new-offer/">Forgot Password Email</a></li>
+        <li class="pages-item"><a href="/forgot-password-phone/?next=/new-offer/">Forgot Password Phone</a></li>
+
+        <br>
+        <br>
+        <p>
+        ============== Login required ===================<br>
+        </p>
+
+        <li class="pages-item"><a href="/reset-password/?next=/new-offer/">Reset Password</a></li>
+        <li class="pages-item"><a href="/logout/">Logout</a></li>
+
+        <li class="pages-item"><a href="/new-offer/">New Offer</a></li>
+        <li class="pages-item"><a href="/profile-overview/">Profile Overview</a></li>
+        <li class="pages-item"><a href="/received-offers/">Received Offers</a></li>
+        <li class="pages-item"><a href="/funding/">Funding</a></li>
+        <li class="pages-item"><a href="/user-public-profile/?item_id=4">User Public Profile</a></li>
+        <li class="pages-item"><a href="/offer-activity/?item_id=4">Offer Activity</a></li>
+        <li class="pages-item"><a href="/edit-offer/?item_id=4">Edit Offer</a></li>
+        <li class="pages-item"><a href="/all-offers/">All Offer</a></li>
+        <li class="pages-item"><a href="/offer-detail/?item_id=4">Offer Detail</a></li>
+        <li class="pages-item"><a href="/offer-listing/?trade_type=sell&trade_price=&what_crypto=BTC&flat=USD&payment_method=cash_deposit">Offer Listing</a></li>
+        <li class="pages-item"><a href="/single-offer-detail/?item_id=2">Single Offer Detail</a></li>
+        <li class="pages-item"><a href="/initiate-trade/?item_id=2">Initiate Trade</a></li>
+        <li class="pages-item"><a href="/trade-processed/?item_id=2">Trade Processed</a></li>
+        <li class="pages-item"><a href="/proof-of-transaction/?item_id=2">Proof Of Transaction</a></li>
+        <li class="pages-item"><a href="/trade-complete/?item_id=2">Trade Complete</a></li>
+        <li class="pages-item"><a href="/send-counter-offer/?item_id=2">Send Counter Offer</a></li>
+        <li class="pages-item"><a href="/watch-list/">Watch List</a></li>
+        <li class="pages-item"><a href="/flag-feedback/?item_id=1">Flag Feedback</a></li>
+        <li class="pages-item"><a href="/leave-review/?item_id=2">Leave Review</a></li>
+        <li class="pages-item"><a href="/independent-escrow/?trade_id=2">Independent Escrow</a></li>
+        <li class="pages-item"><a href="/independent-escrow/?confirmed=closed&trade_id=2">Independent Escrow Close Action</a></li>
+        <li class="pages-item"><a href="/independent-escrow/?confirmed=cancelled&trade_id=2">Independent Escrow Cancel Action</a></li>
+        <li class="pages-item"><a href="/vendor-proof-of-transaction/?item_id=2">Vendor Proof of Transaction</a></li>
+        <li class="pages-item"><a href="/vpof-gift-card-steps/?item_id=2">VPOF Gift Card Steps</a></li>
+        <li class="pages-item"><a href="/vpof-gift-card-open-code/?item_id=2">VPOF Gift Card Open Code</a></li>
+        <li class="pages-item"><a href="/send/">Send</a></li>
+        <li class="pages-item"><a href="/receive/">Receive</a></li>
+        <li class="pages-item"><a href="/trade-history/?mode=sold">Trade History | Sold</a></li>
+        <li class="pages-item"><a href="/trade-history/?mode=bought">Trade History | Bought</a></li>
+        <li class="pages-item"><a href="/trade-history/?mode=successful">Trade History | Successful</a></li>
+        <li class="pages-item"><a href="/trade-history/?mode=cancelled">Trade History | Cancelled</a></li>
+        <li class="pages-item"><a href="/saved-wallets/">Saved Wallets</a></li>
+        <li class="pages-item"><a href="/my-balance/">My Balance</a></li>
+        <li class="pages-item"><a href="/withdraw-funds/">Withdraw Funds</a></li>
+        <li class="pages-item"><a href="/deposits/">Deposits</a></li>
+        <li class="pages-item"><a href="/withdrawals/">Withdrawals</a></li>
+        <li class="pages-item"><a href="/messages/">Message</a></li>
+        <li class="pages-item"><a href="/id-verification/">Id verification</a></li>
+        <li class="pages-item"><a href="/notifications/">Notifications</a></li>
+        <li class="pages-item"><a href="/vendors/">Vendors</a></li>
+        <li class="pages-item"><a href="/referrals/">Referrals</a></li>
+    </ul>
+</section>
+{% endblock %}

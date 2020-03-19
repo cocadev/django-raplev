@@ -1,0 +1,55 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Upload{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger uploading-page">
+    <section class="uploading-page__section section">
+        <h1 class="uploading-page__heading section__heading"><a class="uploading-page__heading-link" href="{{ cadmin_url }}/media-library">Back to Media Files</a></h1>
+        <div class="drag-n-drop">
+            <form
+                id="fileupload"
+                action="{{ cadmin_url }}/upload/"
+                method="POST"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="drag-n-drop__container">
+                    <h2 class="drag-n-drop__heading">Drag and drop files anywhere to upload</h2>
+                    <p class="drag-n-drop__subheading">or</p>
+                    <label class="btn btn--accent btn--large">Select files
+                        <input
+                            type="file"
+                            name="file"
+                            hidden
+                            multiple>
+                    </label>
+                </div>
+                <div id="uploadlist">
+                    <!-- <div class="drag-n-drop__uploading-file upload-bar">
+                        <span class="upload-bar__file-name">375_carddetails.jpg</span>
+                        <div class="upload-bar__bar">
+                            <div class="upload-bar__background"></div>
+                            <div class="upload-bar__progress"></div><button class="upload-bar__close-btn" type="button" onclick="this.parentElement.parentElement.remove()"><svg class="upload-bar__close-icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                            </svg></button>
+                        </div>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'cadmin/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "cadmin/images/icons.svg" %}#times';
+</script>
+{% endblock %}

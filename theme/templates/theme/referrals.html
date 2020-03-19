@@ -1,0 +1,99 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Referrals{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner referrals">
+    <header class="content-header">
+        <h1 class="content-header__heading">My Referrals</h1>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+		</div>
+    </header>
+    <p class="referrals__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. Quisque faucibus quis lacus in accumsan. Cras a feugiat urna. Quisque luctus mauris sed mi aliquet hendrerit. Integer luctus neque mattis, vulputate odio eu, consequat est. Nam orci justo, blandit at risus auctor, faucibus porttitor ante. Quisque ut neque nec odio pulvinar vehicula a et libero. Donec velit mi, sollicitudin ut libero ut, aliquam accumsan nunc. Cras posuere ex egestas, fermentum nibh ac, varius massa. Nunc mattis metus quis velit euismod varius. Aenean in ante vitae arcu volutpat rutrum.</p>
+    <div class="page__field copy">
+        <div class="copy__inner"><input class="copy__output js-copy-target" type="text" value="raplev.com/ref/{{ user.token|slice:'3:23' }}" readonly><span class="copy__message js-copy-message">Copied</span><span class="copy__caption">Copy</span><button class="copy__btn js-copy-trigger" type="button"><svg class="copy__icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#copy"></use>
+                </svg></button></div>
+    </div>
+    <p class="referrals__desc">Share your AmericBTC affiliate link and earn 20% from your team members' escrow fees and 5% from theirs!</p>
+    <div class="referrals__list">
+        <div class="referrals__collapse collapse">
+            <header class="collapse__header js-collapse-trigger" data-target="#refferal-1">
+                <h3 class="collapse__heading">Jonathan Hamilton</h3><span class="collapse__earned">Earned: 422 USD</span><svg class="collapse__icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+            </header>
+            <div class="collapse__content" id="refferal-1">
+                <p class="collapse__text">Current deposit fee for incoming transactions: 0.00015 BTC. Receiving Bitcoin usually takes 30 minutes, however it can take up to 14 days or longer. An incoming transaction needs to receive 3 Bitcoin network confirmations to appear in your wallet. <a href="#">You can find out more in our FAQ.</a></p>
+            </div>
+        </div>
+        <div class="referrals__collapse collapse">
+            <header class="collapse__header js-collapse-trigger" data-target="#refferal-2">
+                <h3 class="collapse__heading">George Ezel LTD</h3><span class="collapse__earned">Earned: 422 USD</span><svg class="collapse__icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+            </header>
+            <div class="collapse__content" id="refferal-2">
+                <p class="collapse__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum et accusamus tempore cumque numquam, rerum ipsam aliquid ea, maxime incidunt maiores quae, sint amet asperiores deserunt odio sit. <a href="#">A, eligendi?</a></p>
+            </div>
+        </div>
+        <div class="referrals__collapse collapse">
+            <header class="collapse__header js-collapse-trigger" data-target="#refferal-3">
+                <h3 class="collapse__heading">Jonathan Hamilton</h3><span class="collapse__earned">Earned: 422 USD</span><svg class="collapse__icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+            </header>
+            <div class="collapse__content" id="refferal-3">
+                <p class="collapse__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum et accusamus tempore cumque numquam, rerum ipsam aliquid ea, maxime incidunt maiores quae, sint amet asperiores deserunt odio sit. <a href="#">A, eligendi?</a></p>
+            </div>
+        </div>
+        <div class="referrals__collapse collapse">
+            <header class="collapse__header js-collapse-trigger" data-target="#refferal-4">
+                <h3 class="collapse__heading">George Ezel LTD</h3><span class="collapse__earned">Earned: 422 USD</span><svg class="collapse__icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                </svg>
+            </header>
+            <div class="collapse__content" id="refferal-4">
+                <p class="collapse__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum et accusamus tempore cumque numquam, rerum ipsam aliquid ea, maxime incidunt maiores quae, sint amet asperiores deserunt odio sit. <a href="#">A, eligendi?</a></p>
+            </div>
+        </div>
+    </div>
+    <h2 class="referrals__heading">Refer a friend</h2>
+    <p class="referrals__refer-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. Quisque faucibus quis lacus in accumsan. Cras a feugiat urna. Quisque luctus mauris sed mi aliquet hendrerit. Integer luctus neque mattis, vulputate odio eu, consequat est. Nam orci justo, blandit at risus auctor, faucibus porttitor ante. Quisque ut neque nec odio pulvinar vehicula a et libero. Donec velit mi, sollicitudin ut libero ut, aliquam accumsan nunc. Cras posuere ex egestas, fermentum nibh ac, varius massa. Nunc mattis metus quis velit euismod varius. Aenean in ante vitae arcu volutpat rutrum.</p>
+    <form class="js-form-toggle" action="{{ theme_url }}/referrals/" method="POST">
+        {% csrf_token %}
+        <div class="page__fields">
+            <div class="form-group">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required>
+                    <svg class="form-group__required">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group__field-group">
+                    <input class="form-group__field" name="fullname" autocomplete="name" placeholder="Full name" required>
+                    <svg class="form-group__required">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="page__field form-group form-group--textarea">
+            <div class="form-group__field-group"><textarea class="form-group__field js-expanding-textarea" name="message" rows="3" placeholder="Your message"></textarea></div>
+        </div>
+        <div class="referrals__control">
+            <p class="referrals__control-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. </p>
+            <div class="referrals__control-buttons">
+                <button class="referrals__control-button btn btn--theme-2 btn--round" type="submit">Invite Friend</button>
+                <button class="referrals__control-button btn btn--theme-4 btn--round" type="reset">Discard</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

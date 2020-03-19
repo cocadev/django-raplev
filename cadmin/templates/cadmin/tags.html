@@ -1,0 +1,77 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Tags{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger tags">
+    <section class="section">
+        <header class="section__header">
+            <h1 class="section__heading">Tags</h1>
+        </header>
+        <div class="section__inner">
+            <div class="tags__container">
+                <ul class="tags__letters">
+                    <a class="tags__letter {% if ongoing == 'True' %}is-active{% endif %}" href="{{ cadmin_url }}/tags?alpha={{ alpha }}&ongoing=True">Available</a>
+                    <a class="tags__letter {% if ongoing == 'False' %}is-active{% endif %}" href="{{ cadmin_url }}/tags?alpha={{ alpha }}&ongoing=False"> Not Available</a>
+                </ul>
+                <ul class="tags__letters">
+                    {% for str in strings %}
+                    <li class="tags__letter {% if alpha == str %}is-active{% endif %}"><a href="{{ cadmin_url }}/tags?alpha={{ str }}&ongoing={{ ongoing }}">{{ str }}</a></li>
+                    {% endfor %}
+                    <li class="tags__letter {% if alpha == '~A' %}is-active{% endif %}"><a href="{{ cadmin_url }}/tags?alpha=~A&ongoing={{ ongoing }}">#</a></li>
+                </ul>
+                <ul class="tags__list">
+                    {% for item in items %}
+                    <li class="tags__item tag" id="{{ item.id }}">
+                        <span class="tag__text">{{ item.name }}</span>
+                        {% if not item.ongoing %}
+                        <button class="tag__close-btn" type="button" onclick="postAction(
+                                {'item_id': '{{item.id}}',
+                                'mode': 'ongoing-true'}, 
+                                'Are you sure to active this tag?', 
+                                '{{ cadmin_url }}/tags/', 
+                                function(message) {
+                                    $('li#{{ item.id }}').remove();
+                                    });">
+                            <svg class="tag__close-icon" width="30" style="fill: #6ad99f;">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check">
+                                </use>
+                            </svg>
+                        </button>
+                        {% endif %}
+                        <button class="tag__close-btn" type="button" 
+                            {% if item.ongoing %}
+                            onclick="postAction(
+                                {'item_id': '{{item.id}}',
+                                'mode': 'ongoing-false'}, 
+                                'Are you sure to deactive this tag?', 
+                                '{{ cadmin_url }}/tags/', 
+                                function(message, e = this) {
+                                    $('li#{{ item.id }}').remove();
+                                });"
+                            {% else %}
+                            onclick="postAction(
+                                {'item_id': '{{item.id}}',
+                                'mode': 'remove'},  
+                                'Are you sure to remove this tag?', 
+                                '{{ cadmin_url }}/tags/', 
+                                function(message) {
+                                    $('li#{{ item.id }}').remove();
+                                });"
+                            {% endif %}>
+                            <svg class="tag__close-icon" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times">
+                                </use>
+                            </svg>
+                        </button>
+                    </li>
+                    {% endfor %}
+                    
+                </ul>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

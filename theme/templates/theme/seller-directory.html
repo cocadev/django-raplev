@@ -1,0 +1,107 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Seller directory{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner seller-directory">
+    <div class="seller-directory__search">
+        <form action="{{ base_url }}" class="seller-directory__search-inner js-search-results-wrapper" id="search_seller_form">
+            {% csrf_token %}
+            <input class="seller-directory__search-input js-search-results-trigger" autocomplete="off" name="q" id="search_username" value="{{ q }}">
+            <input type="hidden" name="s" value="{{ s }}">
+            <button class="seller-directory__search-btn btn btn--round btn--theme-4" type="submit">Search</button>
+        </form>
+        <ul class="seller-directory__search-results js-search-results-target" id="search_username_list">
+        </ul>
+    </div>
+    <div class="seller-directory__tabs">
+        <a class="seller-directory__tab {% if s == 'active' %}is-active{% endif %}" href="{{ base_url }}s=active&q={{q}}">ACTIVE</a>
+        <a class="seller-directory__tab {% if s == 'new' %}is-active{% endif %}" href="{{ base_url }}s=new&q={{q}}">NEW</a>
+    </div>
+    <table class="seller-directory__table table-new">
+        <thead class="table-new__thead">
+            <tr class="table-new__row">
+                <th class="table-new__th">Seller</th>
+                <th class="table-new__th">Total trades completed</th>
+                <th class="table-new__th">Feedback score</th>
+                <th class="table-new__th"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr class="table-new__row">
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Seller</span><a href="#">{{ item }}</a></td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Total trades completed</span><span>{{ item.successful_trade_count }}</span></td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading">Feedback score</span>
+                    <div class="table-new__rate">
+                        <div class="table-new__rate-wrapper"><span class="table-new__rate-sum">({{ item.trade_count }})</span>
+                            <div class="stars-fixed small">
+                                {% for rate in '01234'|make_list %}
+                                <svg class="stars-fixed__icon stars-fixed__icon--half {%if item.customer_rate < forloop.counter %}is-selected{%endif%}"><!-- item.rate -->
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                </svg>
+                                <svg class="stars-fixed__icon {%if item.customer_rate <= forloop.counter %}is-selected{%endif%}">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="table-new__cell"><span class="table-new__mobile-heading"></span>
+                    <a class="table-new__link-btn" href="{{ theme_url }}/user-public-profile?item_id={{ item.id }}">VIEW PROFILE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <nav class="results__pagination pagination">
+        <ul class="pagination__list">
+            {% if items.has_previous %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Prev</li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                 {% if items.number == i %}
+                 <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% else %}
+                 <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% endif %}
+            {% endfor %}
+            {% if items.has_next %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Next</li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script>
+$(function () {
+    $('#search_username').keyup(function () {
+        $('#search_username_list').empty();
+        var search_form = $('#search_seller_form')
+        $.ajax({
+            url: '{{ theme_url }}/vendors/',
+            type: 'POST',
+            data: search_form.serialize(),
+            success: function(data) {
+                data.items.forEach(function(e) {
+                    $('#search_username_list').append('<li class="seller-directory__search-result">'+e+'</li>')
+                })
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        })
+    })
+})
+</script>
+{% endblock %}

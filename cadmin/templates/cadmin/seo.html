@@ -1,0 +1,88 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}SEO{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger seo">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="js-tablist-toggle">
+            <div class="seo__buttons js-tablist-triggers">
+                <button class="seo__button is-active" type="button">Meta tags</button>
+                <button class="seo__button" type="button">Robots.txt</button>
+            </div>
+            <div class="seo__tabs js-tablist-tabs">
+                <section class="seo__tab section is-active">
+                    <header class="section__header">
+                        <h2 class="section__heading">SEO</h2>
+                        <div class="seo__page">
+                            <h3 class="seo__page-heading">Page</h3>
+                            <div class="seo__select form-group">
+                                <div class="form-group__field-group">
+                                    <span class="form-group__triangle"></span>
+                                    <select class="form-group__field" name="page_id" onchange="location.href='{{ cadmin_url }}/seo?page_id='+this.value" required>
+                                        <option value="">Select</option>
+                                        {% for page in pages %}
+                                        <option value="{{ page.id }}" {% if page_id == page.id|stringformat:"i" %}selected{% endif %}>{{ page.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="section__inner">
+                        <label class="seo__field form-group">
+                            <span class="form-group__caption">Title Tag</span>
+                            <span class="form-group__field-group">
+                                <input class="form-group__field" name="seo.title_tag.{{ page_id }}" placeholder="Text field" value="{{ items.seo.title_tag|keyvalue:page_id }}" required>
+                                </span>
+                            </label>
+                            <label class="seo__field form-group">
+                                <span class="form-group__caption">Meta description</span>
+                                <span class="form-group__field-group">
+                                    <textarea class="form-group__field" name="seo.meta_description.{{ page_id }}" rows="7" data-character-counter=".js-character-counter" placeholder="Text field">{{ items.seo.meta_description|keyvalue:page_id|safe }}</textarea>
+                                </span>
+                            </label>
+                            <p class="seo__remaining">Character remaining: 
+                                <span class="js-character-counter">150</span>
+                            </p>
+                        </div>
+                    </section>
+                    <section class="seo__tab section">
+                        <header class="section__header">
+                            <h2 class="section__heading">Robots</h2>
+                            <!-- <div class="seo__page">
+                                <h3 class="seo__page-heading">Page</h3>
+                                <div class="seo__select form-group">
+                                    <div class="form-group__field-group">
+                                        <span class="form-group__triangle"></span>
+                                        <select class="form-group__field" onchange="location.href='{{ cadmin_url }}/seo?page_id='+this.value">
+                                            <option value="">Select </option>
+                                            {% for page in pages %}
+                                            <option value="{{ page.id }}" {% if page_id == page.id|stringformat:"i" %}selected{% endif %}>{{ page.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </header>
+                        <div class="section__inner">
+                            <label class="seo__field form-group">
+                                <span class="form-group__caption">Robots.txt content</span>
+                                <span class="form-group__field-group">
+                                    <textarea class="form-group__field" name="seo.robots_txt" rows="7" placeholder="Text field">{{ items.seo.robots_txt }}</textarea>
+                                </span>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="page__control">
+                <button class="page__control-item btn btn--accent btn--large" type="submit">Apply changes</button>
+                <button class="page__control-item btn btn--dark btn--large" type="reset">Cancel</button>
+            </div>
+        </form>
+	</main>
+{% endblock %}

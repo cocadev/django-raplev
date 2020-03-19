@@ -1,0 +1,97 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger campaigns">
+    <form class="" action="" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.pk }}" />
+        <section class="section">
+            <header class="section__header">
+                <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/campaigns">Campaigns</a><span> / </span><span>{{ item.id }}</span></h1>
+            </header>
+            <div class="section__inner">
+                <div class="section__fields">
+                    <div class="section__field form-group">
+                        <div class="form-group__field-group"><input class="form-group__field" name="campaign_name" value="{{ item.campaign_name }}" placeholder="Campaign title" required></div>
+                    </div>
+                    <div class="section__field form-group">
+                        <div class="form-group__field-group"><input class="form-group__field" name="campaign_url" value="{{ item.campaign_url }}" placeholder="Campaign URL" required></div>
+                    </div>
+                </div>
+                <div class="section__field form-group">
+                    <div class="form-group__field-group"><textarea class="form-group__field js-expanding-textarea" name="overview" rows="3" placeholder="Campaign overview">{{ item.overview|safe }}</textarea></div>
+                </div>
+                <div class="section__fields">
+                    <div class="section__field form-group">
+                        <div class="form-group__field-group"><input class="form-group__field" name="payout" value="{{ item.payout }}" placeholder="Payout" required></div>
+                    </div>
+                    <div class="section__field form-group">
+                        <div class="form-group__field-group"><input class="form-group__field" name="campaign_type" value="{{ item.campaign_type }}" placeholder="Campaign type" required></div>
+                    </div>
+                </div>
+                <div class="section__field form-group">
+                    <div class="form-group__field-group">
+                        <select class="form-group__field js-multiple-select" name="target_location[]" multiple data-placeholder="Target location - separated by comma">
+                            {% for code, name in country_code %}
+                                <option value="{{ code }}" {% if code in item.target_location %}selected{% endif %} >{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="campaigns__attach attach">
+                    <div>
+                        <p class="attach__accepted">Creative materials:</p>
+                        <p class="attach__formats">*jpg, *png, *gif, *docx, *doc, *txt, *pdf accepted</p>
+                    </div><label class="attach__btn">Browse<input id="fileupload" type="file" name="file" multiple
+                        style="display: none;"
+                        data-url="{{ cadmin_url }}/upload/"
+                        data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'></label>
+                        <input type="hidden" name="creative_materials" class="instead_of_file" value="{{ item.creative_materials }}">
+                </div>
+                <div id="uploadlist">
+                    {% for media in item.creative_materials_as_file_list %}
+                    <div class="drag-n-drop__uploading-file upload-bar" file_id="{{ media.id }}">
+                        <div class="upload-bar__file-name" style="width: 80%;">{{ media.file.name }}</div>
+                        <div class="upload-bar__bar">
+                            <a class="upload-bar__close-btn" href="javascript:void(0)" onclick="removeFileList('{{ media.id }}')">
+                                <svg class="upload-bar__close-icon" width="30">
+                                    <use xlink:href="{% static '/cadmin/images/icons.svg' %}#times"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div> 
+            </div>
+        </section>
+        <div class="page__control">
+            {% if success %}
+            <div class="page__control-item status"> 
+                <span class="status__text">Campaign updated</span>
+                <span class="status__icon-wrapper">
+                    <svg class="status__icon" width="30">
+                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#check"></use>
+                    </svg>
+                </span>
+            </div>
+            {% endif %}
+            <button class="page__control-item btn btn--red" type="submit">Update campaign</button>
+        </div>
+    </form>
+</main>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'cadmin/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "cadmin/images/icons.svg" %}#times';
+</script>
+{% endblock %}

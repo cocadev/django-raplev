@@ -1,0 +1,35 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Leave a review{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner leave-review">
+    <form action="{{ theme_url }}/leave-review/" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.id }}" />
+        <header class="leave-review__header">
+            <h1 class="leave-review__heading">Leave a review</h1>
+            <!-- <div class="stars-select medium">
+                <input class="stars-select__input stars-select__input--none" disabled="disabled" checked="checked" name="review" value="0" type="radio" /><label class="stars-select__label" for="review-1"><svg class="stars-select__icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="review-1" name="review" value="1" type="radio" /><label class="stars-select__label" for="review-2"><svg class="stars-select__icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="review-2" name="review" value="2" type="radio" /><label class="stars-select__label" for="review-3"><svg class="stars-select__icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="review-3" name="review" value="3" type="radio" /><label class="stars-select__label" for="review-4"><svg class="stars-select__icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="review-4" name="review" value="4" type="radio" /><label class="stars-select__label" for="review-5"><svg class="stars-select__icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                    </svg></label><input class="stars-select__input" id="review-5" name="review" value="5" type="radio" /></div> -->
+        </header>
+        <div class="page__field form-group form-group--textarea">
+            <div class="form-group__field-group">
+                <textarea class="form-group__field" name="feedback" rows="6" placeholder="Your comment">{{ item.feedback|default_if_none:''|safe }}</textarea>
+            </div>
+        </div>
+        <button class="leave-review__btn btn btn--round btn--theme-4" type="submit">Post this review</button>
+    </form>
+</div>
+{% endblock %}

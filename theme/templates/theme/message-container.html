@@ -1,0 +1,67 @@
+{% load static %}
+{% for mes in relation.messages %}
+{% if mes.writer != user %}
+<article class="messages__item message message--incoming">
+    <div class="message__body">
+        <div class="message__userpic"><img class="message__user-img" src="{% if mes.writer.avatar %}{{ mes.writer.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        <div class="message__content">
+            <p class="message__text">{{ mes.content }}</p>
+            <button class="message__reply" type="button">Reply to this message</button>
+        </div>
+    </div>
+    <footer class="message__footer">
+        <div class="message__data"><span>Sent on {{ mes.created_at }}</span></div>
+    </footer>
+</article>
+{% endif %}
+{% if mes.writer == user %}
+<article class="messages__item message message--outgoing js-message-toggle">
+    <div class="message__edit js-message-dropdown"><button class="message__edit-btn js-message-dropdown-button" type="button" onclick="message.toggleDropdown(this)"><svg class="message__edit-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#ellipsis-h"></use>
+            </svg></button>
+        <div class="message__edit-dropdown"><button class="message__edit-dropdown-btn" type="button" onclick="message.edit(this);">Edit</button><button class="message__edit-dropdown-btn" type="button" onclick="message.delete(this)">Delete</button></div>
+    </div>
+    <div class="message__body">
+        <div class="message__userpic"><img class="message__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        <div class="message__content">
+            <p class="message__text js-message-content">{{ mes.content }}</p>
+            <textarea class="message__text js-message-textarea" hidden></textarea>
+        </div>
+    </div>
+    <footer class="message__footer">
+        <div class="message__control-buttons js-message-edit-buttons"><button class="message__control-btn" type="button" onclick="message.save(this)">Save</button><button class="message__control-btn" type="button" onclick="message.cancel(this)">Cancel</button></div>
+        <div class="message__data"><span>Sent on {{ mes.created_at }}</span></div>
+    </footer>
+</article>
+{% endif %}
+<!-- 
+<article class="messages__item message message--outgoing js-message-toggle">
+    <div class="message__edit js-message-dropdown"><button class="message__edit-btn js-message-dropdown-button" type="button" onclick="message.toggleDropdown(this)"><svg class="message__edit-icon">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#ellipsis-h"></use>
+            </svg></button>
+        <div class="message__edit-dropdown"><button class="message__edit-dropdown-btn" type="button" onclick="message.edit(this);">Edit</button><button class="message__edit-dropdown-btn" type="button" onclick="message.delete(this)">Delete</button></div>
+    </div>
+    <div class="message__body">
+        <div class="message__userpic"><img class="message__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        <div class="message__content">
+            <p class="message__text js-message-content">Donec interdum mauris commodo, tempus velit vel, aliquet felis. Cras sed mi leo. Praesent dolor neque, tempus a tincidunt non, sollicitudin vel quam. Sed et rutrum est. Pellentesque egestas, metus in feugiat feugiat, augue quam bibendum ex, quis lacinia est nibh a metus. Nunc magna lorem, fringilla non turpis in, varius aliquet neque. Sed sit amet rutrum ligula.</p><textarea class="message__text js-message-textarea" hidden></textarea>
+        </div>
+    </div>
+    <footer class="message__footer">
+        <div class="message__control-buttons js-message-edit-buttons"><button class="message__control-btn" type="button" onclick="message.save(this)">Save</button><button class="message__control-btn" type="button" onclick="message.cancel(this)">Cancel</button></div>
+        <div class="message__data"><span>Sent on 03/10/2019 - 14:55 PM</span></div>
+    </footer>
+</article>
+<article class="messages__item message message--invitation">
+    <div class="message__body">
+        <div class="message__userpic"><img class="message__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        <div class="message__content">
+            <p class="message__text">skargard_kelly has been invited you to join to trade <a class="message__trade-id" href="#">No 44785541</a><span>. In hendrerit sollicitudin dignissim. Phasellus commodo vel massa eget pellentesque. Aenean non neque ac risus volutpat interdum in et turpis. Praesent pretium lobortis suscipit. Etiam nec orci erat. Proin vel efficitur dolor, in sollicitudin arcu.</span></p>
+            <div class="message__response-buttons"><button class="message__response-btn" type="button">Review</button><button class="message__response-btn" type="button">Decline</button></div>
+        </div>
+    </div>
+    <footer class="message__footer">
+        <div class="message__data"><span>Sent on 03/10/2019 - 14:55 PM</span></div>
+    </footer>
+</article> -->
+{% endfor %}

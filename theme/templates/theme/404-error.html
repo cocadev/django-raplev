@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>404 Error</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge"><!-- Favicon data-->
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'theme/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'theme/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'theme/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'theme/site.webmanifest' %}">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2c06a9">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="{% static 'theme/css/theme.min.css' %}">
+    </head>
+
+    <body class="error-404">
+        <h1 class="error-404__heading">404</h1>
+        <h2 class="error-404__subheading">OOPS! PAGE NOT FOUND</h2>
+        <p class="error-404__description">The page you ar looking for might have been removed, or had it's name changed or temporary unavailable.</p><a class="error-404__link btn btn--large btn--theme-2" href="/">GO TO HOME PAGE</a>
+    </body>
+
+</html>

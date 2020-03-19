@@ -1,0 +1,70 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Escrows{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger">
+    <section class="section">
+        <header class="section__header">
+            <h1 class="section__heading">Escrows</h1>
+            <form class="section__search form-group search" action="" method="GET">
+                <div class="form-group__field-group"><input class="form-group__field" name="search" placeholder="Search in Escrows" value="{{ search }}"><button class="search__btn" type="submit">Search</button></div>
+            </form>
+        </header>
+        <div class="section__inner">
+            <table class="section__table table">
+                <thead>
+                    <tr>
+                        <th>Escrow ID</th>
+                        <th>Held for</th>
+                        <th>Held from</th>
+                        <th>Amount</th>
+                        <th>Currency type</th>
+                        <th>Trade ID</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td><span class="table__mobile-heading">Escrow ID</span><span>{{ item.id }}</span></td>
+                        <td><span class="table__mobile-heading">Held for</span><a href="#">{{ item.held_for }}</a></td>
+                        <td><span class="table__mobile-heading">Held from</span><a href="#">{{ item.held_from }}</a></td>
+                        <td><span class="table__mobile-heading">Amount</span><span>{{ item.amount }}</span></td>
+                        <td><span class="table__mobile-heading">Currency type</span><span>{{ item.trade.offer.what_crypto }}</span></td>
+                        <td><span class="table__mobile-heading">Trade ID</span><a href="{{ cadmin_url }}/trade-details?item_id={{ item.trade.id }}">{{ item.trade.id }}</a></td>
+                        <td><span class="table__mobile-heading">Status</span><span>{{ item.get_status_display }}</span></td>
+                        <td><span class="table__mobile-heading">Actions</span><a href="{{ cadmin_url }}/escrow-details?item_id={{ item.id }}">Details</a></td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

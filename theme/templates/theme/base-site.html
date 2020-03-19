@@ -1,0 +1,641 @@
+{% extends 'theme/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<aside class="top-bar">
+    <div class="top-bar__container">
+        <form class="top-bar__select" action="{% url 'theme:set-country' %}" method="post">{% csrf_token %}
+            <!-- action="{% url 'set_language' %}" -->
+            <div class="top-bar__select-wrapper"><span class="top-bar__select-triangle"></span>
+                <input name="next" type="hidden" value="{{ redirect_to }}">
+                <select name="language" class="top-bar__select-field" required>
+                    <!-- {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                            {{ language.name_local }} ({{ language.name }})
+                        </option>
+                    {% endfor %} -->
+                    {% for code, country in COUNTRY_CODE %}
+                        <option value="{{ code }}"{% if code == SET_COUNTRY %} selected{% endif %}>
+                            {{ country }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="top-bar__select-btn btn btn--theme-2 btn--round" type="submit">{% trans 'APPLY' %}</button>
+        </form>
+        <ul class="top-bar__items">
+            <li class="top-bar__item"> <span class="top-bar__currency">BTC/{{SET_CURRENCY}}</span>{{ pricing|keyvalue:'BTC_STRING'|safe }}</li>
+            <li class="top-bar__item"> <span class="top-bar__currency">ETH/{{SET_CURRENCY}}</span>{{ pricing|keyvalue:'ETH_STRING'|safe }}</li>
+            <li class="top-bar__item"> <span class="top-bar__currency">XRP/{{SET_CURRENCY}}</span>{{ pricing|keyvalue:'XRP_STRING'|safe }}</li>
+        </ul>
+    </div>
+</aside>
+<div class="page__container">
+    <header class="page__header header">
+        <div class="header__container">
+            <div class="header__inner">
+                <div class="header__wrapper">
+                    <a class="header__logo-wrapper" href="{{ theme_url }}/index">
+                        <img class="header__logo" src="{% static 'theme/images/logos/logo-header-mobile.png' %}" alt="Raplev logo">
+                        <img class="header__logo header__logo--desktop" src="{% static 'theme/images/logos/logo-header.png' %}" alt="Raplev logo">
+                    </a>
+                    <div class="nav-toggle nav-toggle--mobile js-mobile-menu-trigger">
+                        <div class="nav-toggle__bar"></div>
+                        <div class="nav-toggle__bar"></div>
+                        <div class="nav-toggle__bar"></div>
+                    </div>
+                </div>
+                <nav class="header__nav nav">
+                    {% if user.is_authenticated and user.is_customer %}
+                    <div class="nav__list-wrapper">
+                        <ul class="nav__mobile-list js-mobile-menu-target">
+                            <li class="nav__item nav__user-mobile">
+                                <div class="nav__picture-wrapper"><img class="nav__user-picture" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+                                <p class="nav__user-data"><span class="nav__user-text">{{ user.customer.balance }} in Wallet</span><span class="nav__user-text">You can send up to 1.200 BTC[[[?]]]</span></p>
+                            </li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/index">Home</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/offer-listing?trade_type=sell">I’m a Buyer</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/offer-listing?trade_type=buy">I’m a Seller</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/blog-listing">Our Blog</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/profile-overview">Dashboard</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/notifications">Transactions</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/messages">Messages</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/funding">Funding</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/received-offers">Offers </a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/trade-history">Trade History</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/[[[?]]]">Affiliates</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/support-center">Support</a></li>
+                            <li class="nav__item"><a class="nav__link" href="{{ theme_url }}/logout">Logout</a></li>
+                        </ul>
+                        <ul class="nav__desktop-list nav__list--desktop">
+                            <!-- Logged-in menu items which appears on desktop.-->
+                            <li class="nav__item nav__user-desktop" onclick="twoFactorAuth.close(), support.close(),userMenu.open()">
+                                <div class="nav__user-inner"><img class="nav__user-picture" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                            </li>
+                            <li class="nav__item"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#home"></use>
+                                </svg><a class="nav__link" href="{{ theme_url }}/index">Home</a></li>
+                            <li class="nav__item"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#sign-out-alt"></use>
+                                </svg><a class="nav__link" href="{{ theme_url }}/logout">Sign out</a></li>
+                            <li class="nav__item js-two-factor-auth-trigger" onclick="location.href='/messages'" onclicks="userMenu.close(), support.close(),twoFactorAuth.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#inbox"></use>
+                                </svg><span class="nav__message-counter novalue messages-badge"></span><button class="nav__link" type="button">Messages</button></li>
+                            <li class="nav__item js-support-trigger" onclick="twoFactorAuth.close(), userMenu.close(),support.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#ticket-alt"></use>
+                                </svg><button class="nav__link" type="button">Support</button></li>
+                            <li class="nav__item"><button class="scroll-btn" data-toggle="scrollBtn"><svg class="scroll-btn__icon">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                    </svg></button></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <div class="nav__list-wrapper">
+                        <ul class="nav__mobile-list js-mobile-menu-target">
+                            <li class="nav__item"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#home"></use>
+                                </svg><a class="nav__link" href="{{ theme_url }}/index">Home</a></li>
+                            <li class="nav__item" onclick="register.close(),support.close(),login.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#sign-in-alt"></use>
+                                </svg><button class="nav__link" type="button">Login</button></li>
+                            <li class="nav__item" onclick="login.close(),support.close(),register.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#user-plus"></use>
+                                </svg><button class="nav__link" type="button">Register</button></li>
+                            <li class="nav__item" onclick="login.close(),register.close(),support.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#ticket-alt"></use>
+                                </svg><button class="nav__link" type="button">Support</button></li>
+                        </ul>
+                        <ul class="nav__desktop-list nav__list--desktop">
+                            <!-- Logged-in menu items which appears on desktop.-->
+                            <li class="nav__item"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#home"></use>
+                                </svg><a class="nav__link" href="{{ theme_url }}/index">Home</a></li>
+                            <li class="nav__item js-login-trigger" onclick="register.close(),support.close(),login.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#sign-in-alt"></use>
+                                </svg><button class="nav__link" type="button">Login</button></li>
+                            <li class="nav__item js-register-trigger" onclick="login.close(),support.close(),register.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#user-plus"></use>
+                                </svg><button class="nav__link" type="button">Register</button></li>
+                            <li class="nav__item js-support-trigger" onclick="register.close(),login.close(),support.open()"><svg class="nav__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#ticket-alt"></use>
+                                </svg><button class="nav__link" type="button">Support</button></li>
+                            <li class="nav__item"><button class="scroll-btn" data-toggle="scrollBtn"><svg class="scroll-btn__icon">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                    </svg></button></li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </nav>
+            </div>
+            <div class="header__links">
+                <div class="header__extra-links">
+                    <a class="header__extra-link" href="{{ theme_url }}/offer-listing?trade_type=sell">I’m a buyer </a>
+                    <a class="header__extra-link" href="{{ theme_url }}/offer-listing?trade_type=buy">I’m a seller</a>
+                    <a class="header__extra-link" href="{{ theme_url }}/blog-listing">Blog</a></div>
+                    <a class="header__link header__link--trade" href="{{ theme_url }}/new-offer">Create new offer</a>
+                    <a class="header__link header__link--refer" href="{{ theme_url }}/referrals">Refer</a>
+            </div>
+        </div>
+    </header>
+    {% block page-inner %}{% endblock %}
+
+    <!-- Elements are wrapped in an empty block to correct positioning relative to the header during animation. -->
+    <div>
+        <aside class="page__dropdown page__dropdown--forgot-pw dropdown js-forgot-pwd-target">
+            <div class="dropdown__inner">
+                <header class="dropdown__header">
+                    <h3 class="dropdown__heading">Forgot password?</h3>
+                    <button class="dropdown__close" onclick="forgotPW.close()" type="button">
+                    <svg class="dropdown__close-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                    </svg></button>
+                </header>
+                <form action="{{ theme_url }}/forgot-password/" method="POST" id="forgot_form" prefix="forgot">
+                    {% csrf_token %}
+                    <div class="forgot_email dropdown__field form-group {% if error.forgot.email %}is-invalid{% endif %}" id="forgot-email">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address">
+                            {% if error.forgot.email %}
+                            <svg class="form-group__required">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.forgot.email %}
+                        <p class="form-group__message">{{ error.forgot.email }}</p>
+                        {% endif %}
+                        <button type="button" onclick="toggleEmailPhone('forgot-phone')" style="color: white; padding: 10px; margin-top: 20px; font-size: 18px;">I want to recover with phone.</button>
+                    </div>
+                    <div class="forgot_phonenumber dropdown__field form-group {% if error.forgot.phonenumber %}is-invalid{% endif %}" id="forgot-phone" style="display: none;">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="phonenumber" type="text" placeholder="Phone number">
+                            {% if error.forgot.phonenumber %}
+                            <svg class="form-group__required">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.forgot.phonenumber %}
+                        <p class="form-group__message">{{ error.forgot.phonenumber }}</p>
+                        {% endif %}
+                        <button type="button" onclick="toggleEmailPhone('forgot-email')" style="color: white; padding: 10px; margin-top: 20px; font-size: 18px;">I want to recover with Email.</button>
+                    </div>
+                    <footer class="dropdown__buttons">
+                        <button class="dropdown__submit btn btn--large btn--theme-2" type="submit">SEND</button>
+                    </footer>
+                </form>
+            </div>
+        </aside>
+        <aside class="page__dropdown dropdown js-login-target">
+            <div class="dropdown__inner">
+                <header class="dropdown__header">
+                    <h3 class="dropdown__heading">Login</h3>
+                    <button class="dropdown__close" onclick="login.close()" type="button">
+                    <svg class="dropdown__close-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                    </svg></button>
+                </header>
+                <form action="{{ theme_url }}/login/" method="POST" id="login_form" prefix="login">
+                    {% csrf_token %}
+                    <div class="login_email dropdown__field form-group {% if error.login.email %}is-invalid{% endif %}">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="email" type="text" placeholder="Email address" required>
+                            {% if error.login.email %}
+                            <svg class="form-group__required is-invalid-item">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.login.email %}
+                        <p class="form-group__message is-invalid-item">{{ error.login.email }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="login_password dropdown__field form-group {% if error.login.password %}is-invalid{% endif %}">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="password" type="password" autocomplete="current-password" placeholder="Password" required>
+                            {% if error.login.password %}
+                            <svg class="form-group__required is-invalid-item">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.login.password %}
+                        <p class="form-group__message is-invalid-item">{{ error.login.password }}</p>
+                        {% endif %}
+                    </div><button class="dropdown__submit btn btn--large btn--theme-2" type="submit">LOGIN</button>
+                </form>
+                <footer class="dropdown__buttons">
+                    <button class="dropdown__text-btn" onclick="switchToRegister()" type="button">Create Account</button>
+                    <button class="dropdown__text-btn js-forgot-pwd-trigger" onclick="forgotPW.open()" type="button">I forgot my password </button>
+                </footer>
+            </div>
+        </aside>
+        <aside class="page__dropdown dropdown dropdown--register js-register-target">
+            <div class="dropdown__inner">
+                <header class="dropdown__header">
+                    <h3 class="dropdown__heading">Register</h3>
+                    <button class="dropdown__close" onclick="register.close()" type="button">
+                    <svg class="dropdown__close-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                    </svg></button>
+                </header>
+                <form action="{{ theme_url }}/register/" method="POST" id="register_form" prefix="register" class="js-password-check-toggle">
+                    {% csrf_token %}
+                    <div class="register_email dropdown__field form-group {% if error.register.email %}is-invalid{% endif %}">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required>
+                            {% if error.register.email %}
+                            <svg class="form-group__required is-invalid-item">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.register.email %}
+                        <p class="form-group__message is-invalid-item">{{ error.register.email }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="register_username dropdown__field form-group {% if error.register.username %}is-invalid{% endif %}">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="username" autocomplete="name" placeholder="Username" required>
+                            {% if error.register.username %}
+                            <svg class="form-group__required is-invalid-item">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if error.register.username %}
+                        <p class="form-group__message is-invalid-item">{{ error.register.username }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="register_password dropdown__field form-group">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field js-password-strength-input" name="password" type="password" autocomplete="new-password" placeholder="Password" required>
+                        </div>
+                        <div class="dropdown__password-check-bar js-password-strength-output">
+                            <span class="dropdown__password-check-text">Strength: enter value...</span>
+                        </div>
+                    </div>
+                    <div class="dropdown__field form-group">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field js-password-match-input" name="password_confirm" type="password" autocomplete="new-password" placeholder="Password again" required>
+                        </div>
+                        <div class="dropdown__password-check-bar js-password-match-output">
+                            <span class="dropdown__password-check-text">Password matching: enter values...</span>
+                        </div>
+                    </div>
+                    <div class="dropdown__buttons">
+                        <input type='hidden' name='customer_type' id="register_customer_type" value='' >
+                        <button class="dropdown__btn btn btn--theme-4" value="sell" type="submit" onclick="document.querySelector('#register_customer_type').value = 'sell'">I want to sell</button>
+                        <button class="dropdown__btn btn btn--theme-2" value="buy" type="submit" onclick="document.querySelector('#register_customer_type').value = 'buy'">I want to buy</button>
+                    </div>
+                    <button class="dropdown__text-btn js-login-trigger" onclick="switchToLogin()" type="button">I already have an account</button>
+                </form>
+            </div>
+        </aside>
+        <aside class="page__dropdown dropdown support-dropdown js-support-target">
+            <div class="dropdown__inner support-dropdown__inner">
+                <header class="dropdown__header">
+                    <h3 class="dropdown__heading">Support</h3><button class="dropdown__close" onclick="support.close()" type="button"><svg class="dropdown__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                </header>
+                <div class="support-dropdown__dispute">
+                    <p class="support-dropdown__desc">Complex question? Dispute? Submit a ticket instead by using our support system.</p><a class="support-dropdown__link" href="{{ theme_url }}/support-center">SUPPORT CENTER</a>
+                </div>
+            </div>
+        </aside>
+        <aside class="page__dropdown dropdown js-two-factor-auth-target">
+            <div class="dropdown__inner">
+                <header class="dropdown__header">
+                    <h3 class="two-factor__heading"> Two factor authentication</h3><button class="dropdown__close" onclick="twoFactorAuth.close()" type="button"><svg class="dropdown__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                </header>
+                <p class="two-factor__subheading">We have sent you a code to your email, please enter the code below</p>
+                <form action="#">
+                    <div class="dropdown__field form-group {% if error.login.password %}is-invalid{% endif %}">
+                        <div class="form-group__field-group"><input class="form-group__field" name="blank" autocomplete="off" placeholder="Code" required><svg class="form-group__required">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                            </svg></div>
+                        <p class="form-group__message">Validation alert</p>
+                    </div><a class="dropdown__submit btn btn--large btn--theme-2" href="{{ theme_url }}/index-logged">LOGIN</a>
+                </form>
+            </div>
+        </aside>
+        <aside class="page__dropdown dropdown dropdown--user-menu js-user-menu-target">
+            <header class="dropdown__header"><button class="dropdown__close" onclick="userMenu.close()" type="button"><svg class="dropdown__close-icon">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                    </svg></button></header>
+            <div class="dropdown__inner">
+                <ul class="dropdown__list">
+                    <li class="dropdown__mobile-list">
+                        <ul>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/index">Home</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/offer-listing?trade_type=sell">I’m a Buyer</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/offer-listing?trade_type=buy">I’m a Seller</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/blog">Our Blog</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/profile-overview">Dashboard</a></li>
+                    <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/all-offers">All Offers</a></li>
+                    <li class="dropdown__menu-item"><span class="dropdown__counter novalue received-offers-badge"></span><a class="dropdown__link" href="{{ theme_url }}/received-offers">Received Offers</a></li>
+                    <li class="dropdown__menu-item"><span class="dropdown__counter novalue transactions-badge"></span><a class="dropdown__link" href="{{ theme_url }}/notifications">Transactions</a></li>
+                    <li class="dropdown__menu-item"><span class="dropdown__counter novalue messages-badge"></span><a class="dropdown__link" href="{{ theme_url }}/messages">Messages</a></li>
+                    <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/funding">Funding</a></li>
+                    <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/trade-history">Trade History</a></li>
+                    <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/[[[?]]]">Affiliates</a></li>
+                    <li class="dropdown__menu-item"><a class="dropdown__link" href="{{ theme_url }}/logout">Logout</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    <div class="popup js-confirmation-toggle">
+        <button class="popup__close" onclick="confirmation.close()" type="button"></button>
+        <div class="popup__container">
+            <button class="popup__close-inner" type="button" onclick="confirmation.close()">
+                <svg class="popup__close-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                </svg>
+            </button>
+            <form action="{{ theme_url }}/confirm-forgot-password-phone-code/" method="POST" id="confirm_phone" prefix="confirm">
+                {% csrf_token %}
+                <input name="phonenumber" type="hidden" id="confirm_phonenumber" />
+                <h3 class="popup__heading">Please enter the code we sent you to your phone number.</h3>
+                <div class="popup__wrapper">
+                    <div class="confirm_phonenumber popup__field form-group">
+                        <div class="form-group__field-group">
+                            <input class="form-group__field" name="code" autocomplete="off" placeholder="Enter the code" required>
+                            <svg class="form-group__required"><use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use></svg>
+                        </div>
+                    </div>
+                    <div class="popup__btn-wrapper">
+                        <button class="popup__btn btn btn--round btn--theme-4" type="submit">Confirm</button>
+                        <button class="popup__btn btn btn--round btn--theme-2" type="button" onclick="resendConfirmPhone(this)">Resend</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="popup popup--narrow popup--activation js-email-activation-toggle"><button class="popup__close" onclick="emailActivation.close()" type="button"></button>
+        <div class="popup__container"><button class="popup__close-inner" type="button" onclick="emailActivation.close()"><svg class="popup__close-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                </svg></button>
+            <h3 class="popup__heading">Please follow the link sent to your email for verifying your email</h3>
+            <div class="popup__btn-wrapper">
+                <button class="popup__btn btn btn--round btn--theme-2" type="button" onclick="window.location.href = 'mailto:user@example.com?subject=Subject&body=message%20goes%20here';">Open Email</button>
+                <button class="popup__btn btn btn--round btn--theme-4" type="button" onclick="resendConfirmEmail(this)">Resend Code</button>
+            </div>
+        </div>
+    </div>
+    <div class="popup popup--follow-link js-follow-link-toggle"><button class="popup__close" onclick="followLink.close()" type="button"></button>
+        <div class="popup__container"><button class="popup__close-inner" type="button" onclick="followLink.close()"><svg class="popup__close-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                </svg></button>
+            <h3 class="popup__heading">Please follow the link below to activate your account.</h3>
+            <div class="popup__wrapper"><a class="popup__url" href="#">http://ameribtc.com/verif789yjfkdlmiketogaslowxzfv554545</a><a class="popup__btn btn btn--round btn--theme-4" href="#">Open Link</a><a class="popup__link-btn" href="#">Link not working? Give me a new one.</a></div>
+        </div>
+    </div>
+    <div class="popup popup--pw-recover js-pw-recover-2-toggle"><button class="popup__close" onclick="pwRecover_2.close()" type="button"></button>
+        <div class="popup__container"><button class="popup__close-inner" type="button" onclick="pwRecover_2.close()"><svg class="popup__close-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                </svg></button>
+            <h3 class="popup__heading">Forgot password? Enter your phone number to recover it.</h3>
+            <div class="popup__wrapper">
+                <div class="popup__field form-group">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="blank" type="tel" autocomplete="tel" placeholder="+1 2345 678910" required>
+                        <svg class="form-group__required"><use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use></svg>
+                    </div>
+                </div><button class="popup__btn btn btn--round btn--theme-4" type="button">Recover Password</button><a class="popup__link-btn" href="#">Don’t have acces to your phone?</a>
+            </div>
+        </div>
+    </div>
+    <div class="popup popup--pw-recover js-pw-recover-toggle">
+        <button class="popup__close" onclick="pwRecover.close()" type="button"></button>
+        <div class="popup__container">
+            <button class="popup__close-inner" type="button" onclick="pwRecover.close()">
+                <svg class="popup__close-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                </svg>
+            </button>
+            <h3 class="popup__heading">Forgot password? Enter your Email address to recover it.</h3>
+            <div class="popup__wrapper">
+                <div class="popup__field form-group">
+                    <div class="form-group__field-group">
+                        <input class="form-group__field" name="email" type="email" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required>
+                        <svg class="form-group__required">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                        </svg>
+                    </div>
+                </div>
+                <button class="popup__btn btn btn--round btn--theme-4" type="button">Recover Password</button>
+                <a class="popup__link-btn" href="#">Don’t have access to your Email account?</a>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="page__inner footer__container">
+            <div class="footer__top"><a class="footer__logo-wrapper" href="{{ theme_url }}/index"><img class="footer__logo" src="{% static 'theme/images/logos/logo-footer.png' %}" alt="Raplev logo"></a>
+                <div class="social"> <a class="social__link" href="{{ FACEBOOK_LINK }}"><svg class="social__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#facebook-f"></use>
+                        </svg></a><a class="social__link" href="{{ TWITTER_LINK }}"><svg class="social__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#twitter"></use>
+                        </svg></a><a class="social__link" href="{{ LIKEDIN_LINK }}"><svg class="social__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#linkedin-in"></use>
+                        </svg></a><a class="social__link" href="{{ YOUTUBE_LINK }}"><svg class="social__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#youtube"></use>
+                        </svg></a><a class="social__link" href="{{ YOUTUBE_LINK }}"><svg class="social__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#youtube"></use>
+                        </svg></a></div>
+            </div>
+            <nav class="footer__nav-list"><a class="footer__nav-link" href="#">Menu 1</a><a class="footer__nav-link" href="#">Menu 2</a><a class="footer__nav-link" href="#">Menu 3</a><a class="footer__nav-link" href="#">Menu 4</a><a class="footer__nav-link" href="#">Menu 5</a><a class="footer__nav-link" href="#">Menu 6</a><a class="footer__nav-link" href="#">Menu 7</a><a class="footer__nav-link" href="#">Menu 8</a></nav>
+            <p class="footer__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis repellendus sint laborum neque maxime autem asperiores commodi illo officiis, velit, harum numquam nulla laudantium voluptatem voluptas dicta doloremque quam nisi!</p>
+            <p class="footer__copyright">Copyright © 2019 All Rights Reserved by Raplev.com</p>
+        </div>
+    </footer>
+</div>
+<aside class="dialog_modal" id="modal_dialog">
+    <button class="popup__close-inner dialog_close" type="button">
+        <svg class="popup__close-icon" width="30">
+            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+        </svg></button>
+    <h1 class="popup__heading title">Are you sure you want to cancel this escrow?</h1>
+    <div class="popup__buttons">
+        <div class="popup__buttons-top" style="margin-top: 20px;">
+            <button class="popup__btn btn btn--round btn--theme-2 dialog_yes">YES</button>
+            <button class="popup__btn btn btn--round btn--theme-4 dialog_no" type="button">NO</button></div>
+    </div>
+</aside>
+{% endblock %}
+
+{% block bottom-base-script %}
+<script>
+    function postAction(params, title='Are you sure?', url='', additional_func=null) {
+        dialog(title, function() {
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}', ...params},
+                success: function( data, textStatus, jQxhr ){
+                    alertMessage(data.success)
+                    additional_func(data.content)
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+                }
+            });
+        })
+        
+    }
+
+    function dialog(message, yesCallback, noCallback=false) {
+        $('.title').html(message);
+        var dialog = $('#modal_dialog')
+        dialog.show();
+
+        $('.dialog_yes').click(function() {
+            dialog.hide();
+            yesCallback();
+            $('.dialog_yes').off('click')
+        });
+        $('.dialog_no').click(function() {
+            dialog.hide();
+            noCallback();
+            $('.dialog_no').off('click')
+        });
+        $('.dialog_close').click(function() {
+            dialog.hide();
+            noCallback();
+            $('.dialog_close').off('click')
+        });
+    }
+
+    function alertMessage(message='Success', mode='success') {
+        $('.alert-wrapper').append('<aside class="alert alert--'+mode+'"><span>'+message+'</span><button class="alert__close-btn" type="button" onclick="alertNote.close(this)"><svg class="alert__close-icon" width="30"><use xlink:href="{% static "cadmin/images/icons.svg" %}#times"></use></svg></button></aside>')
+    }
+
+    $(function() {
+        $('#login_form, #register_form, #forgot_form, #confirm_phone').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var prefix = form.attr('prefix');
+            form.find('.is-invalid').removeClass('is-invalid');
+            form.find('.is-invalid-item').remove();
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                success: function(data) {
+                    if (data.success) {
+                        if (data.success !== true) {
+                            alertMessage(data.success)
+                        } else {
+                            if (data.next) {
+                                location.href = next
+                            } else {
+                                location.href = ''
+                            }
+                        }
+                    } else if (data.phone_code_confirm) {
+                        confirmation.open()
+                        $('#confirm_phonenumber').val(data.phonenumber)
+                    }
+                    if (data.error) {
+                        Object.keys(data.error).forEach(key=>{
+                            var input = form.find('.'+prefix+'_'+key);
+                            input.addClass('is-invalid');
+                            input.find('.form-group__field-group').append('<svg class="form-group__required is-invalid-item"><use xlink:href="'+'{% static "theme/images/icons.svg" %}'+'#exclamation-circle"></use></svg>')
+                            input.append('<p class="form-group__message is-invalid-item">'+data.error[key]+'</p>');
+                        });
+                    }
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+                }
+            })
+        });
+
+        gen_badges()
+        setInterval(function() {
+            gen_badges()
+        }, 5000);
+    })
+
+    function gen_badges() {
+        $.ajax({
+            url: '/get-badges/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(data) {
+                $('.received-offers-badge').removeClass('novalue').html(data.received_offers);
+                $('.transactions-badge').removeClass('novalue').html(data.transactions);
+                $('.messages-badge').removeClass('novalue').html(data.messages);
+                if (data.received_offers == 0) {
+                    $('.received-offers-badge').addClass('novalue');
+                }
+                if (data.transactions == 0) {
+                    $('.transactions-badge').addClass('novalue');
+                }
+                if (data.messages == 0) {
+                    $('.messages-badge').addClass('novalue');
+                }
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        })
+    }
+
+    function resendConfirmEmail(e) {
+        $.ajax({
+            url: '{{ theme_url }}/resend-verify-email/',
+            type: 'POST',
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success: function(data) {
+                if (data.success) {
+                    alertMessage(data.success)
+                }
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        })
+    }
+
+    function resendConfirmPhone(e) {
+        confirm_phonenumber = $('#confirm_phonenumber').val()
+        $.ajax({
+            url: '{{ theme_url }}/resend-verify-phone/',
+            type: 'POST',
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'phonenumber':confirm_phonenumber},
+            success: function(data) {
+                if (data.success) {
+                    alertMessage(data.success)
+                }
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        })
+    }
+    function toggleEmailPhone(target) {
+        $('#forgot_form input.form-group__field').val('');
+        if (target == 'forgot-email') {
+            $('#forgot-email').show();
+            $('#forgot-phone').hide();
+        } else {
+            $('#forgot-phone').show();
+            $('#forgot-email').hide();
+        }
+    }
+</script>
+{% endblock %}

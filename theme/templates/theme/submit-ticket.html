@@ -1,0 +1,78 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Submit a ticket{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner submit js-form-toggle" action="{{ theme_url }}/submit-ticket/" method="POST">
+    {% csrf_token %}
+    <header class="content-header">
+        <h1 class="content-header__heading">Submit a ticket</h1>
+        {% if user.customer %}
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        </div>
+        {% endif %}
+    </header>
+    <p class="submit__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium justo ac mattis vestibulum. Cras varius nisi ipsum, a aliquet mauris vehicula condimentum. Quisque vel magna vel diam facilisis feugiat. Quisque faucibus quis lacus in accumsan. Cras a feugiat urna. Quisque luctus mauris sed mi aliquet hendrerit. Integer luctus neque mattis, vulputate odio eu, consequat est. </p>
+    <div class="page__field form-group {% if error.email %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Preferred Email Address" required>
+            {% if error.email %}
+            <svg class="form-group__required is-invalid-item"><use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use></svg>
+            {% endif %}
+        </div>
+        {% if error.email %}
+        <p class="form-group__message is-invalid-item">{{ error.email }}</p>
+        {% endif %}
+    </div>
+    <div class="page__field form-group {% if error.topic %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="topic" placeholder="Subject" required>
+            {% if error.topic %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.topic %}
+        <p class="form-group__message is-invalid-item">{{ error.topic }}</p>
+        {% endif %}
+    </div>
+    <div class="page__field form-group form-group--textarea {% if error.content %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <textarea class="form-group__field js-expanding-textarea" name="content" rows="14" placeholder="How can we help you?"></textarea>
+            {% if error.content %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.content %}
+        <p class="form-group__message is-invalid-item">{{ error.content }}</p>
+        {% endif %}
+    </div>
+    <div class="submit__buttons">
+        <button class="submit__btn btn btn--round btn--theme-2" type="submit">Send Message</button>
+        <label class="submit__btn btn btn--round btn--theme-4">Attach File
+            <input id="fileupload" type="file" name="file" multiple hidden data-url="{{ theme_url }}/upload/" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+            <input type="hidden" name="attached_files" class="instead_of_file" >
+        </label>
+        <span class="submit__formats">Accepted formats: *jpg, *png</span>
+    </div>
+    <div id="uploadlist"></div>
+</form>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script defer src="{% static 'js/jquery.ui.widget.js' %}"></script>
+<script defer src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+<script defer src="{% static 'js/jquery.fileupload.js' %}"></script>
+<script defer src="{% static 'theme/js/upload.js' %}"></script>
+<script>
+var ICON_TIMES = '{% static "theme/images/icons.svg" %}#times';
+</script>
+{% endblock %}

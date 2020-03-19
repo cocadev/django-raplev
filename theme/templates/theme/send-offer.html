@@ -1,0 +1,61 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Send offer{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner send-offer js-form-toggle" action="{{ theme_url }}/send-counter-offer/" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="offer_id" value="{{ offer_id }}" />
+    <h1 class="send-offer__heading">SEND OFFER</h1>
+    <div class="page__field form-group {% if error.price %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="price" placeholder="Bid price" required>
+            {% if error.price %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.price %}
+        <p class="form-group__message is-invalid-item">{{ error.price }}</p>
+        {% endif %}
+    </div>
+    <div class="page__field form-group {% if error.flat %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <span class="form-group__triangle"></span>
+            <select class="form-group__field" name="flat" required>
+                {% for key, value in FLAT_CHOICES %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+            {% if error.flat %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.flat %}
+        <p class="form-group__message is-invalid-item">{{ error.flat }}</p>
+        {% endif %}
+    </div>
+    <div class="page__field form-group form-group--textarea {% if error.message %}is-invalid{% endif %}">
+        <div class="form-group__field-group">
+            <textarea class="form-group__field" name="message" rows="7" placeholder="Message"></textarea>
+            {% if error.message %}
+            <svg class="form-group__required is-invalid-item">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+            {% endif %}
+        </div>
+        {% if error.message %}
+        <p class="form-group__message is-invalid-item">{{ error.message }}</p>
+        {% endif %}
+    </div>
+    <div class="send-offer__buttons">
+        <button class="send-offer__btn btn btn--round btn--theme-4" type="submit">Confirm</button>
+        <button class="send-offer__btn btn btn--round btn--theme-2" type="reset">Cancel</button>
+    </div>
+</form>
+{% endblock %}

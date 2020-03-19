@@ -1,0 +1,73 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Saved wallets{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner wallets">
+    <header class="content-header content-header--has-list">
+        <ul class="content-header__list">
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/send">Send</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/receive">Receive</a></li>
+            <li class="content-header__item"><a class="content-header__link" href="{{ theme_url }}/trade-history">Transaction History</a></li>
+            <li class="content-header__item is-active"><a class="content-header__link" href="#">Saved Wallets</a></li>
+        </ul>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+		</div>
+    </header>
+    <div class="wallets__currency">
+        <h2 class="wallets__heading">Bitcoin</h2>
+        <div class="wallets__table listing">
+            <header class="listing__header-row"><span class="wallets__col listing__col">Wallet ID</span><span class="wallets__col listing__col">Description</span><span class="wallets__col listing__col">Added on</span><span class="wallets__col listing__col">Action</span></header>
+            {% for item in user.customer.btc_wallet_list %}
+            <div class="listing__row" id="{{ item.id }}">
+                <span class="wallets__col listing__col listing__id">
+                    <span class="listing__mobile-caption">Wallet ID: </span>
+                    <span>{{ item.id }}</span>
+                </span>
+                <span class="wallets__col listing__col">{{ item.status }}</span>
+                <span class="wallets__col listing__col">{{ item.created_at }}</span>
+                <button class="wallets__col wallets__remove listing__col" type="button" onclick="postAction({'item_id': '{{item.id}}'}, 'Are you sure to remove this wallet?', '{{ theme_url }}/saved-wallet/', function(message) {$('#{{ item.id }}').remove()});">Remove</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="wallets__currency">
+        <h2 class="wallets__heading">Ethereum</h2>
+        <div class="wallets__table listing">
+            <header class="listing__header-row"><span class="wallets__col listing__col">Wallet ID</span><span class="wallets__col listing__col">Description</span><span class="wallets__col listing__col">Added on</span><span class="wallets__col listing__col">Action</span></header>
+            {% for item in user.customer.eth_wallet_list %}
+            <div class="listing__row" id="{{ item.id }}">
+                <span class="wallets__col listing__col listing__id">
+                    <span class="listing__mobile-caption">Wallet ID: </span>
+                    <span>{{ item.id }}</span>
+                </span>
+                <span class="wallets__col listing__col">{{ item.status }}</span>
+                <span class="wallets__col listing__col">{{ item.created_at }}</span>
+                <button class="wallets__col wallets__remove listing__col" type="button" onclick="postAction({'item_id': '{{item.id}}'}, 'Are you sure to remove this wallet?', '{{ theme_url }}/saved-wallet/', function(message) {$('#{{ item.id }}').remove()});">Remove</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="wallets__currency">
+        <h2 class="wallets__heading">Ripple</h2>
+        <div class="wallets__table listing">
+            <header class="listing__header-row"><span class="wallets__col listing__col">Wallet ID</span><span class="wallets__col listing__col">Description</span><span class="wallets__col listing__col">Added on</span><span class="wallets__col listing__col">Action</span></header>
+            {% for item in user.customer.xrp_wallet_list %}
+            <div class="listing__row" id="{{ item.id }}">
+                <span class="wallets__col listing__col listing__id">
+                    <span class="listing__mobile-caption">Wallet ID: </span>
+                    <span>{{ item.id }}</span>
+                </span>
+                <span class="wallets__col listing__col">{{ item.status }}</span>
+                <span class="wallets__col listing__col">{{ item.created_at }}</span>
+                <button class="wallets__col wallets__remove listing__col" type="button" onclick="postAction({'item_id': '{{item.id}}'}, 'Are you sure to remove this wallet?', '{{ theme_url }}/saved-wallet/', function(message) {$('#{{ item.id }}').remove()});">Remove</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

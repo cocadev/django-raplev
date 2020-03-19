@@ -1,0 +1,534 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Buy listing</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge"><!-- Favicon data-->
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2c06a9">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:300,400,600,700&amp;display=swap" rel="stylesheet">
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/theme/css/theme.min.css">
+        <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="/static/theme/js/theme.min.js" defer></script>
+        
+    </head>
+
+    <body class="page">
+        <article class="cookie-alert">
+            <div class="cookie-alert__container"><span>We use cookies to personalize content and ads, to provide social media features and to analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners who may combine it with other information that you’ve provided to them or that they’ve collected from your use of their services</span><button class="cookie-alert__btn" type="button" onclick="this.parentElement.parentElement.remove()">ACCEPT</button></div>
+        </article>
+        <aside class="top-bar">
+            <div class="top-bar__container">
+                <div class="top-bar__select">
+                    <div class="top-bar__select-wrapper"><span class="top-bar__select-triangle"></span><select class="top-bar__select-field" required>
+                            <option value="" selected disabled>Select location</option>
+                            <option value="#">USA</option>
+                            <option value="#">China</option>
+                            <option value="#">Test</option>
+                            <option value="#">Test</option>
+                            <option value="#">Test</option>
+                        </select></div><button class="top-bar__select-btn btn btn--theme-2 btn--round" type="button">APPLY</button>
+                </div>
+                <ul class="top-bar__items">
+                    <li class="top-bar__item"> <span class="top-bar__currency">BTC/USD</span><span class="top-bar__value">10400.99</span><span class="top-bar__change is-positive">+0.19%</span></li>
+                    <li class="top-bar__item"> <span class="top-bar__currency">ETH/USD</span><span class="top-bar__value">129.99</span><span class="top-bar__change is-negative">-1.29%</span></li>
+                    <li class="top-bar__item"> <span class="top-bar__currency">XRP/USD</span><span class="top-bar__value">0.2625</span><span class="top-bar__change is-positive">+3.29% </span></li>
+                </ul>
+            </div>
+        </aside>
+        <div class="page__container">
+            <header class="page__header header">
+                <div class="header__container">
+                    <div class="header__inner">
+                        <div class="header__wrapper"><a class="header__logo-wrapper" href="index.html"><img class="header__logo" src="{% static 'theme/images/logos/logo-header-mobile.png' %}" alt="Raplev logo"><img class="header__logo header__logo--desktop" src="{% static 'theme/images/logos/logo-header.png' %}" alt="Raplev logo"></a>
+                            <div class="nav-toggle nav-toggle--mobile js-mobile-menu-trigger">
+                                <div class="nav-toggle__bar"></div>
+                                <div class="nav-toggle__bar"></div>
+                                <div class="nav-toggle__bar"></div>
+                            </div>
+                        </div>
+                        <nav class="header__nav nav">
+                            <div class="nav__list-wrapper">
+                                <ul class="nav__mobile-list js-mobile-menu-target">
+                                    <li class="nav__item"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#home"></use>
+                                        </svg><a class="nav__link" href="index.html">Home</a></li>
+                                    <li class="nav__item" onclick="login.open()"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#sign-in-alt"></use>
+                                        </svg><button class="nav__link" type="button">Login</button></li>
+                                    <li class="nav__item" onclick="register.open()"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#user-plus"></use>
+                                        </svg><button class="nav__link" type="button">Register</button></li>
+                                    <li class="nav__item" onclick="support.open()"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#ticket-alt"></use>
+                                        </svg><button class="nav__link" type="button">Support</button></li>
+                                </ul>
+                                <ul class="nav__desktop-list nav__list--desktop">
+                                    <!-- Logged-in menu items which appears on desktop.-->
+                                    <li class="nav__item"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#home"></use>
+                                        </svg><a class="nav__link" href="index.html">Home</a></li>
+                                    <li class="nav__item js-login-trigger" onclick="login.open()"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#sign-in-alt"></use>
+                                        </svg><button class="nav__link" type="button">Login</button></li>
+                                    <li class="nav__item js-register-trigger" onclick="register.open()"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#user-plus"></use>
+                                        </svg><button class="nav__link" type="button">Register</button></li>
+                                    <li class="nav__item js-support-trigger" onclick="support.open()"><svg class="nav__icon">
+                                            <use xlink:href="{% static 'theme/images/icons.svg' %}#ticket-alt"></use>
+                                        </svg><button class="nav__link" type="button">Support</button></li>
+                                    <li class="nav__item"><button class="scroll-btn" data-toggle="scrollBtn"><svg class="scroll-btn__icon">
+                                                <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                            </svg></button></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="header__links">
+                        <div class="header__extra-links"><a class="header__extra-link" href="#">I’m a buyer </a><a class="header__extra-link" href="#">I’m a seller</a><a class="header__extra-link" href="#">Blog</a></div><a class="header__link header__link--trade" href="#">Create new offer</a><a class="header__link header__link--refer" href="#">Refer</a>
+                    </div>
+                </div>
+            </header>
+            <div class="banner banner--bare banner--listing">
+                <div class="banner__container">
+                    <section class="search">
+                        <h1 class="search__heading">I want to</h1>
+                        <div class="search__field form-group">
+                            <div class="form-group__field-group"><svg class="form-group__arrow">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                </svg><select class="form-group__field">
+                                    <option value="#" selected>Buy</option>
+                                    <option value="#">Option 1</option>
+                                    <option value="#">Option 2</option>
+                                    <option value="#">Option 3</option>
+                                </select></div>
+                        </div>
+                        <div class="search__field search__field--small form-group">
+                            <div class="form-group__field-group"><input class="form-group__field" name="blank" type="number" placeholder=""></div>
+                        </div>
+                        <div class="search__field form-group">
+                            <div class="form-group__field-group"><svg class="form-group__arrow">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                </svg><select class="form-group__field">
+                                    <option value="#" selected>XRP</option>
+                                    <option value="#">Option 1</option>
+                                    <option value="#">Option 2</option>
+                                    <option value="#">Option 3</option>
+                                </select></div>
+                        </div><span class="search__caption">for</span>
+                        <div class="search__field search__field--small form-group">
+                            <div class="form-group__field-group"><svg class="form-group__arrow">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                </svg><select class="form-group__field">
+                                    <option value="#" selected>USD</option>
+                                    <option value="#">Option 2</option>
+                                    <option value="#">Option 3</option>
+                                </select></div>
+                        </div><span class="search__caption">with</span>
+                        <div class="search__field search__field--small form-group">
+                            <div class="form-group__field-group"><svg class="form-group__arrow">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                                </svg><select class="form-group__field">
+                                    <option value="#" selected>Paypal</option>
+                                    <option value="#">Option 2</option>
+                                    <option value="#">Option 3</option>
+                                </select></div>
+                        </div><button class="search__expand" type="button" onclick="this.parentElement.classList.add('is-expanded')">More+</button><button class="search__btn btn btn--large btn--theme-1" type="button">SEARCH NOW </button>
+                    </section>
+                </div>
+            </div>
+            <section class="results">
+                <div class="results__bar js-results-bar">
+                    <div class="results__bar-inner">
+                        <h1 class="results__headline">Ready? See your search results</h1><svg class="results__icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#arrow-down-mod"></use>
+                        </svg>
+                    </div>
+                </div>
+                <div class="results__inner">
+                    <p class="results__desc"> <b>Nulla facilisi. Fusce eget lobortis arcu. Vestibulum nec lectus quis tellus sodales sodales sit amet ut augue. </b>Aliquam ac dui porttitor, vestibulum diam quis, gravida urna. Aenean ipsum nulla, consequat a feugiat ut, dapibus eu tortor. Nullam fringilla nunc imperdiet, suscipit ex in, semper eros. Aliquam laoreet rhoncus tortor, ac mattis lacus porttitor ac. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquet lectus at dignissim fermentum. </p>
+                    <table class="results__table table-new">
+                        <thead class="table-new__thead">
+                            <tr class="table-new__row">
+                                <th class="table-new__th">Method</th>
+                                <th class="table-new__th">Listed by</th>
+                                <th class="table-new__th">Payment method</th>
+                                <th class="table-new__th">Short description</th>
+                                <th class="table-new__th">Price/BTC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-new__row">
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                                    <div class="table-new__rate">
+                                        <p class="table-new__rate-caption">Selling</p>
+                                        <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">(213)</a>
+                                            <div class="stars-fixed small"><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon is-selected">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">joe.tanto77</a></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>Gift Card</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">Lorem ipsum dolor sit amet habitum donec dumy have to test dummy text here.</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">8000 USD</span><a class="table-new__price-action-btn" href="#">SEE OFFER</a></span></td>
+                            </tr>
+                            <tr class="table-new__row">
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                                    <div class="table-new__rate">
+                                        <p class="table-new__rate-caption">Selling</p>
+                                        <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">(213)</a>
+                                            <div class="stars-fixed small"><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon is-selected">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">joe.tanto77</a></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>Gift Card</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">Lorem ipsum dolor sit amet habitum donec dumy have to test dummy text here.</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">8000 USD</span><a class="table-new__price-action-btn" href="#">SEE OFFER</a></span></td>
+                            </tr>
+                            <tr class="table-new__row">
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                                    <div class="table-new__rate">
+                                        <p class="table-new__rate-caption">Selling</p>
+                                        <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">(213)</a>
+                                            <div class="stars-fixed small"><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon is-selected">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">joe.tanto77</a></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>Gift Card</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">Lorem ipsum dolor sit amet habitum donec dumy have to test dummy text here.</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">8000 USD</span><a class="table-new__price-action-btn" href="#">SEE OFFER</a></span></td>
+                            </tr>
+                            <tr class="table-new__row">
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Method</span>
+                                    <div class="table-new__rate">
+                                        <p class="table-new__rate-caption">Selling</p>
+                                        <div class="table-new__rate-wrapper"><a class="table-new__rate-sum" href="#">(213)</a>
+                                            <div class="stars-fixed small"><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon is-selected">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg><svg class="stars-fixed__icon stars-fixed__icon--half">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star-half"></use>
+                                                </svg><svg class="stars-fixed__icon">
+                                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#star"></use>
+                                                </svg></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Listed by</span><a href="#">joe.tanto77</a></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Payment method</span><span>Gift Card</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Short description</span><span class="table-new__text">Lorem ipsum dolor sit amet habitum donec dumy have to test dummy text here.</span></td>
+                                <td class="table-new__cell"><span class="table-new__mobile-heading">Price/BTC</span><span class="table-new__price-action"><span class="table-new__price-action-sum">8000 USD</span><a class="table-new__price-action-btn" href="#">SEE OFFER</a></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <nav class="results__pagination pagination">
+                        <ul class="pagination__list">
+                            <li class="pagination__item"><a href="?page=1" rel="first">Prev</a></li>
+                            <li class="pagination__item is-active"><span>1</span></li>
+                            <li class="pagination__item"><a href="?page=2">2</a></li>
+                            <li class="pagination__item"><a href="?page=3">3</a></li>
+                            <li class="pagination__item">...</li>
+                            <li class="pagination__item"><a href="?page=5">7</a></li>
+                            <li class="pagination__item"><a href="?page=4" rel="next">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </section><!-- Elements are wrapped in an empty block to correct positioning relative to the header during animation. -->
+            <div>
+                <aside class="page__dropdown page__dropdown--forgot-pw dropdown js-forgot-pwd-target">
+                    <div class="dropdown__inner">
+                        <header class="dropdown__header">
+                            <h3 class="dropdown__heading">Forgot password?</h3><button class="dropdown__close" onclick="forgotPW.close()" type="button"><svg class="dropdown__close-icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                                </svg></button>
+                        </header>
+                        <div class="dropdown__field form-group is-invalid">
+                            <div class="form-group__field-group"><input class="form-group__field" name="blank" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required><svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg></div>
+                            <p class="form-group__message">Validation alert</p>
+                        </div>
+                        <footer class="dropdown__buttons"><button class="dropdown__submit btn btn--large btn--theme-2" type="submit">SEND</button></footer>
+                    </div>
+                </aside>
+                <aside class="page__dropdown dropdown js-login-target">
+                    <div class="dropdown__inner">
+                        <header class="dropdown__header">
+                            <h3 class="dropdown__heading">Login</h3><button class="dropdown__close" onclick="login.close()" type="button"><svg class="dropdown__close-icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                                </svg></button>
+                        </header>
+                        <form action="#">
+                            <div class="dropdown__field form-group is-invalid">
+                                <div class="form-group__field-group"><input class="form-group__field" name="blank" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required><svg class="form-group__required">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg></div>
+                                <p class="form-group__message">Validation alert</p>
+                            </div>
+                            <div class="dropdown__field form-group is-invalid">
+                                <div class="form-group__field-group"><input class="form-group__field" name="blank" type="password" autocomplete="current-password" placeholder="Password" required><svg class="form-group__required">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg></div>
+                                <p class="form-group__message">Validation alert</p>
+                            </div><a class="dropdown__submit btn btn--large btn--theme-2" href="index-logged.html">LOGIN</a>
+                        </form>
+                        <footer class="dropdown__buttons"><button class="dropdown__text-btn" onclick="switchToRegister()" type="button">Create Account</button><button class="dropdown__text-btn js-forgot-pwd-trigger" onclick="forgotPW.open()" type="button">I forgot my password </button></footer>
+                    </div>
+                </aside>
+                <aside class="page__dropdown dropdown dropdown--register js-register-target">
+                    <div class="dropdown__inner">
+                        <header class="dropdown__header">
+                            <h3 class="dropdown__heading">Register</h3><button class="dropdown__close" onclick="register.close()" type="button"><svg class="dropdown__close-icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                                </svg></button>
+                        </header>
+                        <form class="js-password-check-toggle" action="#">
+                            <div class="dropdown__field form-group is-invalid">
+                                <div class="form-group__field-group"><input class="form-group__field" name="blank" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required><svg class="form-group__required">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg></div>
+                                <p class="form-group__message">Validation alert</p>
+                            </div>
+                            <div class="dropdown__field form-group is-invalid">
+                                <div class="form-group__field-group"><input class="form-group__field" name="blank" autocomplete="name" placeholder="Full name" required><svg class="form-group__required">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg></div>
+                                <p class="form-group__message">Validation alert</p>
+                            </div>
+                            <div class="dropdown__field form-group">
+                                <div class="form-group__field-group"><input class="form-group__field js-password-strength-input" name="blank" type="password" autocomplete="new-password" placeholder="Password" required></div>
+                                <div class="dropdown__password-check-bar js-password-strength-output"><span class="dropdown__password-check-text">Strength: enter value...</span></div>
+                            </div>
+                            <div class="dropdown__field form-group">
+                                <div class="form-group__field-group"><input class="form-group__field js-password-match-input" name="blank" type="password" autocomplete="new-password" placeholder="Password again" required></div>
+                                <div class="dropdown__password-check-bar js-password-match-output"><span class="dropdown__password-check-text">Password matching: enter values...</span></div>
+                            </div>
+                            <div class="dropdown__buttons"><button class="dropdown__btn btn btn--theme-4" type="submit">I want to sell</button><button class="dropdown__btn btn btn--theme-2" type="submit">I want to buy</button></div><button class="dropdown__text-btn js-login-trigger" onclick="switchToLogin()" type="submit">I already have an account</button>
+                        </form>
+                    </div>
+                </aside>
+                <aside class="page__dropdown dropdown support-dropdown js-support-target">
+                    <div class="dropdown__inner support-dropdown__inner">
+                        <header class="dropdown__header">
+                            <h3 class="dropdown__heading">Support</h3><button class="dropdown__close" onclick="support.close()" type="button"><svg class="dropdown__close-icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                                </svg></button>
+                        </header>
+                        <div class="support-dropdown__dispute">
+                            <p class="support-dropdown__desc">Complex question? Dispute? Submit a ticket instead by using our support system.</p><a class="support-dropdown__link" href="support-center.html">SUPPORT CENTER</a>
+                        </div>
+                    </div>
+                </aside>
+                <aside class="page__dropdown dropdown js-two-factor-auth-target">
+                    <div class="dropdown__inner">
+                        <header class="dropdown__header">
+                            <h3 class="two-factor__heading"> Two factor authentication</h3><button class="dropdown__close" onclick="twoFactorAuth.close()" type="button"><svg class="dropdown__close-icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                                </svg></button>
+                        </header>
+                        <p class="two-factor__subheading">We have sent you a code to your email, please enter the code below</p>
+                        <form action="#">
+                            <div class="dropdown__field form-group is-invalid">
+                                <div class="form-group__field-group"><input class="form-group__field" name="blank" autocomplete="off" placeholder="Code" required><svg class="form-group__required">
+                                        <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                    </svg></div>
+                                <p class="form-group__message">Validation alert</p>
+                            </div><a class="dropdown__submit btn btn--large btn--theme-2" href="index-logged.html">LOGIN</a>
+                        </form>
+                    </div>
+                </aside>
+                <aside class="page__dropdown dropdown dropdown--user-menu js-user-menu-target">
+                    <header class="dropdown__header"><button class="dropdown__close" onclick="userMenu.close()" type="button"><svg class="dropdown__close-icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                            </svg></button></header>
+                    <div class="dropdown__inner">
+                        <ul class="dropdown__list">
+                            <li class="dropdown__mobile-list">
+                                <ul>
+                                    <li class="dropdown__menu-item"><a class="dropdown__link" href="index.html">Home</a></li>
+                                    <li class="dropdown__menu-item"><a class="dropdown__link">I’m a Buyer</a></li>
+                                    <li class="dropdown__menu-item"><a class="dropdown__link">I’m a Seller</a></li>
+                                    <li class="dropdown__menu-item"><a class="dropdown__link" href="blog.html">Our Blog</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link">Dashboard</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="#">All Offers</a></li>
+                            <li class="dropdown__menu-item"><span class="dropdown__counter">3</span><a class="dropdown__link">Received Offers</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="#">Transactions</a></li>
+                            <li class="dropdown__menu-item"><span class="dropdown__counter">2</span><a class="dropdown__link" href="messages.html">Messages</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="fund.html">Funding</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="#">Trade History</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link">Affiliates</a></li>
+                            <li class="dropdown__menu-item"><a class="dropdown__link" href="index.html">Logout</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+            <div class="popup js-confirmation-toggle"><button class="popup__close" onclick="confirmation.close()" type="button"></button>
+                <div class="popup__container"><button class="popup__close-inner" type="button" onclick="confirmation.close()"><svg class="popup__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                    <h3 class="popup__heading">Please enter the code we sent you to your phone number.</h3>
+                    <div class="popup__wrapper">
+                        <div class="popup__field form-group">
+                            <div class="form-group__field-group"><input class="form-group__field" name="blank" autocomplete="off" placeholder="Enter the code" required><svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg></div>
+                        </div>
+                        <div class="popup__btn-wrapper"><button class="popup__btn btn btn--round btn--theme-4" type="button">Confirm</button><button class="popup__btn btn btn--round btn--theme-2" type="button">Resend</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="popup popup--narrow popup--activation js-email-activation-toggle"><button class="popup__close" onclick="emailActivation.close()" type="button"></button>
+                <div class="popup__container"><button class="popup__close-inner" type="button" onclick="emailActivation.close()"><svg class="popup__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                    <h3 class="popup__heading">Please follow the link sent to your email for verifying your email</h3>
+                    <div class="popup__btn-wrapper"><button class="popup__btn btn btn--round btn--theme-2" type="button">Open Email</button><button class="popup__btn btn btn--round btn--theme-4" type="button">Resend Code</button></div>
+                </div>
+            </div>
+            <div class="popup popup--follow-link js-follow-link-toggle"><button class="popup__close" onclick="followLink.close()" type="button"></button>
+                <div class="popup__container"><button class="popup__close-inner" type="button" onclick="followLink.close()"><svg class="popup__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                    <h3 class="popup__heading">Please follow the link below to activate your account.</h3>
+                    <div class="popup__wrapper"><a class="popup__url" href="#">http://ameribtc.com/verif789yjfkdlmiketogaslowxzfv554545</a><a class="popup__btn btn btn--round btn--theme-4" href="#">Open Link</a><a class="popup__link-btn" href="#">Link not working? Give me a new one.</a></div>
+                </div>
+            </div>
+            <div class="popup popup--pw-recover js-pw-recover-2-toggle"><button class="popup__close" onclick="pwRecover_2.close()" type="button"></button>
+                <div class="popup__container"><button class="popup__close-inner" type="button" onclick="pwRecover_2.close()"><svg class="popup__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                    <h3 class="popup__heading">Forgot password? Enter your phone number to recover it.</h3>
+                    <div class="popup__wrapper">
+                        <div class="popup__field form-group">
+                            <div class="form-group__field-group"><input class="form-group__field" name="blank" type="tel" autocomplete="tel" placeholder="+1 2345 678910" required><svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg></div>
+                        </div><button class="popup__btn btn btn--round btn--theme-4" type="button">Recover Password</button><a class="popup__link-btn" href="#">Don’t have acces to your phone?</a>
+                    </div>
+                </div>
+            </div>
+            <div class="popup popup--pw-recover js-pw-recover-toggle"><button class="popup__close" onclick="pwRecover.close()" type="button"></button>
+                <div class="popup__container"><button class="popup__close-inner" type="button" onclick="pwRecover.close()"><svg class="popup__close-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                        </svg></button>
+                    <h3 class="popup__heading">Forgot password? Enter your Email address to recover it.</h3>
+                    <div class="popup__wrapper">
+                        <div class="popup__field form-group">
+                            <div class="form-group__field-group"><input class="form-group__field" name="blank" type="email" autocomplete="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}" placeholder="Email address" required><svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg></div>
+                        </div><button class="popup__btn btn btn--round btn--theme-4" type="button">Recover Password</button><a class="popup__link-btn" href="#">Don’t have access to your Email account?</a>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="page__inner footer__container">
+                    <div class="footer__top"><a class="footer__logo-wrapper" href="#"><img class="footer__logo" src="{% static 'theme/images/logos/logo-footer.png' %}" alt="Raplev logo"></a>
+                        <div class="social"> <a class="social__link" href="#"><svg class="social__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#facebook-f"></use>
+                                </svg></a><a class="social__link" href="#"><svg class="social__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#twitter"></use>
+                                </svg></a><a class="social__link" href="#"><svg class="social__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#linkedin-in"></use>
+                                </svg></a><a class="social__link" href="#"><svg class="social__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#youtube"></use>
+                                </svg></a><a class="social__link" href="#"><svg class="social__icon">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#youtube"></use>
+                                </svg></a></div>
+                    </div>
+                    <nav class="footer__nav-list"><a class="footer__nav-link" href="#">Menu 1</a><a class="footer__nav-link" href="#">Menu 2</a><a class="footer__nav-link" href="#">Menu 3</a><a class="footer__nav-link" href="#">Menu 4</a><a class="footer__nav-link" href="#">Menu 5</a><a class="footer__nav-link" href="#">Menu 6</a><a class="footer__nav-link" href="#">Menu 7</a><a class="footer__nav-link" href="#">Menu 8</a></nav>
+                    <p class="footer__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis repellendus sint laborum neque maxime autem asperiores commodi illo officiis, velit, harum numquam nulla laudantium voluptatem voluptas dicta doloremque quam nisi!</p>
+                    <p class="footer__copyright">Copyright © 2019 All Rights Reserved by Raplev.com</p>
+                </div>
+            </footer>
+        </div>
+    </body>
+
+</html>

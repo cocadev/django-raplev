@@ -1,0 +1,91 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Trades{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger trades">
+    <section class="section">
+        <header class="section__header">
+            <nav class="section__nav page-nav">
+                <a class="page-nav__item {%if status == ''%}is-active{%endif%}" href="{{ cadmin_url }}/trades?start_date={{ start_date }}&end_date={{ end_date }}&search={{ search }}">All ({{ count|keyvalue:"all" }})</a>
+                <a class="page-nav__item {%if status == 'waiting'%}is-active{%endif%}" href="{{ cadmin_url }}/trades?start_date={{ start_date }}&end_date={{ end_date }}&search={{ search }}&status=Waiting+for+trade+intiator">Waiting for trade intiator ({{ count|keyvalue:"waiting" }})</a>
+                <a class="page-nav__item {%if status == 'archived'%}is-active{%endif%}" href="{{ cadmin_url }}/trades?start_date={{ start_date }}&end_date={{ end_date }}&search={{ search }}&status=Archive">Archive ({{ count|keyvalue:"archived" }})</a>
+                <a class="page-nav__item {%if status == 'completed'%}is-active{%endif%}" href="{{ cadmin_url }}/trades?start_date={{ start_date }}&end_date={{ end_date }}&search={{ search }}&status=Completed">Completed ({{ count|keyvalue:"completed" }})</a>
+            </nav>
+        </header>
+        <div class="section__inner">
+            <form class="date-filter" style="margin-bottom: 20px;" action="" method="GET">
+                <div class="date-filter__inputs">
+                    <div class="date-filter__field form-group">
+                        <div class="form-group__field-group"><svg class="form-group__calendar" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#calendar-alt"></use>
+                            </svg><input class="form-group__field js-datepicker-toggle" name="start_date" placeholder="7 Nov 2019" value="{{ start_date }}" readonly required></div>
+                    </div>
+                    <div class="date-filter__divider">to</div>
+                    <div class="date-filter__field form-group">
+                        <div class="form-group__field-group"><svg class="form-group__calendar" width="30">
+                                <use xlink:href="{% static 'cadmin/images/icons.svg' %}#calendar-alt"></use>
+                            </svg><input class="form-group__field js-datepicker-toggle" name="end_date" placeholder="12 Nov 2019" value="{{ end_date }}" readonly required></div>
+                    </div><button class="date-filter__apply btn btn--red" type="submit">Apply filter</button>
+                </div>
+                <div class="section__search form-group search">
+                    <div class="form-group__field-group"><input class="form-group__field" name="search" value="{{ search }}" placeholder="Search in Trades"><button class="search__btn" type="submit">Search</button></div>
+                </div>
+            </form>
+            <table class="section__table table table--large">
+                <thead>
+                    <tr>
+                        <th>Trade ID</th>
+                        <th>Offer ID</th>
+                        <th>Trade initiator</th>
+                        <th>Vendor</th>
+                        <th>Payment method</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td><span class="table__mobile-heading">Trade ID</span><a href="#">{{ item.id }}</a></td>
+                        <td><span class="table__mobile-heading">Offer ID</span><a href="{{ cadmin_url }}/offer-details?item_id={{ item.offer.id }}">{{ item.offer.id }}</a></td>
+                        <td><span class="table__mobile-heading">Trade initiator</span><a href="#">{{ item.trade_initiator|default_if_none:"" }}</a></td>
+                        <td><span class="table__mobile-heading">Vendor</span><a href="#">{{ item.vendor }}</a></td>
+                        <td><span class="table__mobile-heading">Payment method</span><span>{{ item.payment_method }}</span></td>
+                        <td><span class="table__mobile-heading">Amount</span><span>{{ item.amount }} {{ item.offer.what_crypto }}</span></td>
+                        <td><span class="table__mobile-heading">Status</span><span>{{ item.get_status_display }}</span></td>
+                        <td><span class="table__mobile-heading">Status</span><span>[[?]]</span></td>
+                        <td><span class="table__mobile-heading">Actions</span><a href="{{ cadmin_url }}/trade-details?item_id={{ item.id }}">Details</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,6 @@
+venv
+__src__
+__pycache__
+.vscode
+migrations
+media

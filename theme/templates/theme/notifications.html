@@ -1,0 +1,16 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner notifications">
+    <h1 class="notifications__heading">Notifications</h1>
+    <ul>
+        {% for item in items %}
+        <li class="notifications__item"><span>{{ item.text|safe }}</span><a href="{{ item.url }}">View</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

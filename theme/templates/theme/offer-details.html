@@ -1,0 +1,37 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Offer Detail{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner offer-details">
+    <header class="offer-details__control">
+        <a class="offer-details__control-heading" href="{{ theme_url }}/all-offers">Back to All Offers</a>
+        <a class="offer-details__control-btn btn btn--round btn--theme-4" href="{{ theme_url }}/offer-activity?item_id={{ item.id }}">See offer activity</a>
+    </header>
+    <h1 class="offer-details__heading">OFFER ID - {{ item.id }}</h1>
+    <div class="offer-details__items">
+        <dl class="offer-details__item">
+            <dt class="offer-details__item-heading">Total sold</dt>
+            <dd class="offer-details__item-value">{{ item.sold_amount }} {{ item.sold_currency }}</dd>
+        </dl>
+        <dl class="offer-details__item">
+            <dt class="offer-details__item-heading">Total bought</dt>
+            <dd class="offer-details__item-value">{{ item.bought_amount }} {{ item.bought_currency }}</dd>
+        </dl>
+        <dl class="offer-details__item">
+            <dt class="offer-details__item-heading">Created on</dt>
+            <dd class="offer-details__item-value">{{ item.created_at }}</dd>
+        </dl>
+        <dl class="offer-details__item">
+            <dt class="offer-details__item-heading">Status</dt>
+            <dd class="offer-details__item-value">{{ item.status }}</dd>
+        </dl>
+        <dl class="offer-details__item">
+            <dt class="offer-details__item-heading">Payment Method</dt>
+            <dd class="offer-details__item-value">{{ item.completed_trade.trade_payment }}</dd>
+        </dl>
+    </div>
+</div>
+{% endblock %}

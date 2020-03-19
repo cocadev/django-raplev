@@ -1,0 +1,167 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Dashboard | Fund{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner dashboard">
+    <header class="content-header">
+        <h1 class="content-header__heading">Dashboard</h1>
+        <div class="status">
+            <div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        </div>
+    </header>
+    <ul class="dashboard__page-nav page-nav">
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/profile-overview">Profile Overview</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/received-offers">Received Offers</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/buy-sell-coins">Buy / Sell Coins</a></li>
+        <li class="page-nav__item is-selected"><a class="page-nav__link" href="{{ theme_url }}/funding">Funding</a></li>
+    </ul>
+    <div class="dashboard__inner">
+        <div class="dashboard__user">
+            <div class="dashboard__user-picture"><img class="dashboard__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+            <h2 class="dashboard__name"{{ user.customer.fullname }}</h2>
+            <p class="dashboard__user-data"><span class="dashboard__data-text">{{ user.customer.balance }} in wallet</span><span class="dashboard__data-text">You can send up to 1.200 BTC</span><span class="dashboard__data-text">Seller Level: {{ user.customer.seller_level }}<svg class="dashboard__data-text-info">
+                        <use xlink:href="{% static 'theme/images/icons.svg' %}#question-circle"></use>
+                    </svg></span></p>
+            <ul class="dashboard__data-list">
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trade Partners</span><span class="dashboard__value">{{ user.customer.trade_partners }}</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trades</span><span class="dashboard__value">{{ user.customer.trade_count }}</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trades Volume</span><span class="dashboard__value">{{ user.customer.trade_volumn }}</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Trusted by</span><span class="dashboard__value">{{ user.customer.trusted_by }} People</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Blocked by</span><span class="dashboard__value">{{ user.customer.blocked_by }} People</span></li>
+                <li class="dashboard__data-item"><span class="dashboard__caption">Joined</span><span class="dashboard__value">{{ user.customer.created_at.date }}</span></li>
+            </ul><a class="dashboard__view-profile" href="{{ them_url }}/customer?item_id={{ user.customer.id }}">VIEW PUBLIC PROFILE</a>
+        </div>
+        <div class="dashboard__form">
+            {% if user.id_cards_list %}
+            <fieldset class="dashboard__section" id="cards_list">
+                <legend class="dashboard__heading">Saved Cards</legend>
+                {% for item in user.id_cards_list %}
+                <div class="dashboard__saved-card js-card-toggle" onclick="selectCard('{{item.id}}')" id="{{item.id}}">
+                    <div class="dashboard__card-field">
+                        <input class="dashboard__card-output" type="text" placeholder="Visa ending with **** 4321" value="{{ item.card_name }} ending with **** {{ item.card_number|slice:'10:' }}" readonly>
+                        <button class="dashboard__toggle-btn js-collapse-trigger" data-target="#card_{{ forloop.counter }}"></button>
+                        {% if item.status %}
+                        <svg class="dashboard__tick">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#check-circle"></use>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="dashboard__saved-card-dropdown" id="card_{{ forloop.counter }}">
+                        <button class="btn btn--theme-4 btn--round" type="button" onclick="postAction({'item_id': '{{item.id}}', 'mode': 'remove_card'}, 'Are you sure to remove this card?', '{{ theme_url }}/funding/', function(message) {removeCard();});">Remove</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </fieldset>
+            {% endif %}
+            <form class="js-form-toggle" action="{{ theme_url }}/funding/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="mode" value="add_card" />
+                <fieldset class="dashboard__section">
+                    <div class="dashboard__heading-wrapper">
+                        <h3 class="dashboard__heading">Add New Card</h3>
+                        <p class="dashboard__waiting">Adding card for the first time? Wait time can be anywhere up to 10 working days </p>
+                    </div>
+                    <div class="page__fields">
+                        <div class="page__field form-group">
+                            <div class="form-group__field-group">
+                                <input class="form-group__field" name="card_name" autocomplete="cc-name" placeholder="Name on Card" required>
+                                <svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="page__field form-group">
+                            <div class="form-group__field-group">
+                                <input class="form-group__field" name="card_number" autocomplete="cc-number" placeholder="Card Number" required>
+                                <svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="page__field form-group">
+                            <div class="form-group__field-group">
+                                <input class="form-group__field" name="security_code" autocomplete="cc-csc" placeholder="3 Digit Security Code" required><svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="page__field form-group">
+                            <div class="form-group__field-group">
+                                <input class="form-group__field js-datepicker-toggle" name="expiration_date" pattern="((?:19|20)\d{2})\s*-(1[012]|0?[1-9])-\s*(3[01]|[12][0-9]|0?[1-9])" autocomplete="off" placeholder="Expiry Date" required>
+                                <svg class="form-group__calendar">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#calendar"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="dashboard__buttons" style="margin-bottom: 30px;">
+                    <button class="dashboard__btn btn btn--theme-4 btn--round" type="submit">Add</button>
+                    <button class="dashboard__btn btn btn--theme-2 btn--round" type="reset">Clear</button>
+                </div>
+            </form>
+            <form class="js-form-toggle" action="{{ theme_url }}/funding/" method="POST" id="fund_form" onclick="">
+                {% csrf_token %}
+                <input type="hidden" name="mode" value="fund" />
+                <input type="hidden" name="card" id="card_select" required />
+                <fieldset class="dashboard__section">
+                    <legend class="dashboard__heading">Funding</legend>
+                    <div class="page__fields">
+                        <div class="page__field form-group">
+                            <div class="form-group__field-group">
+                                <span class="form-group__triangle"></span>
+                                <select class="form-group__field" name="fund_crypto" required>
+                                    <option value="" disabled>What do you wish to fund?</option>
+                                    {% for key, value in CURRENCY_CHOICES %}
+                                        <option value="{{ key }}" {% if key == currency %}selected{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="page__field form-group">
+                            <div class="form-group__field-group">
+                                <input class="form-group__field" name="amount" type="number" placeholder="Amount" required>
+                                <svg class="form-group__required">
+                                    <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="dashboard__buttons">
+                    <button class="dashboard__btn btn btn--theme-4 btn--round" type="submit">Complete</button>
+                    <button class="dashboard__btn btn btn--theme-2 btn--round" type="reset">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script>
+$(function () {
+    $('#fund_form').on('submit', function (e) {
+        if ($('#card_select').val()) {
+            // $('#fund_form').submit()
+
+        } else {
+            $('.cards_list_alert').remove();
+            $('#cards_list').append('<p class="cards_list_alert" style="color:red; margin: 10px 5px;">Please select card for fund.</p>')
+            e.preventDefault();
+        }
+    })
+})
+
+function selectCard(card_id) {
+    $('.dashboard__tick').map(function(i, e) {e.classList.remove("is-active");});
+    $('#'+card_id+' .dashboard__tick').map(function(i, e) {e.classList.add("is-active");});
+    $('#card_select').val(card_id); 
+}
+</script>
+{% endblock %}

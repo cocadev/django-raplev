@@ -1,0 +1,133 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>China All coins</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge"><!-- Favicon data-->
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'theme/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'theme/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'theme/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'theme/site.webmanifest' %}">
+        <link rel="mask-icon" href="{% static '/safari-pinned-tab.svg" color="#2c06a9">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+        <link href="{% static 'css/fonts.googleapis.css' %}" rel="stylesheet">
+        <link href="{% static 'theme/css/quill.snow.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'theme/css/theme.min.css' %}">
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script defer src="{% static 'theme/js/theme.min.js' %}"></script>
+    </head>
+
+    <body class="page landing landing--china">
+        <header class="landing-header">
+            <div class="landing-header__container"><a class="landing-header__logo-wrapper"><img class="landing-header__logo" src="{% static 'theme/images/logos/logo-landing-china.png' %}" alt="Raplev logo"></a>
+                <nav class="landing-header__nav">
+                    <ul class="landing-header__nav-list">
+                        <li class="landing-header__nav-item"><a class="landing-header__nav-link" href="#">About us</a></li>
+                        <li class="landing-header__nav-item"><a class="landing-header__nav-link" href="#">Why us</a></li>
+                        <li class="landing-header__nav-item"><a class="landing-header__nav-link" href="#">Offers</a></li>
+                    </ul>
+                </nav><a class="landing-header__btn btn" href="#">Sign up</a>
+            </div>
+        </header>
+        <section class="landing__top">
+            <div class="landing__top-container">
+                <header class="landing__top-header">
+                    <h1 class="landing__top-heading">The ultimate trade platform</h1>
+                    <h2 class="landing__top-subheading">Buy BTC, ETH, XRP in China</h2>
+                    <p class="landing__top-desc">Fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem augue, malesuada vitae tortor at, aliquet cursus odio. Aenean mattis felis eu sollicitudin dictum. </p><a class="btn" href="#">Latest offers</a>
+                </header>
+                <form class="landing__form" action="#"><label class="page__field form-group"><span class="form-group__caption">I want to buy</span><span class="form-group__field-group"><span class="form-group__triangle"></span><select class="form-group__field" required="required">
+                                <option value="" selected="selected" disabled="disabled">Bitcoin (BTC)</option>
+                                <option value="#">Option 1</option>
+                                <option value="#">Option 2</option>
+                                <option value="#">Option 3</option>
+                            </select></span></label><label class="page__field form-group"><span class="form-group__caption">Amount</span><span class="form-group__field-group"><input class="form-group__field" name="unfilled" type="number" placeholder="Text field" required="required" /></span></label><label class="page__field form-group"><span class="form-group__caption">With</span><span class="form-group__field-group"><span class="form-group__triangle"></span><select class="form-group__field" required="required">
+                                <option value="" selected="selected" disabled="disabled">USD</option>
+                                <option value="#">Option 1</option>
+                                <option value="#">Option 2</option>
+                                <option value="#">Option 3</option>
+                            </select></span></label>
+                    <p class="landing__form-desc">We offer fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem augue, malesuada vitae tortor at, aliquet cursus odio. Aenean mattis felis eu sollicitudin dictum. </p><a class="landing__form-btn btn" href="#">SEARCH NOW</a>
+                </form>
+            </div>
+        </section>
+        <section class="landing__offers">
+            <div class="landing__offers-container">
+                <div class="landing__title">
+                    <h2 class="landing__heading-offers">Latest offers</h2>
+                    <p class="landing__desc">Fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem augue, malesuada vitae tortor at, aliquet cursus odio. Aenean mattis felis eu sollicitudin dictum. </p>
+                </div>
+                <table class="landing__table table-landing">
+                    <thead>
+                        <tr>
+                            <th>Offer type</th>
+                            <th>Listed by</th>
+                            <th>Price/BTC</th>
+                            <th>Limits</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td><span class="table-landing__mobile-heading">Offer type</span><span>{{ item.offer.get_trade_type_display }}</span></td>
+                            <td><span class="table-landing__mobile-heading">Listed by</span><a href="#">{{ item.trade_initiator }}</a></td>
+                            <td><span class="table-landing__mobile-heading">Price/BTC</span><span>{{ item.amount }}</span></td>
+                            <td><span class="table-landing__mobile-heading">Limits</span><span>{{ item.offer.minimum_transaction_limit }} - {{ item.offer.maximum_transaction_limit }}</span></td>
+                            <td><button class="landing__table-btn table-landing__btn" >SEE OFFER</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="landing__advantage">
+            <div class="landing__advantage-container">
+                <div class="landing__title">
+                    <h2 class="landing__heading-advantage">Why choose us?</h2>
+                    <p class="landing__desc">Fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem augue, malesuada vitae tortor at, aliquet cursus odio. Aenean mattis felis eu sollicitudin dictum. </p>
+                </div>
+                <ul class="landing__advantage-items">
+                    <li class="landing__advantage-item"><svg class="landing__advantage-item-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#shield-china"></use>
+                        </svg>
+                        <div class="landing__advantage-item-heading">Safe and secure</div>
+                        <div class="landing__advantage-item-desc">Fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem auge.</div>
+                    </li>
+                    <li class="landing__advantage-item"><svg class="landing__advantage-item-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#fast-china"></use>
+                        </svg>
+                        <div class="landing__advantage-item-heading">Fast and reliable</div>
+                        <div class="landing__advantage-item-desc">Fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem auge.</div>
+                    </li>
+                    <li class="landing__advantage-item"><svg class="landing__advantage-item-icon">
+                            <use xlink:href="{% static 'theme/images/icons.svg' %}#cup-china"></use>
+                        </svg>
+                        <div class="landing__advantage-item-heading">Safe and secure</div>
+                        <div class="landing__advantage-item-desc">Fusce ullamcorper mauris velit, ac lacinia nulla accumsan vitae. Quisque lorem auge.</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <div class="landing-header landing-header--footer">
+            <div class="landing-header__container"><a class="landing-header__logo-wrapper"><img class="landing-header__logo" src="{% static 'theme/images/logos/logo-landing-china.png' %}" alt="Raplev logo"></a>
+                <nav class="landing-header__nav">
+                    <ul class="landing-header__nav-list">
+                        <li class="landing-header__nav-item"><a class="landing-header__nav-link" href="#">About us</a></li>
+                        <li class="landing-header__nav-item"><a class="landing-header__nav-link" href="#">Why us</a></li>
+                        <li class="landing-header__nav-item"><a class="landing-header__nav-link" href="#">Offers</a></li>
+                    </ul>
+                </nav><a class="landing-header__btn btn" href="#">Sign up</a>
+            </div>
+        </div>
+        <footer class="landing__footer">
+            <div class="landing__footer-container"><span>© 2020 - All Rights Reserved</span><a href="#">Terms and Conditions</a></div>
+        </footer>
+    </body>
+
+</html>

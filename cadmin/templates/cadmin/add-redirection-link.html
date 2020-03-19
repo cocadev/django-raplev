@@ -1,0 +1,131 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Add redirection link{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger addition">
+    <section class="section">
+        <header class="add-header">
+            <div class="add-header__top">
+                <h1 class="add-header__heading">Add a redirection link</h1>
+                {% if success %}
+                <aside class="add-header__alert alert alert--neutral">
+                    <span>{{ success }}</span>
+                    <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+                        <svg class="alert__close-icon" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#times"></use>
+                        </svg>
+                    </button>
+                </aside>
+                {% endif %}
+            </div>
+            <form action="{{ cadmin_url }}/add-redirection-link/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <div class="add-header__bottom">
+                    <div class="add-header__add-field add-field add-field--small">
+                        <div class="add-field__desc">OLD LINK</div>
+                        <div class="add-field__form-group"><span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <div class="add-field__wrapper">
+                                    <div class="add-field__field-group">
+                                        <input class="add-field__input" name="old_link" value="{{ item.old_link }}" required placeholder="Old Link" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-header__add-field add-field add-field--small">
+                        <div class="add-field__desc">NEW LINK</div>
+                        <div class="add-field__form-group"><span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <div class="add-field__wrapper">
+                                    <div class="add-field__field-group">
+                                        <input class="add-field__input" name="new_link" value="{{ item.new_link }}" required placeholder="New Link" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-header__add-field add-field--large">
+                        <div class="add-field__desc">REDIRECTION TYPE</div>
+                        <div class="add-field__form-group"><span class="add-field__base">https://raplev.com/</span>
+                            <div class="add-field__inner">
+                                <div class="add-field__wrapper">
+                                    <div class="add-field__field-group"><span class="form-group__triangle"></span>
+                                        <select class="add-field__input" name="redirection_type" required>
+                                            <option value="302temporary" {% if item.redirection_type == '302temporary' %}selected{% endif %}>302temporary</option>
+                                            <option value="301temporary" {% if item.redirection_type == '301temporary' %}selected{% endif %}>301temporary</option>
+                                            <option value="400temporary" {% if item.redirection_type == '400temporary' %}selected{% endif %}>400temporary</option>
+                                            <option value="500temporary" {% if item.redirection_type == '500temporary' %}selected{% endif %}>500temporary</option>
+                                        </select>
+                                    </div>
+                                    <button class="add-field__btn btn btn--accent" type="submit">{% if item.id %}Edit{% else %}Add{% endif %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if error.new_link %}
+                <div class="add-field__message">
+                    <svg class="add-field__message-icon" width="30">
+                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#exclamation-circle"></use>
+                    </svg>
+                    <span class="add-field__message-text">{{ error.new_link }}</span>
+                </div>
+                {% endif %}
+            </form>
+        </header>
+        <div class="section__inner">
+            <table class="section__table table">
+                <thead>
+                    <tr>
+                        <th>Old link</th>
+                        <th>New link</th>
+                        <th>Redirection type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td><span class="table__mobile-heading">Old link</span><a href="/{{ item.old_link }}">{{ item.old_link }}</a></td>
+                        <td><span class="table__mobile-heading">New link</span><a href="/{{ item.new_link }}">{{ item.new_link }}</a></td>
+                        <td><span class="table__mobile-heading">Redirection type</span><span>{{ item.redirection_type }}</span></td>
+                        <td><span class="table__mobile-heading">Actions</span>
+                            <div class="table-actions">
+                                <a class="table-actions__item table-actions__edit" href="{{ cadmin_url }}/add-redirection-link/?item_id={{ item.id }}">Edit</a>
+                                <a class="table-actions__item" href="{{ cadmin_url }}/add-redirection-link?delete_id={{ item.id }}">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

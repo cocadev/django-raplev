@@ -1,0 +1,39 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Leave a review{% endblock %}
+
+{% block page-inner %}
+<form class="page__inner flag-feedback js-form-toggle" action="{{ theme_url }}/flag-feedback/" method="POST">
+    {% csrf_token %}
+    <input name="review_id" value="{{ item.id }}" type="hidden">
+    <header class="flag-feedback__header">
+        <h1 class="flag-feedback__heading">Flag a feedback</h1>
+        {% if success %}
+        <aside class="flag-feedback__alert alert alert--success">
+            <span class="alert__text">Your flag report has been sent</span>
+            <button class="alert__close-btn" type="button" onclick="alertNote.close(this)">
+                <svg class="alert__close-icon">
+                    <use xlink:href="{% static 'theme/images/icons.svg' %}#times"></use>
+                </svg>
+            </button>
+        </aside>
+        {% endif %}
+    </header>
+    <div class="page__field form-group">
+        <div class="form-group__field-group">
+            <input class="form-group__field" name="reason" placeholder="Why is the feedback being flagged?" required>
+            <svg class="form-group__required">
+                <use xlink:href="{% static 'theme/images/icons.svg' %}#exclamation-circle"></use>
+            </svg>
+        </div> 
+    </div>
+    <div class="page__field form-group form-group--textarea">
+        <div class="form-group__field-group">
+            <textarea class="form-group__field" name="content" rows="12" data-character-counter=".js-character-counter" placeholder="Any note you would like to add (Optional)"></textarea>
+        </div>
+    </div>
+    <div class="flag-feedback__control"><button class="btn btn--round btn--theme-2" type="submit">SUBMIT</button><span>Character remaining: <span class="js-character-counter">200</span></span></div>
+</form>
+{% endblock %}

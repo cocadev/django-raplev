@@ -1,0 +1,142 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Dashboard | Received Offers{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner dashboard">
+    <header class="content-header">
+        <h1 class="content-header__heading">Dashboard</h1>
+        <div class="status">
+            <div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+        </div>
+    </header>
+    <ul class="dashboard__page-nav page-nav">
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/profile-overview">Profile Overview</a></li>
+        <li class="page-nav__item is-selected"><a class="page-nav__link" href="{{ theme_url }}/received-offers">Received Offers</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/buy-sell-coins">Buy / Sell Coins</a></li>
+        <li class="page-nav__item"><a class="page-nav__link" href="{{ theme_url }}/funding">Funding</a></li>
+    </ul>
+    <section class="dashboard__offers">
+        {% for item in items %}
+        <div class="dashboard__offer received-offer {% if item.offer.is_expired %} is-expired{% endif %}" id="{{ item.id }}">
+            <header class="received-offer__user-data">
+                <h2 class="received-offer__data-heading">New Bid</h2>
+                <div class="received-offer__data-container">
+                    <div class="received-offer__data">
+                        <div class="received-offer__userpic"><img class="received-offer__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+                        <div>
+                            <p class="received-offer__name">{{ item.vendor }}</p>
+                            <p class="received-offer__score">{{ item.vendor.customer_rate }} Feedback Score</p>
+                        </div>
+                    </div>
+                    <ul class="received-offer__list">
+                        <li class="received-offer__item">{{ item.vendor.user.supported_language }}<svg class="received-offer__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#{% if item.offer.supported_location in item.vendor.user.supported_language %}check{% else %}times{% endif %}-circle"></use>
+                            </svg></li>
+                        <li class="received-offer__item">{{ item.vendor.user.email_verified|yesno:'Email Verified,Email Not Verified' }}<svg class="received-offer__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#{% if item.offer.identified_user_required and item.vendor.user.email_verified %}check{% else %}times{% endif %}-circle"></use>
+                            </svg></li>
+                        <li class="received-offer__item">{{ item.vendor.user.phone_verified|yesno:'SMS Verified,SMS Not Verified' }}<svg class="received-offer__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#{% if item.offer.sms_verification_required and item.vendor.user.phone_verified %}check{% else %}times{% endif %}-circle"></use>
+                            </svg></li>
+                        <li class="received-offer__item received-offer__item--successful">{{ item.vendor.successful_trade_count }} Successful Trades<svg class="received-offer__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#{% if item.vendor.successful_trade_count > item.offer.minimum_successful_trades %}check{% else %}times{% endif %}-circle"></use>
+                            </svg></li>
+                        <li class="received-offer__item received-offer__item--unsuccessful">{{ item.vendor.unsuccessful_trade_count }} Unsucessfull Trades<svg class="received-offer__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#{% if item.vendor.successful_trade_rate > item.offer.minimum_complete_trade_rate %}check{% else %}times{% endif %}-circle"></use>
+                            </svg></li>
+                        <li class="received-offer__item received-offer__item--score">Feedback score - {{ item.vendor.customer_rate }}/5<svg class="received-offer__icon">
+                                <use xlink:href="{% static 'theme/images/icons.svg' %}#{% if item.vendor.customer_rate >= 4 %}check{% else %}times{% endif %}-circle"></use>
+                            </svg></li>
+                        {% if item.status == 'accepted' %}
+                            {% if item.vendor.user == user %}
+                            <li class="received-offer__item received-offer__item--successful">Accepted by Offerer</li>
+                            {% else %}
+                            <li class="received-offer__item received-offer__item--successful">Accepted by you</li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                    <div class="received-offer__bottom">
+                        {% if item.status == 'accepted' %}
+                            {% if item.vendor.user == user %}
+                            <button class="received-offer__btn btn btn--theme-1" type="button" onclick="location.href='{{ theme_url }}/initiate-trade?trade_id={{ item.id }}'">INIT TRADE</button>
+                            {% else %}
+                            <button class="received-offer__btn btn btn--theme-3" disabled type="button" onclick="location.href='{{ theme_url }}/initiate-trade?trade_id={{ item.id }}'">INIT TRADE</button>
+                            {% endif %}
+                            <button class="received-offer__btn btn btn--theme-4" type="button" onclick="location.href='{{ theme_url }}/messages?for={{ item.vendor.user.id }}'">MESSAGE</button>
+                        {% else %}
+                        <button class="received-offer__btn btn btn--theme-2" onclick="postAction({'item_id': '{{item.id}}', 'mode': 'accepted'}, 'Are you sure to accepted this offer?', '{{ theme_url }}/received-offers/', function(message) {location.href='{{ theme_url }}/messages?for={{ item.vendor.user.id }}'});">ACCEPT</button>
+                        <button class="received-offer__btn btn btn--theme-4" type="button" onclick="postAction({'item_id': '{{item.id}}', 'mode': 'declined'}, 'Are you sure to decline this offer?', '{{ theme_url }}/received-offers/', function(message) {$('#{{ item.id }}').remove()});">DECLINE</button>
+                        {% endif %}
+                        <button class="received-offer__btn btn btn--theme-1" style="display: none; height: 10px;" type="button">COUNTER OFFER</button>
+                    </div>
+                </div>
+            </header>
+            <div class="received-offer__body">
+                <header class="received-offer__inner">
+                    <p class="received-offer__desc">{{ item.created_by }} offered {{ item.price }} {{ item.flat }} for {{ item.offer.get_trade_price }} {{ item.offer.flat }} / {{ item.offer.what_crypto }}</p>
+                </header>
+                <div class="received-offer__text">
+                    {{ item.message|safe }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div id="more_loader">
+            <button class="dashboard__load" type="button" onclick="loadMore();">LOAD MORE</button>
+            <div class="dashboard__loader loader">
+                <div class="lds-css ng-scope">
+                    <div class="lds-spinner" style="width: 100%; height: 100%">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div><span class="loader__text">LOADING</span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block bottom-script %}
+{{ block.super }}
+<script>
+    function loadMore() {
+        var loadmore = [];
+        $('.dashboard__offer').each(function(i, e) {
+            loadmore.push($(e).attr('id'));
+        })
+        $('#more_loader .loader').addClass('is-active');
+        $('#more_loader button').hide();
+        console.log(loadmore)
+        $.ajax({
+            url: '{{ theme_url }}/received-offers/',
+            type: 'GET',
+            data: {
+                loadmore: loadmore
+            },
+            success: function(data) {
+                $('#more_loader').before(data);
+                $('#more_loader .loader').removeClass('is-active');
+                $('#more_loader button').show();
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
+        })
+    }
+
+</script>
+{% endblock %}

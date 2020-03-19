@@ -1,0 +1,90 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Offer Details{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details offer-details">
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/offers">Offers ID</a><span> / </span><span>{{ item.id }}</span></h1>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Created on</dt>
+                    <dd class="data-panel__value">{{ item.created_at }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Address</dt>
+                    <dd class="data-panel__value">{{ item.address }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Flat</dt>
+                    <dd class="data-panel__value">{{ item.flat }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Created by</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.created_by }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Show postcode</dt>
+                    <dd class="data-panel__value is-{{ item.show_postcode|lower }}">{{ item.get_show_postcode_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Minimum transaction limit</dt>
+                    <dd class="data-panel__value">{{ item.minimum_transaction_limit }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Trade type</dt>
+                    <dd class="data-panel__value">{{ item.get_trade_type_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">What crypto</dt>
+                    <dd class="data-panel__value">{{ item.what_crypto }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Maximum transaction limit</dt>
+                    <dd class="data-panel__value">{{ item.maximum_transaction_limit }}</dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Operating hours</dt>
+                    <dd class="data-panel__value">{{ item.operating_hours_start }} - {{ item.operating_hours_end }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Restrict hours</dt>
+                    <dd class="data-panel__value">{{ item.restrict_hours_start }} - {{ item.restrict_hours_end }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <div class="offer-details__sections">
+        <section class="offer-details__section section section--small">
+            <header class="section__header">
+                <h2 class="section__heading">Trade overview</h2>
+            </header>
+            <p class="offer-details__text section__inner">{{ item.trade_overview }}</p>
+        </section>
+        <section class="offer-details__section section section--small">
+            <header class="section__header">
+                <h2 class="section__heading">Message for proof of transaction</h2>
+            </header>
+            <div class="offer-details__text section__inner">{{ item.message_for_proof|safe }}</div>
+        </section>
+    </div>
+    <section class="details__section section">
+        <header class="section__header">
+            <h2 class="section__heading">Additional options</h2>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Identified user required</dt>
+                    <dd class="data-panel__value is-{{ item.identified_user_required|lower }}">{{ item.get_identified_user_required_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">SMS verification required</dt>
+                    <dd class="data-panel__value is-{{ item.sms_verification_required|lower }}">{{ item.get_sms_verification_required_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Minimum successful trades</dt>
+                    <dd class="data-panel__value">{{ item.minimum_successful_trades }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+</main>
+{% endblock %}

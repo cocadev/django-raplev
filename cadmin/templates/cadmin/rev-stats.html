@@ -1,0 +1,42 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Rev stats{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger rev-stats">
+    <div class="rev-stats__section section">
+        <form action="" method="GET">
+            <div class="date-filter">
+                <div class="date-filter__field form-group">
+                    <div class="form-group__field-group"><svg class="form-group__calendar" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#calendar-alt"></use>
+                        </svg><input class="form-group__field js-datepicker-toggle" name="start_date" type="text" placeholder="7 Nov 2019" value="{{ start_date }}" readonly required></div>
+                </div>
+                <div class="date-filter__divider">to</div>
+                <div class="date-filter__field form-group">
+                    <div class="form-group__field-group"><svg class="form-group__calendar" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#calendar-alt"></use>
+                        </svg><input class="form-group__field js-datepicker-toggle" name="end_date" type="text" placeholder="12 Nov 2019" value="{{ end_date }}" readonly required></div>
+                </div><button class="date-filter__apply btn btn--red" type="submit">Apply filter</button>
+            </div>
+        </form>
+    </div>
+    <div class="rev-stats__sections">
+        <div class="rev-stats__data section">
+            <dl class="rev-stats__data-wrapper"><dt class="rev-stats__heading">Total Earned</dt>
+                <dd class="rev-stats__subheading">${{ total_earned }}</dd>
+            </dl>
+            <dl class="rev-stats__data-wrapper"><dt class="rev-stats__heading">Total Refunded</dt>
+                <dd class="rev-stats__subheading">${{ total_refunded }}</dd>
+            </dl>
+        </div>
+        <div class="rev-stats__pie section"><svg class="rev-stats__pie-element js-pie" width="100" height="100" data-percentage="{{ percentage }}">
+                <circle r="25" cx="50" cy="50"></circle>
+            </svg>
+            <div><span class="rev-stats__pie-desc-item">Main platform</span><span class="rev-stats__pie-desc-item">VOLUME</span></div>
+        </div>
+    </div>
+</main>
+{% endblock %}

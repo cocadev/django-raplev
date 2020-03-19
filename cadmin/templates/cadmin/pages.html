@@ -1,0 +1,89 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Cadmin Pages{% endblock %}
+
+{% block head-script %}
+<style>
+    .pages-list {
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-bottom: 30px;
+    }
+    .pages-item {
+        padding: 3px 10px;
+    }
+</style>
+{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner">
+    <ul class="pages-list">
+        <li class="pages-item"><a href="/cadmin/login/">Login</a></li>
+
+        <br>
+        <br>
+        <p>
+        ============== Login required ===================<br>
+        </p>
+
+        <li class="pages-item"><a href="/cadmin/add-user/">Add User</a></li>
+        <li class="pages-item"><a href="/cadmin/users/">Users</a></li>
+        <li class="pages-item"><a href="/cadmin/logout/">Logout</a></li>
+        <li class="pages-item"><a href="/cadmin/recover/">Index</a></li>
+        <li class="pages-item"><a href="/cadmin/set-pw/">Set Pw</a></li>
+        <li class="pages-item"><a href="/cadmin/revenue/">Revenue</a></li>
+        <li class="pages-item"><a href="/cadmin/revenue-details/item_id=2">Revenue Details</a></li>
+        <li class="pages-item"><a href="/cadmin/rev-stats/">Rev Stats</a></li>
+        <li class="pages-item"><a href="/cadmin/offers/">Offers</a></li>
+        <li class="pages-item"><a href="/cadmin/offer-details/?item_id=2">Offer Details</a></li>
+        <li class="pages-item"><a href="/cadmin/trades/">Trades</a></li>
+        <li class="pages-item"><a href="/cadmin/trade-details/?item_id=1">Trade Details</a></li>
+        <li class="pages-item"><a href="/cadmin/customers/">Customers</a></li>
+        <li class="pages-item"><a href="/cadmin/customer-details/?item_id=2">Customer Details</a></li>
+        <li class="pages-item"><a href="/cadmin/transactions/">Transactions</a></li>
+        <li class="pages-item"><a href="/cadmin/transaction-details/?item_id=2">Transaction Details</a></li>
+        <li class="pages-item"><a href="/cadmin/escrows/">Escrows</a></li>
+        <li class="pages-item"><a href="/cadmin/escrow-details/?item_id=1">Escrow Details</a></li>
+        <li class="pages-item"><a href="/cadmin/support-center/">Support Center</a></li>
+        <li class="pages-item"><a href="/cadmin/ticket-details-dispute/?item_id=1">Ticket Details Dispute</a></li>
+        <li class="pages-item"><a href="/cadmin/ticket-details-no-dispute/?item_id=3">Ticket Details No Dispute</a></li>
+        <li class="pages-item"><a href="/cadmin/id-verify-app/">ID Verify App</a></li>
+        <li class="pages-item"><a href="/cadmin/id-verify-app-details/?item_id=1">ID Verify App Details</a></li>
+        <li class="pages-item"><a href="/cadmin/contact-form/">Contact Form</a></li>
+        <li class="pages-item"><a href="/cadmin/contact-form-details/?item_id=1">Contact Form Details</a></li>
+        <li class="pages-item"><a href="/cadmin/additional-pages/">Additional Pages</a></li>
+        <li class="pages-item"><a href="/cadmin/additional-page-preview/?item_id=1">Additional Page Preview</a></li>
+        <li class="pages-item"><a href="/cadmin/add-new-page/?item_id=1">Add New Page</a></li>
+        <li class="pages-item"><a href="/cadmin/blog/">Blog</a></li>
+        <li class="pages-item"><a href="/cadmin/post-preview/?item_id=1">Post Preview</a></li>
+        <li class="pages-item"><a href="/cadmin/add-new-post/?item_id=1">Add New Post</a></li>
+        <li class="pages-item"><a href="/cadmin/tags/?alpha=&ongoing=True">Tags</a></li>
+        <li class="pages-item"><a href="/cadmin/tags/?alpha=&ongoing=False">Tags</a></li>
+        <li class="pages-item"><a href="/cadmin/media-library/">Media Library</a></li>
+        <li class="pages-item"><a href="/cadmin/upload/">Upload</a></li>
+        <li class="pages-item"><a href="/cadmin/last-login/">Last Login</a></li>
+        <li class="pages-item"><a href="/cadmin/flagged-posts/">Flagged Posts</a></li>
+        <li class="pages-item"><a href="/cadmin/flagged-post-details/">Flagged Post Details</a></li>
+        <li class="pages-item"><a href="/cadmin/add-landing-page/">Add Landing Page</a></li>
+        <li class="pages-item"><a href="/cadmin/add-pers-link/">Add Pers Link</a></li>
+        <li class="pages-item"><a href="/cadmin/add-redirection-link/">Add Redirection Link</a></li>
+        <li class="pages-item"><a href="/cadmin/documentations/">Documentations</a></li>
+        <li class="pages-item"><a href="/cadmin/post-issue/">Post Issue</a></li>
+        <li class="pages-item"><a href="/cadmin/seo/">SEO</a></li>
+        <li class="pages-item"><a href="/cadmin/security-status/">Security Status</a></li>
+        <li class="pages-item"><a href="/cadmin/options/">Options</a></li>
+        <li class="pages-item"><a href="/cadmin/options-router-blog/">Options Router Blog</a></li>
+        <li class="pages-item"><a href="/cadmin/options-router-forgot-password/">Options Router Forgot Password</a></li>
+        <li class="pages-item"><a href="/cadmin/campaigns/">Camapaigns</a></li>
+        <li class="pages-item"><a href="/cadmin/campaign-updated/?item_id=1">Campaign Updated</a></li>
+        <li class="pages-item"><a href="/cadmin/affiliates/">Affiliates</a></li>
+        <li class="pages-item"><a href="/cadmin/add-new-affiliate/?item_id=1">Add New Affiliates</a></li>
+        <li class="pages-item"><a href="/cadmin/reports/">Reports</a></li>
+        <li class="pages-item"><a href="/cadmin/community-posts/">Community Posts</a></li>
+        <li class="pages-item"><a href="/cadmin/community-post-details/?item_id=1">Community Post Details</a></li>
+        <li class="pages-item"><a href="/cadmin/community-post-rules/">Community Post Rules</a></li>
+    </ul>
+</main>
+{% endblock %}

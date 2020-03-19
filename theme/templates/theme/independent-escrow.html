@@ -1,0 +1,48 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Escrows{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner escrows">
+    <header class="content-header content-header--has-list">
+        <ul class="content-header__list js-tablist-triggers">
+            <li class="content-header__item {% if confirmed == 'opened' %}is-active{% endif %}"><a class="content-header__link" href="{{ theme_url }}/independent-escrow?confirmed=opened&trade_id={{ trade_id }}">Open Escrows</a></li>
+            <li class="content-header__item {% if confirmed == 'closed' %}is-active{% endif %}"><a class="content-header__link" href="{{ theme_url }}/independent-escrow?confirmed=closed&trade_id={{ trade_id }}">Closed Escrows</a></li>
+            <li class="content-header__item {% if confirmed == 'cancelled' %}is-active{% endif %}"><a class="content-header__link" href="{{ theme_url }}/independent-escrow?confirmed=cancelled&trade_id={{ trade_id }}">Cancelled Escrows</a></li>
+        </ul>
+        <div class="status">
+			<div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt="{{ user }}"></div>
+		</div>
+    </header>
+    <div class="js-tablist-tabs">
+        <div class="escrows__tab">
+            {% for item in items %}
+            <div class="escrows__item">
+                <div class="escrows__price-wrapper">
+                    <h2 class="escrows__price">{{ item.amount }} {{ item.currency }}</h2>
+                    <p class="escrows__date">Escrow on {{ item.created_at }}</p>
+                </div>
+                <div class="escrows__desc-wrapper">
+                    <p class="escrows__desc">{% if item.held_from == user.customer %}Held for {{ item.held_for }}{% else %}Held from {{ item.held_from }}{% endif %}</p>
+                    <p class="escrows__status">{{ item.get_status_display }}</p>
+                    {% if item.held_from == user.customer %}
+                    <button class="btn btn--theme-4" style="float: right; margin-top: 10px"  onclick="
+                        postAction(
+                            {'item_id': '{{item.id}}'}, 
+                            'Are you sure to SEND coins?', 
+                            '{{ theme_url }}/independent-escrow/', 
+                            function(message) {
+                                location.href=''
+                            });
+                    ">Auto Send</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

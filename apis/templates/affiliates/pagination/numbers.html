@@ -1,0 +1,43 @@
+{% load static %}
+
+<ul class="pagination__list">
+  {% if previous_url %}
+  <li class="pagination__item">
+    <a class="pagination__link" href="javascript: showLists('{{ previous_url }}')">
+      <div class="pagination__left"></div>
+    </a>
+  </li>
+  {% else %}
+  <li class="pagination__item disabled">
+    <a class="pagination__link" href="#">
+      <div class="pagination__left"></div>
+    </a>
+  </li>
+  {% endif %}
+  
+  {% for page_link in page_links %}
+    {% if page_link.is_break %}
+    <li class="pagination__item is-disabled"><span>...</span></li>
+    {% else %}
+      {% if page_link.is_active %}
+      <li class="pagination__item is-active"><a class="pagination__link" href="javascript: showLists('{{ page_link.url }}')">{{ page_link.number }}</a></li>
+      {% else %}
+      <li class="pagination__item"><a class="pagination__link" href="javascript: showLists('{{ page_link.url }}')">{{ page_link.number }}</a></li>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if next_url %}
+  <li class="pagination__item">
+    <a class="pagination__link" href="javascript: showLists('{{ next_url }}')">
+      <div class="pagination__right"></div>
+    </a>
+  </li>
+  {% else %}
+  <li class="pagination__item disabled">
+    <a class="pagination__link" href="#">
+      <div class="pagination__right"></div>
+    </a>
+  </li>
+  {% endif %}
+</ul>

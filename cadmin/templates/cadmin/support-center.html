@@ -1,0 +1,80 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Support Center{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger">
+    <section class="section">
+        <header class="section__header">
+            <div>
+                <h1 class="section__heading">Support Center</h1>
+                <nav class="section__nav page-nav">
+                    <a class="page-nav__item {% if is_dispute == '' %}is-active{% endif %}" href="{{ cadmin_url }}/support-center?search={{ search }}">All ({{ count|keyvalue:"All" }})</a>
+                    <a class="page-nav__item {% if is_dispute == 'False' %}is-active{% endif %}" href="{{ cadmin_url }}/support-center?search={{ search }}&is_dispute=False">General ({{ count|keyvalue:"General" }})</a>
+                    <a class="page-nav__item {% if is_dispute == 'True' %}is-active{% endif %}" href="{{ cadmin_url }}/support-center?search={{ search }}&is_dispute=True">Disputes ({{ count|keyvalue:"Disputes" }})</a>
+                </nav>
+            </div>
+            <form class="section__search form-group search" action="" method="GET">
+                <div class="form-group__field-group"><input class="form-group__field" name="search" placeholder="Search in Tickets" value="{{ search }}"><button class="search__btn" type="submit">Search</button></div>
+            </form>
+        </header>
+        <div class="section__inner">
+            <table class="section__table table table--large">
+                <thead>
+                    <tr>
+                        <th>Ticket number</th>
+                        <th>Created by</th>
+                        <th>Created on</th>
+                        <th>Topic</th>
+                        <th>Is dispute?</th>
+                        <th>Ticket manager</th>
+                        <th>Ticket priority</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td><span class="table__mobile-heading">Ticket number</span><a href="#">{{ item.id }}</a></td>
+                        <td><span class="table__mobile-heading">Created by</span><a href="#">{{ item.email }}</a></td>
+                        <td><span class="table__mobile-heading">Created on</span><span>{{ item.created_at }}</span></td>
+                        <td><span class="table__mobile-heading">Topic</span><span>{{ item.topic }}</span></td>
+                        <td><span class="table__mobile-heading">Is dispute?</span><span>{{ item.get_is_dispute_display }}</span></td>
+                        <td><span class="table__mobile-heading">Ticket manager</span><a href="#">{{ item.ticket_manager }}</a></td>
+                        <td><span class="table__mobile-heading">Ticket priority</span>
+                            <div class="table__priority-{{ item.ticket_priority|lower }}">{{ item.ticket_priority }}</div>
+                        </td>
+                        <td><span class="table__mobile-heading">Actions</span>
+                            <a href="{{ cadmin_url }}/ticket-details-{{ item.is_dispute|yesno:'dispute,no-dispute' }}?item_id={{ item.id }}">Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="section__pagination pagination">
+                <ul class="pagination__list">
+                    {% if items.has_previous %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Prev</li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                         {% if items.number == i %}
+                         <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% else %}
+                         <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                         {% endif %}
+                    {% endfor %}
+                    {% if items.has_next %}
+                    <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+                    {% else %}
+                    <li class="pagination__item disabled">Next</li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+</main>
+{% endblock %}

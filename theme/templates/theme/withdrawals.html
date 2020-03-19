@@ -1,0 +1,40 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Withdrawals{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner reports">
+    <header class="content-header content-header--has-list">
+        <ul class="reports__list content-header__list js-tablist-triggers">
+            <li class="content-header__item">
+                <a class="content-header__link" href="{{ theme_url }}/deposits">DEPOSITS</a>
+            </li>
+            <li class="content-header__item is-active">
+                <a class="content-header__link" href="{{ theme_url }}/withdrawals">WITHDRAWALS</a>
+            </li>
+        </ul>
+        <div class="status">
+            <div class="status__data"><span class="status__text">{{ user.customer.balance }} in wallet</span><a class="status__text" href="{{ them_url }}/my-balance">View Full Wallet</a></div>
+			<div class="status__userpic"><img class="status__user-img" src="{% if user.avatar %}{{ user.avatar.file.url }}{% else %}{% static 'theme/images/userpic.png' %}{% endif %}" alt=""></div>
+        </div>
+    </header>
+    <div class="js-tablist-tabs listing">
+        <div class="reports__tab">
+            <header class="listing__header-row"><span class="reports__col listing__col">Withdrawal ID</span><span class="reports__col listing__col">Withdrawn</span><span class="reports__col listing__col">Added on</span><span class="reports__col listing__col">Details</span></header>
+            {% for item in user.customer.withdrawals %}
+            <div class="listing__row">
+                <span class="reports__col listing__col listing__id">
+                    <span class="listing__mobile-caption">Deposit ID: </span>
+                    <span>{{ item.id }}</span>
+                </span>
+                <span class="reports__col listing__col">{{ item.amount }} {{ item.currency }}</span>
+                <span class="reports__col listing__col">{{ item.created_at }}</span>
+                <span class="reports__col listing__col">{{ item.details|slice:':100' }}<a class="listing__more" href="#">More</a></span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

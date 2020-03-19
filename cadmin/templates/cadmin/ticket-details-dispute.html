@@ -1,0 +1,72 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Ticket Details Dispute{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger details">
+    <section class="details__section section">
+        <header class="section__header">
+            <h1 class="section__heading"><a class="details__heading-text" href="{{ cadmin_url }}/support-center">Ticket details</a><span> / </span><span>{{ item.id }}</span></h1>
+        </header>
+        <div class="section__inner data-panel">
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Raised by</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.created_by }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Raised against</dt>
+                    <dd class="data-panel__value"><a href="#">{{ item.created_by }}</a></dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Trade ID</dt>
+                    <dd class="data-panel__value"><a href="{{ cadmin_url }}/trade-details?item_id={{ item.trade.id }}">{{ item.trade.id }}</a></dd>
+                </div>
+            </dl>
+            <dl class="data-panel__list">
+                <div class="data-panel__item"><dt class="data-panel__heading">Status</dt>
+                    <dd class="data-panel__value">{{ item.trade.get_status_display }}</dd>
+                </div>
+                <div class="data-panel__item"><dt class="data-panel__heading">Referred to dispute</dt>
+                    <dd class="data-panel__value">{{ item.get_is_dispute_display }}</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+    <section class="section messages">
+        <div class="messages__wrapper">
+            {% for mes in item.messages_list %}
+            <article class="messages__item message message--{% if mes.writer == item.transaction.trade_initiator %}by{% else %}against{% endif %}">
+                <div class="message__user">
+                    <div class="message__user-default-icon">
+                        <svg class="message__user-icon" width="30">
+                            <use xlink:href="{% static 'cadmin/images/icons.svg' %}#user"></use>
+                        </svg>
+                    </div>
+                </div>
+                <div class="message__content">
+                    <header class="message__header">
+                        <h2 class="message__heading">{{ mes.writer }}</h2>
+                        <time class="message__data" datetime="2019-10-03 12:23">Sent on {{ mes.created_at }}</time>
+                    </header>
+                    <div class="message__text">{{ mes.content|safe }}</div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <form class="messages__input" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="item_id" value="{{ item.id }}" />
+            <textarea class="messages__input-textarea js-expanding-textarea" name="content"  rows="1" placeholder="Enter your message here" required></textarea>
+            <div class="messages__input-buttons">
+                <label class="messages__input-attach">
+                    <input type="file" name="attach_file"  hidden>
+                    <svg class="messages__input-icon" width="30">
+                        <use xlink:href="{% static 'cadmin/images/icons.svg' %}#paperclip"></use>
+                    </svg>
+                </label>
+                <button class="messages__input-send" type="submit">Send</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

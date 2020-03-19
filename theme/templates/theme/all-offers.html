@@ -1,0 +1,63 @@
+{% extends 'theme/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}All Offers{% endblock %}
+
+{% block page-inner %}
+<div class="page__inner all-offers">
+    <div class="all-offers__inner listing">
+        <header class="listing__header-row">
+            <span class="all-offers__col listing__col">Offer ID</span>
+            <span class="all-offers__col listing__col">Total Sold</span>
+            <span class="all-offers__col listing__col">Total Bought</span>
+            <span class="all-offers__col listing__col">Created on</span>
+            <span class="all-offers__col listing__col">Details</span>
+        </header>
+        {% for item in items %}
+        <div class="listing__row">
+            <span class="all-offers__col listing__col listing__id">
+                <span class="listing__mobile-caption">Offer ID: </span>
+                <span>{{ item.id }}</span>
+            </span>
+            <span class="all-offers__col listing__col">
+                <span class="listing__mobile-caption">Sold: </span>
+                <span>{{ item.sold_amount }} {{ item.sold_currency }}</span>
+            </span>
+            <span class="all-offers__col listing__col">
+                <span class="listing__mobile-caption">Bought: </span>
+                <span>{{ item.bought_amount }} {{ item.bought_currency }}</span>
+            </span>
+            <span class="all-offers__col listing__col"> 
+                <span class="listing__mobile-caption">Created: </span>
+                <span>{{ item.created_at }}</span>
+            </span>
+            <span class="all-offers__col listing__col">{{ item.trade_overview }}
+                <a class="listing__more" href="{{ theme_url }}/offer-detail?item_id={{ item.id }}">More</a>
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    <nav class="all-offers__pagination pagination">
+        <ul class="pagination__list">
+            {% if items.has_previous %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.previous_page_number }}" rel="first">Prev</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Prev</li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                 {% if items.number == i %}
+                 <li class="pagination__item is-active"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% else %}
+                 <li class="pagination__item"><a href="{{ base_url }}page={{ i }}">{{ i }}</a></li>
+                 {% endif %}
+            {% endfor %}
+            {% if items.has_next %}
+            <li class="pagination__item"><a href="{{ base_url }}page={{ items.next_page_number }}" rel="next">Next</a></li>
+            {% else %}
+            <li class="pagination__item disabled">Next</li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

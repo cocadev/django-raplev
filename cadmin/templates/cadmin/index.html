@@ -1,0 +1,68 @@
+{% extends 'cadmin/base-site.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Pages{% endblock %}
+
+{% block page-inner %}
+<main class="page__inner js-nav-close-trigger">
+    <div style="margin: 30px">
+        <h1>Pages</h1>
+        <ol>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/00_styleguide">00_styleguide.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/02_popups">02_popups.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/login">login.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/recover">recover.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/set-pw">set-pw.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/revenue">revenue.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/revenue-details">revenue-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/id-verify-app">id-verify-app.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/id-verify-app-details">id-verify-app-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/customers">customers.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/customer-details">customer-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/transactions">transactions.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/transaction-details">transaction-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/escrows">escrows.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/escrow-details">escrow-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/offers">offers.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/offer-details">offer-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/trades">trades.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/trade-details">trade-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/contact-form">contact-form.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/contact-form-details">contact-form-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-new-post">add-new-post.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-new-page">add-new-page.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/users">users.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-user">add-user.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-new-affiliate">add-new-affiliate.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-redirection-link">add-redirection-link.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-pers-link">add-pers-link.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/add-landing-page">add-landing-page.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/ticket-details-dispute">ticket-details-dispute.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/ticket-details-no-dispute">ticket-details-no-dispute.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/seo">seo.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/media-library">media-library.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/post-issue">post-issue.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/affiliates">affiliates.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/campaigns">campaigns.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/reports">reports.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/support-center">support-center.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/tags">tags.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/documentations">documentations.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/last-login">last-login.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/additional-pages">additional-pages.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/blog">blog.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/security-status">security-status.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/options">options.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/campaign-updated">campaign-updated.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/upload">upload.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/rev-stats">rev-stats.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/community-posts">community-posts.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/community-post-details">community-post-details.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/community-post-rules">community-post-rules.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/flagged-posts">flagged-posts.html</a></li>
+            <li style="list-style: decimal inside"><a href="{{ cadmin_url }}/flagged-content">flagged-content.html</a></li>
+        </ol>
+    </div>
+</main>
+{% endblock %}
