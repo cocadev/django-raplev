@@ -57,7 +57,7 @@ sqlparse==0.3.0
 stop-words==2018.7.23
 toolz==0.10.0
 typed-ast==1.4.0
-urllib3==1.25.7
+urllib3==1.26.5
 varint==1.0.2
 wrapt==1.11.2
 zipp==0.6.0
