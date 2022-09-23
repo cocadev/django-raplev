@@ -44,7 +44,7 @@ netaddr==0.7.19
 parsimonious==0.8.1
 phonenumbers==8.11.0
 Pillow==6.2.1
-protobuf==3.11.1
+protobuf==3.18.3
 psycopg2-binary==2.8.4
 pycryptodome==3.9.4
 pyrsistent==0.15.6
